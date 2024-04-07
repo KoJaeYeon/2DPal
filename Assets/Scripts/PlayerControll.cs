@@ -34,9 +34,6 @@ public class PlayerControll : MonoBehaviour
     public float speed = 0.01f;
     public float run = 1;
 
-    public float firetime = 0;
-    public int attackCount = 0;
-
     Animator animator;
 
     public GameObject[] equip;
@@ -69,27 +66,9 @@ public class PlayerControll : MonoBehaviour
     {
         if (fire)
         {
-            firetime += Time.deltaTime;
-            if (firetime > 1)
-            {
-                animator_Equip[(int)nowEquip].SetTrigger("GoFire");
-                firetime = 0;
-                attackCount++;
-
-                if(attackCount > 1) // 추후 무기 따라서 수정 요망
-                {
-                    attackCount = 0;
-                    if(target.layer.Equals(LayerMask.NameToLayer("Resources")))
-                    {
-                        Bricks bricks = target.GetComponent<Bricks>();
-                        bricks.DestroyTile(GetTarget.transform.position);
-                    }
-                        
-                }
-            }
 
         }
-        
+
 
     }
     private void FixedUpdate()
@@ -100,20 +79,41 @@ public class PlayerControll : MonoBehaviour
     {
         fire = inputValue.isPressed;
         animator_Equip[(int)nowEquip].SetBool("Fire", fire);
+
+        GiveResourceData();   
+
         if (!fire)
         {
-            firetime = 0;
-            attackCount = 0;
+            ResourceManager.Instance.DataClear();        
         }
 
     }
+
+    public bool GiveResourceData()
+    {
+        if (target == null) { return false; }
+        else if (target.layer.Equals(LayerMask.NameToLayer("Resources"))) // 자원을 캘때
+        {
+            Bricks bricks = target.GetComponent<Bricks>();
+            ResourceManager.Instance.ReceiveResourceData(bricks, nowEquip, GetTarget.transform.position);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public Vector3 GiveTargetPositionData()
+    {
+        return GetTarget.transform.position;
+    }
+
     private void OnChangeWeapon(InputValue inputValue)
     {
         float change = inputValue.Get<Vector2>().y;
-        Debug.Log(change);
         if (change > 0 && (int)nowEquip != 5)
         {
-            Debug.Log((int)nowEquip);
             equip[(int)nowEquip].SetActive(false);
             nowEquip += 1;
             equip[(int)nowEquip].SetActive(true);
@@ -122,7 +122,6 @@ public class PlayerControll : MonoBehaviour
         }
         else if (change < 0 && nowEquip != 0)
         {
-            Debug.Log((int)nowEquip);
             equip[(int)nowEquip].SetActive(false);
             nowEquip -= 1;
             equip[(int)nowEquip].SetActive(true);

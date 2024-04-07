@@ -13,7 +13,7 @@ public class GetTarget : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        Debug.Log("oncollision");
+        //Debug.Log("oncollision");
         playerControll.target = collision.gameObject;
     }
     private void OnTriggerExit2D(Collider2D collision)
