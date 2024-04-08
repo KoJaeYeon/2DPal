@@ -52,19 +52,19 @@ public class ResourceManager : Singleton<ResourceManager>
                     
                     if (nowAttackBricks.DestroyTile(bricsPosition))
                     {
-                        ItemManager.Instance.DropItem(giveItem);
+                        InventoryManager.Instance.DropItem(giveItem);
                         DataClear();
                     }
                     else if (nowAttackBricks.DestroyTile(bricsPosition + Vector3.down))
                     {
                         Debug.Log("down");
-                        ItemManager.Instance.DropItem(giveItem);
+                        InventoryManager.Instance.DropItem(giveItem);
                         DataClear();
                     }
                     else if (nowAttackBricks.DestroyTile(bricsPosition + Vector3.up))
                     {
                         Debug.Log("up");
-                        ItemManager.Instance.DropItem(giveItem);
+                        InventoryManager.Instance.DropItem(giveItem);
                         DataClear();
                     }
                 }
@@ -72,17 +72,17 @@ public class ResourceManager : Singleton<ResourceManager>
                 {
                     if (nowAttackBricks.DestroyTile(bricsPosition))
                     {
-                        ItemManager.Instance.DropItem(giveItem);
+                        InventoryManager.Instance.DropItem(giveItem);
                         DataClear();
                     }
                     else if (nowAttackBricks.DestroyTile(bricsPosition + Vector3.left))
                     {
-                        ItemManager.Instance.DropItem(giveItem);
+                        InventoryManager.Instance.DropItem(giveItem);
                         DataClear();
                     }
                     else if (nowAttackBricks.DestroyTile(bricsPosition + Vector3.right))
                     {
-                        ItemManager.Instance.DropItem(giveItem);
+                        InventoryManager.Instance.DropItem(giveItem);
                         DataClear();
                     }
                 }
@@ -90,7 +90,7 @@ public class ResourceManager : Singleton<ResourceManager>
             }
             else
             {
-                ItemManager.Instance.DropItem(giveItem);
+                InventoryManager.Instance.DropItem(giveItem);
             }
         }
 

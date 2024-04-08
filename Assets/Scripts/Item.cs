@@ -4,39 +4,47 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public enum itemName
-{
-    Stone,
-    Tree,
-    Iron
-}
+[System.Serializable]
 public class Item
 {
-    [SerializeField] itemName name;
+    [SerializeField] string itemName;
     [SerializeField] int id;
     [SerializeField] int _count;
-    [SerializeField] float weight;
+    [SerializeField] float _weight;
+    [SerializeField] Sprite _sprite;
 
-    public Item(itemName name, int id, int count, float weight)
+    public Item(string itemName, int id, int count, float weight)
     {
-        this.name = name;
+        this.itemName = itemName;
         this.id = id;
         this._count = count;
-        this.weight = weight;
+        this._weight = weight;
     }
 
     public Item(Item item)
     {
-        this.name = item.name;
+        this.itemName = item.itemName;
         this.id = item.id;
         this._count = item._count;
-        this.weight = item.weight;
+        this._weight = item._weight;
+        _sprite = item._sprite;
     }
 
+    public Sprite sprite
+    {
+        get => _sprite;
+        set => _sprite = value;
+    }
     public int count
     {
         get => _count;
         set => _count = value;
+    }
+
+    public float weight
+    {
+        get => _weight;
+        set => _weight = value;
     }
 
     public void Add(Item item)
@@ -46,7 +54,7 @@ public class Item
 
     public override string ToString()
     {
-        return "이름" + name.ToString() + ",id" + id.ToString() + ",count" + _count.ToString();
+        return "이름" + itemName.ToString() + ",id" + id.ToString() + ",count" + _count.ToString();
     }
 
     public override int GetHashCode()

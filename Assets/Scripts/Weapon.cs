@@ -8,7 +8,6 @@ public class Weapon : MonoBehaviour
 
     [SerializeField] void Attack()
     {
-        Debug.Log("Attack!!!");
         ResourceManager.Instance.Attack(weapon_damage);
     }
 }

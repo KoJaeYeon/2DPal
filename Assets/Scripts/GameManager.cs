@@ -9,21 +9,31 @@ public class GameManager : Singleton<GameManager>
     public GameObject resourceManager;
     public GameObject palManager;
     public GameObject itemManager;
+    public GameObject spriteManager;
 
-    private void Awake()
+    public GameObject OptionPanel;
+
+    bool isMenuOn = false;
+    private void OnMenu()
     {
-        
+        if (isMenuOn)
+        {
+            OptionPanel.SetActive(false);
+            isMenuOn = false;
+        }
+        else
+        {
+            OptionPanel.SetActive(true);
+            isMenuOn = true;
+        }
     }
 
-    private void Update()
+    private void OnInventoryCheck()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        Dictionary<int, Item> dictionary = InventoryManager.Instance.inventory;
+        foreach (Item item in dictionary.Values)
         {
-            Dictionary<int, Item> dictionary = itemManager.GetComponent<ItemManager>().inventory;
-            foreach (Item item in dictionary.Values)
-            {
-                Debug.Log(item);
-            }
+            Debug.Log(item);
         }
     }
 }

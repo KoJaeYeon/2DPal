@@ -8,21 +8,20 @@ public class Bricks : MonoBehaviour
     public Tilemap tilemap;
     public Item item;
 
-    [SerializeField] itemName itemName;
     [SerializeField] int id;
-    [SerializeField] int count = 40;
-    [SerializeField] float weight;
 
     public float maxDuration = 250;
     public float duration = 250;
 
+    public int count;
     public int givedItem = 0;
     public int leftItem;
 
     private void Awake()
     {
         tilemap = GetComponent<Tilemap>();
-        item = new Item(itemName, id, count, weight);
+        item = ItemDatabase.Instance.items[id];
+        count = item.count;
         leftItem = count;
     }
 
@@ -30,8 +29,23 @@ public class Bricks : MonoBehaviour
     {
         duration -= damage;
         Item giveItem = new Item(item);
-        if(duration)
-        return item;
+        if (duration < 0) giveItem.count = leftItem; //ÆÄ±«µÇ¸é ³²Àº °¹¼ö ¸®ÅÏ
+        else
+        {
+            float togiveNum = (((maxDuration - duration) / maxDuration) * count);// ÃÑ Áà¾ß ÇÒ °¹¼ö
+            if ( togiveNum > givedItem) 
+            {
+                giveItem.count = (int)(togiveNum - givedItem);
+                leftItem -= (int)(togiveNum - givedItem);
+                givedItem += (int)(togiveNum - givedItem);
+                Debug.Log("left°¨¼Ò");
+            }
+            else
+            {
+                giveItem.count = 0;
+            }
+        }
+        return giveItem;
     }
 
     public bool DestroyTile(Vector3 pos)
@@ -40,6 +54,8 @@ public class Bricks : MonoBehaviour
         if (tilemap.GetTile(cellPostion) == null) return false;
         tilemap.SetTile(cellPostion,null);
         duration = maxDuration;
+        leftItem = count;
+        givedItem = 0;
         return true;
     }
 
