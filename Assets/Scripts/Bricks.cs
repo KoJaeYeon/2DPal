@@ -38,7 +38,6 @@ public class Bricks : MonoBehaviour
                 giveItem.count = (int)(togiveNum - givedItem);
                 leftItem -= (int)(togiveNum - givedItem);
                 givedItem += (int)(togiveNum - givedItem);
-                Debug.Log("left°¨¼Ò");
             }
             else
             {

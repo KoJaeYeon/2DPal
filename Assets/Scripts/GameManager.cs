@@ -13,6 +13,10 @@ public class GameManager : Singleton<GameManager>
     bool isMenuOn = false;
     bool isCraftOn = false;
 
+    private void Start()
+    {
+
+    }
     public bool ManagerUsingUi()
     {
         if(isMenuOn||isCraftOn) return true;

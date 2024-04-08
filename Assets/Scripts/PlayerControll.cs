@@ -82,7 +82,12 @@ public class PlayerControll : MonoBehaviour
     }
     private void Update()
     {
-        if(running && moving)
+        Stamina();
+    }
+
+    public void Stamina()
+    {
+        if (running && moving)
         {
             slider.gameObject.SetActive(true);
             nowStamina -= 0.015f;
@@ -103,7 +108,7 @@ public class PlayerControll : MonoBehaviour
                 slider.gameObject.SetActive(false);
             }
         }
-        if(nowStamina < 0)
+        if (nowStamina < 0)
         {
             istired = true;
             running = false;
@@ -115,7 +120,6 @@ public class PlayerControll : MonoBehaviour
                 ResourceManager.Instance.DataClear();
             }
             image.color = new Color(1, 0, 0, 0.8f);
-            Debug.Log("red");
         }
         slider.value = nowStamina / maxStamina;
     }
@@ -128,11 +132,13 @@ public class PlayerControll : MonoBehaviour
     {
         if (GameManager.Instance.ManagerUsingUi()) return;
         if (istired) return;
+        if(statement == Statement.Crafting)
+        {
+            return;
+        }
         fire = inputValue.isPressed;
         animator_Equip[(int)nowEquip].SetBool("Fire", fire);
-
-        GiveResourceData();   
-
+        GiveResourceData();
         if (!fire)
         {
             ResourceManager.Instance.DataClear();        

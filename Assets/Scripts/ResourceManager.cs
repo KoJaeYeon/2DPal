@@ -57,13 +57,11 @@ public class ResourceManager : Singleton<ResourceManager>
                     }
                     else if (nowAttackBricks.DestroyTile(bricsPosition + Vector3.down))
                     {
-                        Debug.Log("down");
                         InventoryManager.Instance.DropItem(giveItem);
                         DataClear();
                     }
                     else if (nowAttackBricks.DestroyTile(bricsPosition + Vector3.up))
                     {
-                        Debug.Log("up");
                         InventoryManager.Instance.DropItem(giveItem);
                         DataClear();
                     }
