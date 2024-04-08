@@ -6,14 +6,18 @@ using UnityEngine.UI;
 public class GameManager : Singleton<GameManager>
 {
     public GameObject playerController;
-    public GameObject resourceManager;
-    public GameObject palManager;
-    public GameObject itemManager;
-    public GameObject spriteManager;
 
     public GameObject OptionPanel;
+    public GameObject CraftingPanel;
 
     bool isMenuOn = false;
+    bool isCraftOn = false;
+
+    public bool ManagerUsingUi()
+    {
+        if(isMenuOn||isCraftOn) return true;
+        return false;
+    }
     private void OnMenu()
     {
         if (isMenuOn)
@@ -25,6 +29,20 @@ public class GameManager : Singleton<GameManager>
         {
             OptionPanel.SetActive(true);
             isMenuOn = true;
+        }
+    }
+
+    public void OnCraft()
+    {
+        if (isCraftOn)
+        {
+            CraftingPanel.SetActive(false);
+            isCraftOn = false;
+        }
+        else
+        {
+            CraftingPanel.SetActive(true);
+            isCraftOn = true;
         }
     }
 

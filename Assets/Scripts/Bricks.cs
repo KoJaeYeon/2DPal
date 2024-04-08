@@ -17,7 +17,7 @@ public class Bricks : MonoBehaviour
     public int givedItem = 0;
     public int leftItem;
 
-    private void Awake()
+    private void Start()
     {
         tilemap = GetComponent<Tilemap>();
         item = ItemDatabase.Instance.items[id];

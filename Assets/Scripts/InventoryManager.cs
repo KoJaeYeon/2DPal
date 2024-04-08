@@ -20,7 +20,6 @@ public class InventoryManager : Singleton<InventoryManager>
     void UpdateSlot(int i,Item item)
     {
         Slot slot = UIInventorySlot.transform.GetChild(i).GetChild(0).GetComponent<Slot>();
-        Debug.Log(slot);
         DebugItem = item;
         slot.UpdateSlot(item);
     }
@@ -29,26 +28,23 @@ public class InventoryManager : Singleton<InventoryManager>
     {
         if(inventory.ContainsValue(item))
         {
-            Debug.Log("같은거");
-            for(int i = 0; i < maxInvetory; i++)
+            foreach (int i in inventory.Keys)
             {
-                if (inventory.ContainsKey(i) && inventory[i].Equals(item))
+                if (inventory[i].Equals(item))
                 {
-                    Debug.Log("인벤토리" + i + "번째칸에" + item + "들어감");
                     inventory[i].Add(item);
                     playerWeight += item.count * item.weight;
-                    UpdateSlot(i,inventory[i]);
+                    UpdateSlot(i, inventory[i]);
                 }
             }
         }
+    
         else
         {
-            Debug.Log("다른거");
             for (int i = 0;i < maxInvetory; i++)
             {
                 if (!inventory.ContainsKey(i))
                 {
-                    Debug.Log("인벤토리"+i + "번째칸에" + item +"들어감");
                     inventory.Add(i, item);
                     playerWeight += item.count * item.weight;
                     UpdateSlot(i, item);

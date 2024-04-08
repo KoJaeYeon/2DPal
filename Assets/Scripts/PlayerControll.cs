@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
+using UnityEngine.UI;
 
 public enum ViewDirection
 {
@@ -22,17 +23,33 @@ public enum Equipment
     Gun = 4,
     Bow = 5
 }
+
+public enum Statement
+{
+    Idle = 0,
+    Crafting = 1
+}
+
 public class PlayerControll : MonoBehaviour
 {
     Vector2 direction;
     public ViewDirection viewdirection;
+    public Statement statement;
     public GameObject target; // 콜라이더 오브젝트
     public Transform GetTarget;
+    public Slider slider;
+    public Image image;
+
     public bool running = false;
     public bool fire = false;
+    public bool moving = false;
+    public bool istired = false;
 
     public float speed = 0.01f;
     public float run = 1;
+
+    public float maxStamina = 100;
+    public float nowStamina = 100;
 
     Animator animator;
 
@@ -44,6 +61,7 @@ public class PlayerControll : MonoBehaviour
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
+        image = slider.gameObject.transform.GetChild(1).GetChild(0).GetComponent<Image>();
 
         GetTarget = transform.GetChild(0);
         animator_Equip = GetComponentsInChildren<Animator>();
@@ -64,19 +82,52 @@ public class PlayerControll : MonoBehaviour
     }
     private void Update()
     {
-        if (fire)
+        if(running && moving)
         {
-
+            slider.gameObject.SetActive(true);
+            nowStamina -= 0.015f;
         }
-
-
+        else if (fire)
+        {
+            slider.gameObject.SetActive(true);
+            nowStamina -= 0.03f;
+        }
+        else
+        {
+            if (nowStamina < maxStamina)
+                nowStamina += 0.03f;
+            else
+            {
+                istired = false;
+                image.color = new Color(1, 1, 0, 0.8f);
+                slider.gameObject.SetActive(false);
+            }
+        }
+        if(nowStamina < 0)
+        {
+            istired = true;
+            running = false;
+            run = running ? 2 : 1;
+            fire = false;
+            animator_Equip[(int)nowEquip].SetBool("Fire", fire);
+            if (!fire)
+            {
+                ResourceManager.Instance.DataClear();
+            }
+            image.color = new Color(1, 0, 0, 0.8f);
+            Debug.Log("red");
+        }
+        slider.value = nowStamina / maxStamina;
     }
+
     private void FixedUpdate()
     {
         transform.Translate(direction * speed * run);
     }
     private void OnFire(InputValue inputValue)
     {
+        if (GameManager.Instance.ManagerUsingUi()) return;
+        if (istired) return;
         fire = inputValue.isPressed;
         animator_Equip[(int)nowEquip].SetBool("Fire", fire);
 
@@ -132,6 +183,7 @@ public class PlayerControll : MonoBehaviour
     private void OnMove(InputValue inputValue)
     {
         direction  = inputValue.Get<Vector2>();
+        moving = true;
         if (direction.x == 0 && direction.y != 0)
         {
             animator.SetBool("Idle", false);
@@ -192,12 +244,14 @@ public class PlayerControll : MonoBehaviour
         }
         else if (direction.x == 0 && direction.y == 0)
         {
+            moving = false;
             animator.SetBool("Idle",true);
         }
     }
 
     private void OnRun(InputValue inputValue)
     {
+        if (istired) return;
         running = inputValue.isPressed;
         run = running ? 2 : 1;
     }

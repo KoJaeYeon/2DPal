@@ -224,6 +224,24 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Craft",
+                    "type": "Button",
+                    "id": "bae5a933-3b1d-4ecb-b5a3-fee2807c0160",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Escape",
+                    "type": "Button",
+                    "id": "41f17c79-535b-4177-8253-452c21573274",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "InventoryCheck",
                     "type": "Button",
                     "id": "2a66c50d-0de2-49b7-9805-aaa26ac62e88",
@@ -247,23 +265,34 @@
                 },
                 {
                     "name": "",
-                    "id": "30daaefb-2a26-4749-90c7-5d4e812da215",
-                    "path": "<Keyboard>/escape",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Menu",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "311e5551-dfe5-438e-bdc1-2602ec3bfa87",
                     "path": "<Keyboard>/f",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "InventoryCheck",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "64d13b15-ef0d-4b10-929c-a8fd8320559f",
+                    "path": "<Keyboard>/b",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Craft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7489a13e-2b33-4e99-8989-e8d523045ac3",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Escape",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
