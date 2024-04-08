@@ -57,6 +57,8 @@ public class PlayerControll : MonoBehaviour
     public Animator[] animator_Equip;
     public Equipment nowEquip = Equipment.None;
 
+    public GameObject freeBuilding;
+
     Rigidbody2D rigid;
     private void Awake()
     {
@@ -134,7 +136,16 @@ public class PlayerControll : MonoBehaviour
         if (istired) return;
         if(statement == Statement.Crafting)
         {
-            return;
+            if(freeBuilding.GetComponent<Building>().ContactCheck()) return;
+            else
+            {
+                equip[(int)nowEquip].SetActive(true);
+                GetTarget.gameObject.SetActive(true);
+                statement = Statement.Idle;
+                freeBuilding.transform.parent = FurnitureDatabase.Instance.parent.transform;
+                freeBuilding = null;
+                return;
+            }
         }
         fire = inputValue.isPressed;
         animator_Equip[(int)nowEquip].SetBool("Fire", fire);
@@ -144,6 +155,13 @@ public class PlayerControll : MonoBehaviour
             ResourceManager.Instance.DataClear();        
         }
 
+    }
+
+    public void FreeBuilding()
+    {
+        equip[(int)nowEquip].SetActive(false);
+        GetTarget.gameObject.SetActive(false);
+        freeBuilding.transform.parent = transform;
     }
 
     public bool GiveResourceData()
@@ -168,6 +186,13 @@ public class PlayerControll : MonoBehaviour
 
     private void OnChangeWeapon(InputValue inputValue)
     {
+        if (GameManager.Instance.ManagerUsingUi()) return;
+        if (istired) return;
+        if (statement == Statement.Crafting)
+        {
+            return;
+        }
+
         float change = inputValue.Get<Vector2>().y;
         if (change > 0 && (int)nowEquip != 5)
         {
@@ -196,7 +221,11 @@ public class PlayerControll : MonoBehaviour
             if (direction.y < 0)
             {
                 viewdirection = ViewDirection.Down;
-                GetTarget.localPosition = new Vector2(0, -1.5f);
+                if(statement == Statement.Crafting)
+                {
+                    freeBuilding.transform.localPosition = new Vector2(0, -2.5f);
+                }
+                else GetTarget.localPosition = new Vector2(0, -1.5f);
                 if (animator.GetInteger("Direction") != (int)viewdirection)
                 {
                     animator.SetInteger("Direction", (int)viewdirection);
@@ -209,7 +238,11 @@ public class PlayerControll : MonoBehaviour
             else if (direction.y > 0)
             {
                 viewdirection = ViewDirection.Up;
-                GetTarget.localPosition = new Vector2(0, 1.5f);
+                if (statement == Statement.Crafting)
+                {
+                    freeBuilding.transform.localPosition = new Vector2(0, 2.5f);
+                }
+                else GetTarget.localPosition = new Vector2(0, 1.5f);
                 if (animator.GetInteger("Direction") != (int)viewdirection)
                 {
                     animator.SetInteger("Direction", (int)viewdirection);
@@ -226,7 +259,11 @@ public class PlayerControll : MonoBehaviour
             if (direction.x < 0)
             {
                 viewdirection = ViewDirection.Left;
-                GetTarget.localPosition = new Vector2(-1, 0);
+                if (statement == Statement.Crafting)
+                {
+                    freeBuilding.transform.localPosition = new Vector2(-2, 0);
+                }
+                else GetTarget.localPosition = new Vector2(-1, 0);
                 if (animator.GetInteger("Direction") != (int)viewdirection)
                 {
                     animator.SetInteger("Direction", (int)viewdirection);
@@ -238,7 +275,11 @@ public class PlayerControll : MonoBehaviour
             else if (direction.x > 0)
             {
                 viewdirection = ViewDirection.Right;
-                GetTarget.localPosition = new Vector2(1, 0);
+                if (statement == Statement.Crafting)
+                {
+                    freeBuilding.transform.localPosition = new Vector2(2,0);
+                }
+                else GetTarget.localPosition = new Vector2(1, 0);
                 if (animator.GetInteger("Direction") != (int)viewdirection)
                 {
                     animator.SetInteger("Direction", (int)viewdirection);

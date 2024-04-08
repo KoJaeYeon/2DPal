@@ -2987,8 +2987,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1206604350}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7165,37 +7164,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1106809075}
   m_CullTransparentMesh: 1
---- !u!1 &1206604349
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1206604350}
-  m_Layer: 0
-  m_Name: Primitive Workbench
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1206604350
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1206604349}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 436310113}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1236356632
 GameObject:
   m_ObjectHideFlags: 0
@@ -7372,6 +7340,7 @@ MonoBehaviour:
   equip: []
   animator_Equip: []
   nowEquip: 0
+  freeBuilding: {fileID: 0}
 --- !u!61 &1236356638
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7683,6 +7652,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06fbe8ecfde7f314ebd94428e59d2401, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parent: {fileID: 436310112}
+  Prefabs:
+  - {fileID: 4682611247453526136, guid: 9d954088421802f48bd03de382e4929e, type: 3}
+  - {fileID: 9135124482644195523, guid: eff93db3374334b4b9e2710c46818556, type: 3}
+  - {fileID: 3379179182051263402, guid: 794adce6a524f334bacfed0d89a2a5a3, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   sprites:
   - {fileID: 21300000, guid: 6d86431eac62aa948a7934797407b6c9, type: 3}
   - {fileID: 21300000, guid: 2e75dfc8d0713d04893f89b353814a83, type: 3}
