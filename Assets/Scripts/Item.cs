@@ -7,24 +7,24 @@ using UnityEngine;
 [System.Serializable]
 public class Item
 {
-    [SerializeField] string itemName;
-    [SerializeField] int id;
+    [SerializeField] string _itemName;
+    [SerializeField] int _id;
     [SerializeField] int _count;
     [SerializeField] float _weight;
     [SerializeField] Sprite _sprite;
 
-    public Item(string itemName, int id, int count, float weight)
+    public Item(string itemName, int _id, int count, float weight)
     {
-        this.itemName = itemName;
-        this.id = id;
+        this._itemName = itemName;
+        this._id = _id;
         this._count = count;
         this._weight = weight;
     }
 
     public Item(Item item)
     {
-        this.itemName = item.itemName;
-        this.id = item.id;
+        this._itemName = item._itemName;
+        this._id = item._id;
         this._count = item._count;
         this._weight = item._weight;
         _sprite = item._sprite;
@@ -34,6 +34,17 @@ public class Item
     {
         get => _sprite;
         set => _sprite = value;
+    }
+
+    public string itemName
+    {
+        get => _itemName;
+        set => _itemName = value;
+    }
+    public int id
+    {
+        get => _id;
+        set => _id = value;
     }
     public int count
     {
@@ -51,10 +62,14 @@ public class Item
     {
         _count += item._count;
     }
+    public void Substarct(Item item)
+    {
+        _count -= item._count;
+    }
 
     public override string ToString()
     {
-        return "이름" + itemName.ToString() + ",id" + id.ToString() + ",count" + _count.ToString();
+        return "이름" + _itemName.ToString() + ",_id" + _id.ToString() + ",count" + _count.ToString();
     }
 
     public override int GetHashCode()
@@ -66,7 +81,7 @@ public class Item
     {
         if(obj == null) return false;
         Item other = obj as Item;
-        if (other.id == id) return true;
+        if (other._id == _id) return true;
         else return false;
     }
 }

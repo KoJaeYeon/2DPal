@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.XR;
+using System.IO;
+using System.Collections;
 public class Node
 {
     /*
@@ -33,11 +35,16 @@ public class Node
         this.y = y;
     }
 
+    public override string ToString()
+    {
+        return "x : " + x + ",y : " + y;
+    }
+
 }
 public class Astar : MonoBehaviour
 {
+    public PalAI palAI;
     public GameObject destination;
-    public GameObject prefab; //테스트용 검사블럭
 
     public int range = 5;
 
@@ -62,6 +69,10 @@ public class Astar : MonoBehaviour
 
     List<Node> OpenList, ClosedList;
 
+    private void Awake()
+    {
+        palAI = GetComponent<PalAI>();
+    }
     public void SetGizmoIndex(int index)
     {
         this.index = index;
@@ -120,17 +131,23 @@ public class Astar : MonoBehaviour
             for(int j = 0; j < sizeY; j++)
             {
                 bool isObstacle = false;
-                //각 노드에 0.4f반지름의 원을 생성하여 충돌감지 후 노드 담기
-                foreach (Collider2D col in Physics2D.OverlapCircleAll(new Vector2(i + bottomLeft.x, j + bottomLeft.y), 0.4f))
+                //각 노드에 0.49f반지름의 원을 생성하여 충돌감지 후 노드 담기
+                foreach (Collider2D col in Physics2D.OverlapCircleAll(new Vector2(i + bottomLeft.x, j + bottomLeft.y), 0.49f))
                 {
-                    if(col.gameObject.layer.Equals(LayerMask.NameToLayer("Obstacle")))
+                    if(col.gameObject.layer.Equals(LayerMask.NameToLayer("Resources")))
                     {
                         isObstacle = true;
                     }
+                    else if (col.gameObject.layer.Equals(LayerMask.NameToLayer("Furniture")))
+                    {
+                        int index = col.gameObject.GetComponent<Building>().index;
+                        if (palAI.targetBulding.index != index)
+                        {
+                            isObstacle = true;
+                        }
+                    }
                 }
                 nodeArray[i, j] = new Node(isObstacle, i + bottomLeft.x, j + bottomLeft.y);
-                //if(!isObstacle) // 테스트용 검사블럭생성
-                //Instantiate(prefab, new Vector3((float)(i + bottomLeft.x), (float)(j + bottomLeft.y), 0), transform.rotation);
             }
         }
 

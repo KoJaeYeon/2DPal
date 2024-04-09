@@ -15,4 +15,10 @@ public class ItemDatabase : Singleton<ItemDatabase>
         id = 3; item = new Item("Iron", id, 40, 8); item.sprite = sprites[index++]; items.Add(id, item);
         id = 4; item = new Item("Paldium Fragment", id, 40, 1); item.sprite = sprites[index++]; items.Add(id, item);
     }
+
+    public Item GetItem(int id)
+    {
+        Item item = new Item(items[id]);
+        return item;
+    }
 }

@@ -22,8 +22,15 @@ public class GameManager : Singleton<GameManager>
         if(isMenuOn||isCraftOn) return true;
         return false;
     }
+
+    private void OnEscape()
+    {
+        if (isCraftOn) { OnCraft(); return; }
+        OnMenu();
+    }
     private void OnMenu()
     {
+        if (isCraftOn) return;
         if (isMenuOn)
         {
             OptionPanel.SetActive(false);
@@ -38,6 +45,7 @@ public class GameManager : Singleton<GameManager>
 
     public void OnCraft()
     {
+        if (isMenuOn) return;
         if (isCraftOn)
         {
             CraftingPanel.SetActive(false);
@@ -47,15 +55,6 @@ public class GameManager : Singleton<GameManager>
         {
             CraftingPanel.SetActive(true);
             isCraftOn = true;
-        }
-    }
-
-    private void OnInventoryCheck()
-    {
-        Dictionary<int, Item> dictionary = InventoryManager.Instance.inventory;
-        foreach (Item item in dictionary.Values)
-        {
-            Debug.Log(item);
         }
     }
 }

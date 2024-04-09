@@ -9,6 +9,9 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
     public List<GameObject>[] furniturePrefabs = new List<GameObject>[10];
     public GameObject[] Prefabs = new GameObject[10];
     public Sprite[] sprites;
+    public Material flashMaterial;
+
+    public Furniture testFur;
     private void Awake()
     {
         int index = 0;
@@ -42,5 +45,11 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
         prefab.transform.parent = parent.transform;
 
         return prefab;
+    }
+
+    public int[,] NeedItem(int id)
+    {
+        testFur = furnitures[id];
+        return furnitures[id].buildingItems;
     }
 }

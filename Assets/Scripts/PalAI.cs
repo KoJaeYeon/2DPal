@@ -7,14 +7,15 @@ public enum PalStates
 {
     //Decimal
     Idle = 0,
-    Move = 1
+    Move = 1,
+    Action = 2
 }
 
 public class PalAI : MonoBehaviour
 {
-    public PalStates palState;
-    
+    public PalStates palState;    
     public GameObject target;
+    public Building targetBulding;
 
     #region Astar Pathfinding
     Astar astar;
@@ -32,7 +33,11 @@ public class PalAI : MonoBehaviour
     void OnGo()
     {
         astar.SetDestination(target); // 타켓 목적지 설정
-        path = astar.AStar(); // 길찾기 연산
+        path = astar.AStar(); // 길찾기 연산        
+        if (path.Count == 0)
+        {
+            return;        
+        }
         palState = PalStates.Move;
         pathInitIndex = 0; // 초기화
         pathFinalIndex = path.Count;
@@ -41,26 +46,51 @@ public class PalAI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        StartCoroutine(Search());
     }
-
-    // Update is called once per frame
-    void Update()
+    IEnumerator Search()
     {
-        if(Input.GetKeyDown(KeyCode.F))
+        Debug.Log("Search");
+        if (palState == PalStates.Idle && PalManager.Instance.buildings.Count > 0)
         {
+            targetBulding = PalManager.Instance.buildings[0];
+            target = targetBulding.gameObject;
             OnGo();
         }
+        else if (palState == PalStates.Move && targetBulding.buildingStatement == BuildingStatement.Built)
+        {
+            palState = PalStates.Idle;
+        }
+        yield return new WaitForSeconds(1f);
+        StartCoroutine(Search());
+    }
 
-        switch(palState)
+    private void FixedUpdate()
+    {
+        switch (palState)
         {
             case PalStates.Idle:
                 break;
             case PalStates.Move:
                 PalMove();
                 break;
+            case PalStates.Action:
+                PalWork();
+                break;
         }
+    }
 
+
+    void PalWork()
+    {
+        if(targetBulding.buildingStatement == BuildingStatement.Built)
+        {
+            palState = PalStates.Idle;
+        }
+        else if(targetBulding.buildingStatement == BuildingStatement.isBuilding)
+        {
+            targetBulding.Build(1);
+        }
         
     }
 
@@ -69,7 +99,7 @@ public class PalAI : MonoBehaviour
         targetx = path[pathInitIndex].x;
         targety = path[pathInitIndex].y;
 
-        transform.position = Vector3.MoveTowards(transform.position, new Vector3(targetx, targety), 0.003f);
+        transform.position = Vector3.MoveTowards(transform.position, new Vector3(targetx, targety), 0.03f);
         if (Mathf.Abs(transform.position.x - targetx) < 0.1f && Mathf.Abs(transform.position.y - targety) < 0.1f)
         {
             astar.SetGizmoIndex(pathInitIndex);
@@ -78,6 +108,23 @@ public class PalAI : MonoBehaviour
             {
                 palState = PalStates.Idle;
             }
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+
+        if(collision.gameObject.CompareTag("Furniture"))
+        {
+            int index = collision.gameObject.GetComponent<Building>().index;
+            if(targetBulding.index == index)
+            {
+                palState = PalStates.Action;
+            }
+        }
+        else
+        {
+            return;
         }
     }
 }

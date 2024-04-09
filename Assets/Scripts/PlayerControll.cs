@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
@@ -27,7 +28,9 @@ public enum Equipment
 public enum Statement
 {
     Idle = 0,
-    Crafting = 1
+    Crafting = 1,
+    Action = 2,
+    Building = 3
 }
 
 public class PlayerControll : MonoBehaviour
@@ -44,6 +47,7 @@ public class PlayerControll : MonoBehaviour
     public bool fire = false;
     public bool moving = false;
     public bool istired = false;
+    public bool isaction = false;
 
     public float speed = 0.01f;
     public float run = 1;
@@ -58,8 +62,10 @@ public class PlayerControll : MonoBehaviour
     public Equipment nowEquip = Equipment.None;
 
     public GameObject freeBuilding;
-
     Rigidbody2D rigid;
+
+    public Building building;
+
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -85,7 +91,12 @@ public class PlayerControll : MonoBehaviour
     private void Update()
     {
         Stamina();
+        if(statement== Statement.Building)
+        {
+            building.Build(1);
+        }
     }
+
 
     public void Stamina()
     {
@@ -130,20 +141,41 @@ public class PlayerControll : MonoBehaviour
     {
         transform.Translate(direction * speed * run);
     }
+
+    public void OnAction(InputValue inputValue)
+    {
+        if (target == null) return;
+        if(target.CompareTag("Furniture"))
+        {
+            building = target.GetComponent<Building>();
+            isaction = inputValue.isPressed;
+
+            if(isaction && building.buildingStatement == BuildingStatement.isBuilding)
+            {
+                statement = Statement.Building;
+            }
+            else if (isaction && building.buildingStatement == BuildingStatement.Built)
+            {
+                statement = Statement.Action;
+            }
+            else
+            {
+                building = null;
+                statement = Statement.Idle;
+            }
+        }
+    }
     private void OnFire(InputValue inputValue)
     {
         if (GameManager.Instance.ManagerUsingUi()) return;
         if (istired) return;
+        if (statement == Statement.Action) return;
         if(statement == Statement.Crafting)
         {
             if(freeBuilding.GetComponent<Building>().ContactCheck()) return;
             else
             {
-                equip[(int)nowEquip].SetActive(true);
-                GetTarget.gameObject.SetActive(true);
-                statement = Statement.Idle;
-                freeBuilding.transform.parent = FurnitureDatabase.Instance.parent.transform;
-                freeBuilding = null;
+                EndBuilding();
                 return;
             }
         }
@@ -155,6 +187,24 @@ public class PlayerControll : MonoBehaviour
             ResourceManager.Instance.DataClear();        
         }
 
+    }
+
+    private void OnCancel()
+    {
+        if(statement == Statement.Crafting)
+        {
+            freeBuilding.SetActive(false);
+            EndBuilding();
+        }
+    }
+
+    public void EndBuilding()
+    {
+        equip[(int)nowEquip].SetActive(true);
+        GetTarget.gameObject.SetActive(true);
+        statement = Statement.Idle;
+        freeBuilding.transform.parent = FurnitureDatabase.Instance.parent.transform;
+        freeBuilding = null;
     }
 
     public void FreeBuilding()
@@ -213,6 +263,7 @@ public class PlayerControll : MonoBehaviour
     }
     private void OnMove(InputValue inputValue)
     {
+        if (statement == Statement.Action) return;
         direction  = inputValue.Get<Vector2>();
         moving = true;
         if (direction.x == 0 && direction.y != 0)

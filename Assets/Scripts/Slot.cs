@@ -19,11 +19,19 @@ public class Slot : MonoBehaviour
     }
     public void UpdateSlot(Item item)
     {
-        this.item = item;
-        image.sprite = item.sprite;
-        image.gameObject.SetActive(true);
-        itemData[0].text = item.count.ToString();
-        itemData[1].text = (item.count * item.weight).ToString();
+        if (item == null)
+        {
+            RemoveSlot();
+        }
+        else
+        {
+            this.item = item;
+            image.sprite = item.sprite;
+            image.gameObject.SetActive(true);
+            itemData[0].text = item.count.ToString();
+            itemData[1].text = (item.count * item.weight).ToString();
+        }
+
     }
 
     public void RemoveSlot()

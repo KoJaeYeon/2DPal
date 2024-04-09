@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 3379179182051263446}
   - component: {fileID: 3379179182051263447}
   - component: {fileID: 3379179182051263400}
-  m_Layer: 0
+  - component: {fileID: 1504922016641873138}
+  m_Layer: 7
   m_Name: 3PalBox
-  m_TagString: Untagged
+  m_TagString: Furniture
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -103,14 +104,14 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3379179182051263402}
-  m_BodyType: 2
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -142,3 +143,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.7636364, y: 2}
   m_EdgeRadius: 0
+--- !u!114 &1504922016641873138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3379179182051263402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e752c63c56345f24b8c7f72a769da180, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: 0
+  buildingStatement: 0
+  MaxConstructTime: 0
+  nowConstructTime: 0
