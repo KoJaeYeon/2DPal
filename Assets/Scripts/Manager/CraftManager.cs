@@ -8,13 +8,14 @@ public class CraftManager : Singleton<CraftManager>
 {
     PlayerControll playerControll;
 
-    public GameObject Hole;
-    public GameObject DataPanel;
+    public GameObject Hole; // 중앙에 뜨는 아이템 정보
+    public GameObject DataPanel; // 왼쪽 정보창에 뜨는 아이템 정보 패널
+    public GameObject BuildingPanel; // 건축 시작할 때 뜨는 패널
 
     public Image holeImage;
     public TextMeshProUGUI holeTMP;
     public Sprite initialImage;
-    public NeedPanel[] needPanels;
+    public NeedPanel[] needPanels; //왼쪽 정보창에 뜨는 아이템 패널
 
     public bool canBuild;
 
@@ -31,10 +32,14 @@ public class CraftManager : Singleton<CraftManager>
         needPanels = DataPanel.GetComponentsInChildren<NeedPanel>();
         initialImage = holeImage.sprite;
         holeTMP.text = "";
+        Hole.SetActive(false);
+        BuildingPanel.SetActive(false);
     }
 
     public void FurnitureOver(int id)
     {
+        Hole.SetActive(true);
+        //DataPanel.transform.parent.gameObject.SetActive(true); //깜빡임이 심해서 제외
         canBuild = true;
         int[,] needItem = FurnitureDatabase.Instance.furnitures[id].buildingItems;
         for (int i = 0; i < needItem.GetLength(0); i++)
@@ -42,7 +47,7 @@ public class CraftManager : Singleton<CraftManager>
             int needId = needItem[i, 0];
             int needNum = needItem[i, 1];
             if (!needPanels[i].UpdateDataPanel(ItemDatabase.Instance.items[needId], needNum)) canBuild = false;
-        }
+        }        
         holeImage.sprite = FurnitureDatabase.Instance.furnitures[id].sprite;
         holeTMP.text = FurnitureDatabase.Instance.furnitures[id].itemName;
     }
@@ -56,6 +61,8 @@ public class CraftManager : Singleton<CraftManager>
         }
         holeImage.sprite= initialImage;
         holeTMP.text = "";
+        Hole.SetActive(false);
+        //DataPanel.transform.parent.gameObject.SetActive(false); 
     }
 
     public void FurnitureChoice(int id)
@@ -74,25 +81,34 @@ public class CraftManager : Singleton<CraftManager>
             playerControll.statement = Statement.Crafting;
             playerControll.freeBuilding = FurnitureDatabase.Instance.GiveFurniture(id);
             playerControll.FreeBuilding();
-            PayBuilding();
+            BuildingPanel.SetActive(true);
         }
     }
 
-    public void PayBuilding()
+    public void PayBuilding() // 건물지을 때 자원소모
     {
         for(int i = 0; i < length; i++)
         {
             int payItemId = needItem[i,0];
             int payitemNum = needItem[i,1];
             Item payitem = ItemDatabase.Instance.GetItem(payItemId);
-            Debug.Log(payitemNum);
             payitem.count = payitemNum;
             InventoryManager.Instance.UseItem(payitem);
         }
     }
 
-    public void ReturnBuilding()
+    public void ReturnBuilding(int id = 0) // 취소 또는 분해할 때 자원 회수
     {
+        if (id == 0) id = Crafting_id;
+        needItem = FurnitureDatabase.Instance.NeedItem(id);
+        for (int i = 0; i < needItem.GetLength(0); i++)
+        {
+            int needId = needItem[i, 0];
+            int needNum = needItem[i, 1];
+            Item returnItem = ItemDatabase.Instance.GetItem(needId);
+            returnItem.count = needNum;
+            InventoryManager.Instance.DropItem(returnItem);
 
+        }
     }
 }

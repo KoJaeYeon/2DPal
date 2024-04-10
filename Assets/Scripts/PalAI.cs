@@ -17,6 +17,8 @@ public class PalAI : MonoBehaviour
     public GameObject target;
     public Building targetBulding;
 
+    public bool thisPalCanbuild = true;
+
     #region Astar Pathfinding
     Astar astar;
     private List<Node> path;
@@ -51,15 +53,23 @@ public class PalAI : MonoBehaviour
     IEnumerator Search()
     {
         Debug.Log("Search");
-        if (palState == PalStates.Idle && PalManager.Instance.buildings.Count > 0)
+        if (palState == PalStates.Idle)
         {
-            targetBulding = PalManager.Instance.buildings[0];
-            target = targetBulding.gameObject;
-            OnGo();
+            if(thisPalCanbuild == true && PalManager.Instance.buildings.Count > 0)
+            {
+                targetBulding = PalManager.Instance.buildings[0];
+                target = targetBulding.gameObject;
+                OnGo();
+            }
+
         }
-        else if (palState == PalStates.Move && targetBulding.buildingStatement == BuildingStatement.Built)
+        else if (palState == PalStates.Move) 
         {
-            palState = PalStates.Idle;
+            if(thisPalCanbuild == true && targetBulding.buildingStatement == BuildingStatement.Built) //가기 전에 건물 완공되면 업무취소
+            {
+                palState = PalStates.Idle;
+            }
+            
         }
         yield return new WaitForSeconds(1f);
         StartCoroutine(Search());
@@ -120,6 +130,10 @@ public class PalAI : MonoBehaviour
             if(targetBulding.index == index)
             {
                 palState = PalStates.Action;
+            }
+            else
+            {
+                OnGo();
             }
         }
         else

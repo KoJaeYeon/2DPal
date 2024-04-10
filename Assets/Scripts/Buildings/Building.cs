@@ -10,6 +10,7 @@ public enum BuildingStatement
 }
 public class Building : MonoBehaviour
 {
+    public int id;
     public int index;
     static int worldIndexNum;
     public BuildingStatement buildingStatement = BuildingStatement.FreeBuilding;
@@ -41,7 +42,8 @@ public class Building : MonoBehaviour
     {
         if (buildingStatement == BuildingStatement.Built) return;
         nowConstructTime += work;
-        spriteRenderer.color = new Color(1, 1, nowConstructTime / MaxConstructTime);
+        if ((nowConstructTime / MaxConstructTime) < 0.5f) spriteRenderer.color = new Color((nowConstructTime / MaxConstructTime) *2, (nowConstructTime / MaxConstructTime) * 2, 0);
+        else spriteRenderer.color = new Color(1, 1, ((nowConstructTime / MaxConstructTime) - 0.5f) * 2);
         if (nowConstructTime > MaxConstructTime)
         {
             buildingStatement = BuildingStatement.Built;
@@ -57,10 +59,15 @@ public class Building : MonoBehaviour
         buildingStatement = BuildingStatement.isBuilding;
         boxCollider2d.isTrigger = false;
         rigidbody2d.bodyType = RigidbodyType2D.Static;
-        spriteRenderer.color = Color.yellow;
+        spriteRenderer.color = Color.black;
         index = worldIndexNum++;
         PalManager.Instance.buildings.Add(this);
         return false;
+    }
+
+    public float GetLeftWork()
+    {
+        return MaxConstructTime - nowConstructTime;
     }
 
     private void OnTriggerStay2D(Collider2D collision)

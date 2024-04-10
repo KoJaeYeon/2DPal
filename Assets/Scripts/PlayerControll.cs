@@ -176,6 +176,7 @@ public class PlayerControll : MonoBehaviour
             else
             {
                 EndBuilding();
+                CraftManager.Instance.PayBuilding();
                 return;
             }
         }
@@ -191,9 +192,16 @@ public class PlayerControll : MonoBehaviour
 
     private void OnCancel()
     {
-        if(statement == Statement.Crafting)
+        if (target == null) return;
+        if (target.CompareTag("Furniture"))
+        {
+            building = target.GetComponent<Building>();
+        }
+
+        if (statement == Statement.Crafting)
         {
             freeBuilding.SetActive(false);
+            CraftManager.Instance.ReturnBuilding();
             EndBuilding();
         }
     }
@@ -205,6 +213,7 @@ public class PlayerControll : MonoBehaviour
         statement = Statement.Idle;
         freeBuilding.transform.parent = FurnitureDatabase.Instance.parent.transform;
         freeBuilding = null;
+        CraftManager.Instance.BuildingPanel.SetActive(false);
     }
 
     public void FreeBuilding()
@@ -212,6 +221,21 @@ public class PlayerControll : MonoBehaviour
         equip[(int)nowEquip].SetActive(false);
         GetTarget.gameObject.SetActive(false);
         freeBuilding.transform.parent = transform;
+        switch(viewdirection)
+        {
+            case ViewDirection.Up:
+                freeBuilding.transform.localPosition = new Vector2(0, 2.5f);
+                break;
+            case ViewDirection.Down:
+                freeBuilding.transform.localPosition = new Vector2(0, -2.5f);
+                break;
+            case ViewDirection.Right:
+                freeBuilding.transform.localPosition = new Vector2(2, 0);
+                break;
+            case ViewDirection.Left:
+                freeBuilding.transform.localPosition = new Vector2(-2, 0);
+                break;
+        }        
     }
 
     public bool GiveResourceData()

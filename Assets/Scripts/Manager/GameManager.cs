@@ -15,7 +15,10 @@ public class GameManager : Singleton<GameManager>
 
     private void Start()
     {
-
+        OnMenu();
+        OnMenu();
+        OnCraft();
+        OnCraft();
     }
     public bool ManagerUsingUi()
     {

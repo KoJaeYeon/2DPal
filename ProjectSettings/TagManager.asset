@@ -15,7 +15,7 @@ TagManager:
   - UI
   - Resources
   - Furniture
-  - 
+  - Pal
   - 
   - 
   - 
@@ -51,4 +51,13 @@ TagManager:
     locked: 0
   - name: ForeGround
     uniqueID: 1577506835
+    locked: 0
+  - name: Pal
+    uniqueID: 2300441015
+    locked: 0
+  - name: Furniture
+    uniqueID: 2095415125
+    locked: 0
+  - name: Player
+    uniqueID: 3586594741
     locked: 0
