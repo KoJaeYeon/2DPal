@@ -38,6 +38,7 @@ public class Building : MonoBehaviour
         rigidbody2d.bodyType = RigidbodyType2D.Dynamic;
         nowConstructTime = 0;
     }
+
     public void Build(float work)
     {
         if (buildingStatement == BuildingStatement.Built) return;
@@ -50,9 +51,25 @@ public class Building : MonoBehaviour
             spriteRenderer.color = Color.white;
             StartCoroutine(falshCoroutine());
             PalManager.Instance.buildings.Remove(this);
+            PlayerControll playerControll = GameManager.Instance.playerController.GetComponent<PlayerControll>();
+            if (playerControll.statement == Statement.Building)
+            {
+                playerControll.EndConstruct(this);
+            }
         }
     }
 
+    public void Cancel() // C를 계속눌러 취소됐을 때
+    {
+        if(buildingStatement == BuildingStatement.isBuilding)
+        {
+            CraftManager.Instance.ReturnBuilding(id);
+            PalManager.Instance.buildings.Remove(this);
+            transform.parent = FurnitureDatabase.Instance.poolParent.transform;
+            gameObject.SetActive(false);
+        }
+
+    }
     public bool ContactCheck()
     {
         if (isContact) return isContact;

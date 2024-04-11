@@ -16,6 +16,7 @@ public class CraftManager : Singleton<CraftManager>
     public TextMeshProUGUI holeTMP;
     public Sprite initialImage;
     public NeedPanel[] needPanels; //왼쪽 정보창에 뜨는 아이템 패널
+    public NeedPanel_Build[] needPanels_Build; // 오른쪽 정보창에 뜨는 건축 패널
 
     public bool canBuild;
 
@@ -30,9 +31,14 @@ public class CraftManager : Singleton<CraftManager>
         holeImage = Hole.GetComponent<Image>();
         holeTMP = Hole.GetComponentInChildren<TextMeshProUGUI>();
         needPanels = DataPanel.GetComponentsInChildren<NeedPanel>();
+        needPanels_Build = BuildingPanel.GetComponentsInChildren<NeedPanel_Build>();
         initialImage = holeImage.sprite;
         holeTMP.text = "";
         Hole.SetActive(false);
+    }
+    private void Start()
+    {
+
         BuildingPanel.SetActive(false);
     }
 
@@ -65,7 +71,7 @@ public class CraftManager : Singleton<CraftManager>
         //DataPanel.transform.parent.gameObject.SetActive(false); 
     }
 
-    public void FurnitureChoice(int id)
+    public void FurnitureChoice(int id, bool player = false)
     {
         this.Crafting_id = id;
         needItem = FurnitureDatabase.Instance.NeedItem(id);
@@ -77,11 +83,19 @@ public class CraftManager : Singleton<CraftManager>
         }
         else // 제작가능
         {
-            GameManager.Instance.OnCraft();
+            if(!player) GameManager.Instance.OnCraft();
             playerControll.statement = Statement.Crafting;
             playerControll.freeBuilding = FurnitureDatabase.Instance.GiveFurniture(id);
             playerControll.FreeBuilding();
             BuildingPanel.SetActive(true);
+            canBuild = true;
+            int[,] needItem = FurnitureDatabase.Instance.furnitures[id].buildingItems;
+            for (int i = 0; i < needItem.GetLength(0); i++)
+            {
+                int needId = needItem[i, 0];
+                int needNum = needItem[i, 1];
+                if (!needPanels_Build[i].UpdateDataPanel(ItemDatabase.Instance.items[needId], needNum)) canBuild = false;
+            }
         }
     }
 

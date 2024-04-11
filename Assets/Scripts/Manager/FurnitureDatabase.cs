@@ -6,6 +6,7 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
 {
     public Dictionary<int, Furniture> furnitures = new Dictionary<int, Furniture>();
     public GameObject parent;
+    public GameObject poolParent;
     public List<GameObject>[] furniturePrefabs = new List<GameObject>[10];
     public GameObject[] Prefabs = new GameObject[10];
     public Sprite[] sprites;
@@ -24,7 +25,7 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
             GameObject prefab = Instantiate(Prefabs[i]);
             furniturePrefabs[i] = new List<GameObject>();
             furniturePrefabs[i].Add(prefab);
-            prefab.transform.parent = parent.transform;
+            prefab.transform.parent = poolParent.transform;
             prefab.SetActive(false);
         }
     }

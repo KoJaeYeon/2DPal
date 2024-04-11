@@ -39,7 +39,7 @@ public class PlayerControll : MonoBehaviour
     public ViewDirection viewdirection;
     public Statement statement;
     public GameObject target; // 콜라이더 오브젝트
-    public Transform GetTarget;
+    public Transform GetTargetTrans;
     public Slider slider;
     public Image image;
 
@@ -63,15 +63,16 @@ public class PlayerControll : MonoBehaviour
 
     public GameObject freeBuilding;
     Rigidbody2D rigid;
-
+    GetTarget getTarget;
     public Building building;
 
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
         image = slider.gameObject.transform.GetChild(1).GetChild(0).GetComponent<Image>();
+        getTarget = GetTargetTrans.gameObject.GetComponent<GetTarget>();
 
-        GetTarget = transform.GetChild(0);
+        GetTargetTrans = transform.GetChild(0);
         animator_Equip = GetComponentsInChildren<Animator>();
         animator = animator_Equip[0];
         animator_Equip[0] = null;
@@ -142,76 +143,11 @@ public class PlayerControll : MonoBehaviour
         transform.Translate(direction * speed * run);
     }
 
-    public void OnAction(InputValue inputValue)
-    {
-        if (target == null) return;
-        if(target.CompareTag("Furniture"))
-        {
-            building = target.GetComponent<Building>();
-            isaction = inputValue.isPressed;
-
-            if(isaction && building.buildingStatement == BuildingStatement.isBuilding)
-            {
-                statement = Statement.Building;
-            }
-            else if (isaction && building.buildingStatement == BuildingStatement.Built)
-            {
-                statement = Statement.Action;
-            }
-            else
-            {
-                building = null;
-                statement = Statement.Idle;
-            }
-        }
-    }
-    private void OnFire(InputValue inputValue)
-    {
-        if (GameManager.Instance.ManagerUsingUi()) return;
-        if (istired) return;
-        if (statement == Statement.Action) return;
-        if(statement == Statement.Crafting)
-        {
-            if(freeBuilding.GetComponent<Building>().ContactCheck()) return;
-            else
-            {
-                EndBuilding();
-                CraftManager.Instance.PayBuilding();
-                return;
-            }
-        }
-        fire = inputValue.isPressed;
-        animator_Equip[(int)nowEquip].SetBool("Fire", fire);
-        GiveResourceData();
-        if (!fire)
-        {
-            ResourceManager.Instance.DataClear();        
-        }
-
-    }
-
-    private void OnCancel()
-    {
-        if (target == null) return;
-        if (target.CompareTag("Furniture"))
-        {
-            building = target.GetComponent<Building>();
-        }
-
-        if (statement == Statement.Crafting)
-        {
-            freeBuilding.SetActive(false);
-            CraftManager.Instance.ReturnBuilding();
-            EndBuilding();
-        }
-    }
-
     public void EndBuilding()
     {
         equip[(int)nowEquip].SetActive(true);
-        GetTarget.gameObject.SetActive(true);
-        statement = Statement.Idle;
-        freeBuilding.transform.parent = FurnitureDatabase.Instance.parent.transform;
+        GetTargetTrans.gameObject.SetActive(true);
+        statement = Statement.Idle;        
         freeBuilding = null;
         CraftManager.Instance.BuildingPanel.SetActive(false);
     }
@@ -219,7 +155,7 @@ public class PlayerControll : MonoBehaviour
     public void FreeBuilding()
     {
         equip[(int)nowEquip].SetActive(false);
-        GetTarget.gameObject.SetActive(false);
+        GetTargetTrans.gameObject.SetActive(false);
         freeBuilding.transform.parent = transform;
         switch(viewdirection)
         {
@@ -238,13 +174,21 @@ public class PlayerControll : MonoBehaviour
         }        
     }
 
+    public void EndConstruct(Building building)
+    {
+        if(this.building.Equals(building))
+        {
+            statement = Statement.Idle;
+        }
+    }
+
     public bool GiveResourceData()
     {
         if (target == null) { return false; }
         else if (target.layer.Equals(LayerMask.NameToLayer("Resources"))) // 자원을 캘때
         {
             Bricks bricks = target.GetComponent<Bricks>();
-            ResourceManager.Instance.ReceiveResourceData(bricks, nowEquip, GetTarget.transform.position);
+            ResourceManager.Instance.ReceiveResourceData(bricks, nowEquip, GetTargetTrans.transform.position);
             return true;
         }
         else
@@ -255,9 +199,98 @@ public class PlayerControll : MonoBehaviour
 
     public Vector3 GiveTargetPositionData()
     {
-        return GetTarget.transform.position;
+        return GetTargetTrans.transform.position;
     }
 
+    private void OnPressX()
+    {
+        if(statement == Statement.Crafting)
+        {
+            if (freeBuilding.GetComponent<Building>().ContactCheck()) return;
+            else
+            {
+                int id = freeBuilding.GetComponent<Building>().id;
+                freeBuilding.transform.parent = FurnitureDatabase.Instance.parent.transform;
+                EndBuilding();
+                CraftManager.Instance.PayBuilding();
+                CraftManager.Instance.FurnitureChoice(id, true);
+                return;
+            }
+        }
+    }
+
+    private void OnAction(InputValue inputValue) //F
+    {
+        if (target == null) return;
+        if (target.CompareTag("Furniture"))
+        {
+            building = target.GetComponent<Building>();
+            isaction = inputValue.isPressed;
+
+            if (isaction && building.buildingStatement == BuildingStatement.isBuilding)
+            {
+                statement = Statement.Building;
+            }
+            else if (isaction && building.buildingStatement == BuildingStatement.Built)
+            {
+                statement = Statement.Action;
+            }
+            else
+            {
+                building = null;
+                statement = Statement.Idle;
+            }
+        }
+    }
+    private void OnFire(InputValue inputValue) // Fire1
+    {
+        if (GameManager.Instance.ManagerUsingUi()) return;
+        if (istired) return;
+        if (statement == Statement.Action) return;
+        if (statement == Statement.Crafting)
+        {
+            if (freeBuilding.GetComponent<Building>().ContactCheck()) return;
+            else
+            {
+                freeBuilding.transform.parent = FurnitureDatabase.Instance.parent.transform;
+                EndBuilding();
+                CraftManager.Instance.PayBuilding();
+                return;
+            }
+        }
+        fire = inputValue.isPressed;
+        animator_Equip[(int)nowEquip].SetBool("Fire", fire);
+        GiveResourceData();
+        if (!fire)
+        {
+            ResourceManager.Instance.DataClear();
+        }
+
+    }
+
+    private void OnCancel(InputValue inputValue) //C
+    {
+        if (statement == Statement.Crafting)
+        {
+            freeBuilding.transform.parent = FurnitureDatabase.Instance.poolParent.transform;
+            freeBuilding.SetActive(false);
+            EndBuilding();
+        }
+
+        bool isPressed = inputValue.isPressed;
+        if (target == null) return;
+        if (target.CompareTag("Furniture"))
+        {
+            building = target.GetComponent<Building>();
+        }
+        if (statement == Statement.Idle)
+        {
+            if (getTarget.ActionPanel.activeSelf)
+            {
+                getTarget.CancelAction(isPressed);
+            }
+        }
+    }
     private void OnChangeWeapon(InputValue inputValue)
     {
         if (GameManager.Instance.ManagerUsingUi()) return;
@@ -300,7 +333,7 @@ public class PlayerControll : MonoBehaviour
                 {
                     freeBuilding.transform.localPosition = new Vector2(0, -2.5f);
                 }
-                else GetTarget.localPosition = new Vector2(0, -1.5f);
+                else GetTargetTrans.localPosition = new Vector2(0, -1.5f);
                 if (animator.GetInteger("Direction") != (int)viewdirection)
                 {
                     animator.SetInteger("Direction", (int)viewdirection);
@@ -317,7 +350,7 @@ public class PlayerControll : MonoBehaviour
                 {
                     freeBuilding.transform.localPosition = new Vector2(0, 2.5f);
                 }
-                else GetTarget.localPosition = new Vector2(0, 1.5f);
+                else GetTargetTrans.localPosition = new Vector2(0, 1.5f);
                 if (animator.GetInteger("Direction") != (int)viewdirection)
                 {
                     animator.SetInteger("Direction", (int)viewdirection);
@@ -338,7 +371,7 @@ public class PlayerControll : MonoBehaviour
                 {
                     freeBuilding.transform.localPosition = new Vector2(-2, 0);
                 }
-                else GetTarget.localPosition = new Vector2(-1, 0);
+                else GetTargetTrans.localPosition = new Vector2(-1, 0);
                 if (animator.GetInteger("Direction") != (int)viewdirection)
                 {
                     animator.SetInteger("Direction", (int)viewdirection);
@@ -354,7 +387,7 @@ public class PlayerControll : MonoBehaviour
                 {
                     freeBuilding.transform.localPosition = new Vector2(2,0);
                 }
-                else GetTarget.localPosition = new Vector2(1, 0);
+                else GetTargetTrans.localPosition = new Vector2(1, 0);
                 if (animator.GetInteger("Direction") != (int)viewdirection)
                 {
                     animator.SetInteger("Direction", (int)viewdirection);

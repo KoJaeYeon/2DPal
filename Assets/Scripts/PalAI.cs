@@ -100,6 +100,10 @@ public class PalAI : MonoBehaviour
         else if(targetBulding.buildingStatement == BuildingStatement.isBuilding)
         {
             targetBulding.Build(1);
+            if(!targetBulding.gameObject.activeSelf)
+            {
+                palState = PalStates.Idle;
+            }
         }
         
     }
