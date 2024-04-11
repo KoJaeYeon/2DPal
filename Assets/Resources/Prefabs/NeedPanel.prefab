@@ -271,7 +271,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.28195086, g: 0.2882113, b: 0.6037736, a: 1}
+  m_Color: {r: 0.09019608, g: 0.101960786, b: 0.16862746, a: 0.5882353}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -385,6 +385,7 @@ MonoBehaviour:
     _id: 0
     _count: 0
     _weight: 0
+    _description: 
     _sprite: {fileID: 0}
   image: {fileID: 0}
   itemData:

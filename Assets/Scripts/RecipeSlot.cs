@@ -39,4 +39,9 @@ public class RecipeSlot : MonoBehaviour
         }
         
     }
+
+    public void PressButton()
+    {
+        ProductManager.Instance.UpdateProductPanel(product);
+    }
 }

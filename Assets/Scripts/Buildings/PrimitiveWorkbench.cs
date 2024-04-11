@@ -14,6 +14,9 @@ public class PrimitiveWorkbench : Building
     public override void Action()
     {
         RecipePanel.SetActive(true);
+        ProductManager.Instance.primitiveWorkbench = this;
+        ProductManager.Instance.ResetPanel();
         GameManager.Instance.activePanel = RecipePanel;
+
     }
 }

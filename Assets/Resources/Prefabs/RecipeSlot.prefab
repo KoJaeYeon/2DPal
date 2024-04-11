@@ -400,8 +400,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 14
-  m_fontSizeBase: 14
+  m_fontSize: 12
+  m_fontSizeBase: 12
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -510,8 +510,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uADFC\uC811 \uC804\uD22C\uC6A9 \uB098\uBB34 \uACE4\uBD09.\n\uBD88\uC548\uD558\uB2E4."
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 7033a5a78f575e743ba4be309b26d780, type: 2}
-  m_sharedMaterial: {fileID: 4539167822251362731, guid: 7033a5a78f575e743ba4be309b26d780, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 3713e1b30a2e7fe4e9ecce4539419896, type: 2}
+  m_sharedMaterial: {fileID: 7890495887863513900, guid: 3713e1b30a2e7fe4e9ecce4539419896, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -535,8 +535,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 12
-  m_fontSizeBase: 12
+  m_fontSize: 10
+  m_fontSizeBase: 10
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1714,7 +1714,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4033821390244296663}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1388063405953884365}
+        m_TargetAssemblyTypeName: RecipeSlot, Assembly-CSharp
+        m_MethodName: PressButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1388063405953884365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1731,9 +1743,9 @@ MonoBehaviour:
   image: {fileID: 0}
   needPanel:
   - {fileID: 0}
-  tmpPro:
-  - {fileID: 4623478256072844593}
-  - {fileID: 6433112208631674212}
+  itemData:
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &3133330220387954791
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2227,8 +2239,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 14
-  m_fontSizeBase: 14
+  m_fontSize: 12
+  m_fontSizeBase: 12
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2439,8 +2451,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 14
-  m_fontSizeBase: 14
+  m_fontSize: 12
+  m_fontSizeBase: 12
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2651,8 +2663,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 14
-  m_fontSizeBase: 14
+  m_fontSize: 12
+  m_fontSizeBase: 12
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2761,8 +2773,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uB098\uBB34 \uACE4\uBD09"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 7033a5a78f575e743ba4be309b26d780, type: 2}
-  m_sharedMaterial: {fileID: 4539167822251362731, guid: 7033a5a78f575e743ba4be309b26d780, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 3713e1b30a2e7fe4e9ecce4539419896, type: 2}
+  m_sharedMaterial: {fileID: 7890495887863513900, guid: 3713e1b30a2e7fe4e9ecce4539419896, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
