@@ -9,6 +9,9 @@ public class GameManager : Singleton<GameManager>
 
     public GameObject OptionPanel;
     public GameObject CraftingPanel;
+    public GameObject RecipePanel;
+
+    public GameObject activePanel;
 
     bool isMenuOn = false;
     bool isCraftOn = false;
@@ -19,6 +22,11 @@ public class GameManager : Singleton<GameManager>
         OnMenu();
         OnCraft();
         OnCraft();
+        RecipePanel.SetActive(false);
+    }
+    public void ActivePanel(GameObject panel)
+    {
+        activePanel = panel;
     }
     public bool ManagerUsingUi()
     {
@@ -26,8 +34,10 @@ public class GameManager : Singleton<GameManager>
         return false;
     }
 
-    private void OnEscape()
+    public void EscapeMenu(bool range = false)
     {
+        if(activePanel != null) { activePanel.SetActive(false); return; }
+        if (range) return; // 패널만 닫을 때
         if (isCraftOn) { OnCraft(); return; }
         OnMenu();
     }

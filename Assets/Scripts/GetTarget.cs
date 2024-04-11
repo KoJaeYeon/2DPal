@@ -28,19 +28,22 @@ public class GetTarget : MonoBehaviour
                 float leftwork = building.GetLeftWork();
                 leftwork = leftwork < 0 ? 0 : leftwork;
                 Number.text = leftwork.ToString();
+                ActionPanel.transform.GetChild(0).gameObject.SetActive(true);
+                ActionPanel.transform.GetChild(1).gameObject.SetActive(false);
 
-                if(playerControll.statement == Statement.Building)
+                if (playerControll.statement == Statement.Building)
                 {
-                    animators[0].SetBool("Press", true);
+                    animators[1].SetBool("Press", true);
                 }
                 else
                 {
-                    animators[0].SetBool("Press", false);
+                    animators[1].SetBool("Press", false);
                 }
             }
             else
             {
-
+                ActionPanel.transform.GetChild(1).gameObject.SetActive(true);
+                ActionPanel.transform.GetChild(0).gameObject.SetActive(false);
             }
         }
     }
@@ -54,12 +57,12 @@ public class GetTarget : MonoBehaviour
     {
         if(ispressed)
         {
-            animators[1].Play("LongPressC");
+            animators[2].Play("LongPressC");
         }
         else
         {
             Debug.Log("IDLE");
-            animators[1].Play("Idle");
+            animators[2].Play("Idle");
         }
         
     }
@@ -68,6 +71,7 @@ public class GetTarget : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Furniture"))
         {
+            ActionPanel.SetActive(false);
             ActionPanel.SetActive(true);
             building = collision.gameObject.GetComponent<Building>();
         }
@@ -81,7 +85,8 @@ public class GetTarget : MonoBehaviour
         playerControll.target = null;
         if (collision.gameObject.CompareTag("Furniture"))
         {
-            ActionPanel.SetActive(false);
+            animators[0].Play("UnShowEffect");
         }
+        GameManager.Instance.EscapeMenu(true);
     }
 }

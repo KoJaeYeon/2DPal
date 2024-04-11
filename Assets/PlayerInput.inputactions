@@ -60,13 +60,22 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "PressX",
+                    "name": "Fire2",
                     "type": "Value",
                     "id": "7e2d91bb-eb51-49a9-9fe7-d47a8da33987",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Escape",
+                    "type": "Button",
+                    "id": "52e3a50a-815d-4d11-b12f-695d5b048d85",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -260,11 +269,22 @@
                 {
                     "name": "",
                     "id": "9db5a269-0f7b-449c-b988-59c4493be726",
-                    "path": "<Keyboard>/x",
+                    "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "PressX",
+                    "action": "Fire2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cac4abff-741c-447c-bb6b-4a63b7b368a0",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Escape",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -291,15 +311,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "Escape",
-                    "type": "Button",
-                    "id": "41f17c79-535b-4177-8253-452c21573274",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -322,17 +333,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Craft",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "7489a13e-2b33-4e99-8989-e8d523045ac3",
-                    "path": "<Keyboard>/escape",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Escape",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

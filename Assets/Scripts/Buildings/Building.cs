@@ -6,7 +6,8 @@ public enum BuildingStatement
 {
     FreeBuilding = 0,
     isBuilding =1,
-    Built = 2
+    Built = 2,
+    Working = 3
 }
 public class Building : MonoBehaviour
 {
@@ -22,7 +23,7 @@ public class Building : MonoBehaviour
     BoxCollider2D boxCollider2d;
     Rigidbody2D rigidbody2d;
 
-    private void Awake()
+    protected void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         boxCollider2d = GetComponent<BoxCollider2D>();
@@ -37,6 +38,10 @@ public class Building : MonoBehaviour
         boxCollider2d.isTrigger = true;
         rigidbody2d.bodyType = RigidbodyType2D.Dynamic;
         nowConstructTime = 0;
+    }
+
+    public virtual void Action()
+    {
     }
 
     public void Build(float work)

@@ -158,5 +158,5 @@ MonoBehaviour:
   id: 103
   index: 0
   buildingStatement: 0
-  MaxConstructTime: 0
+  MaxConstructTime: 500
   nowConstructTime: 0

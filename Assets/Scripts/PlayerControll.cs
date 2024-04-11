@@ -202,23 +202,19 @@ public class PlayerControll : MonoBehaviour
         return GetTargetTrans.transform.position;
     }
 
-    private void OnPressX()
+    private void OnEscape(InputValue inputValue)
     {
-        if(statement == Statement.Crafting)
+        if (statement == Statement.Crafting)
         {
-            if (freeBuilding.GetComponent<Building>().ContactCheck()) return;
-            else
-            {
-                int id = freeBuilding.GetComponent<Building>().id;
-                freeBuilding.transform.parent = FurnitureDatabase.Instance.parent.transform;
-                EndBuilding();
-                CraftManager.Instance.PayBuilding();
-                CraftManager.Instance.FurnitureChoice(id, true);
-                return;
-            }
+            freeBuilding.transform.parent = FurnitureDatabase.Instance.poolParent.transform;
+            freeBuilding.SetActive(false);
+            EndBuilding();
+        }
+        else
+        {
+            GameManager.Instance.EscapeMenu();
         }
     }
-
     private void OnAction(InputValue inputValue) //F
     {
         if (target == null) return;
@@ -233,8 +229,9 @@ public class PlayerControll : MonoBehaviour
             }
             else if (isaction && building.buildingStatement == BuildingStatement.Built)
             {
-                statement = Statement.Action;
+                building.Action();
             }
+                //statement = Statement.Action;
             else
             {
                 building = null;
@@ -252,6 +249,7 @@ public class PlayerControll : MonoBehaviour
             if (freeBuilding.GetComponent<Building>().ContactCheck()) return;
             else
             {
+                if (!CraftManager.Instance.canBuild) return; // 재료 부족으로 건축 불가능 시 리턴, 없으면 프로그램 터짐
                 freeBuilding.transform.parent = FurnitureDatabase.Instance.parent.transform;
                 EndBuilding();
                 CraftManager.Instance.PayBuilding();
@@ -268,15 +266,26 @@ public class PlayerControll : MonoBehaviour
 
     }
 
-    private void OnCancel(InputValue inputValue) //C
+    private void OnFire2()
     {
         if (statement == Statement.Crafting)
         {
-            freeBuilding.transform.parent = FurnitureDatabase.Instance.poolParent.transform;
-            freeBuilding.SetActive(false);
-            EndBuilding();
+            if (freeBuilding.GetComponent<Building>().ContactCheck()) return;
+            else
+            {
+                if (!CraftManager.Instance.canBuild) return; // 재료 부족으로 건축 불가능 시 리턴, 없으면 프로그램 터짐
+                int id = freeBuilding.GetComponent<Building>().id;
+                freeBuilding.transform.parent = FurnitureDatabase.Instance.parent.transform;
+                EndBuilding();
+                CraftManager.Instance.PayBuilding();
+                CraftManager.Instance.FurnitureChoice(id, true);
+                return;
+            }
         }
+    }
 
+    private void OnCancel(InputValue inputValue) //C
+    {
         bool isPressed = inputValue.isPressed;
         if (target == null) return;
         if (target.CompareTag("Furniture"))
@@ -294,11 +303,13 @@ public class PlayerControll : MonoBehaviour
     private void OnChangeWeapon(InputValue inputValue)
     {
         if (GameManager.Instance.ManagerUsingUi()) return;
-        if (istired) return;
         if (statement == Statement.Crafting)
         {
+            float rotationZ = inputValue.Get<Vector2>().y;
+            freeBuilding.transform.Rotate(Vector3.forward * rotationZ * 30f);
             return;
         }
+        if (istired) return;
 
         float change = inputValue.Get<Vector2>().y;
         if (change > 0 && (int)nowEquip != 5)

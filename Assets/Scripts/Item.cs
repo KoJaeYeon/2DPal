@@ -11,14 +11,16 @@ public class Item
     [SerializeField] int _id;
     [SerializeField] int _count;
     [SerializeField] float _weight;
+    [SerializeField] string _description;
     [SerializeField] Sprite _sprite;
 
-    public Item(string itemName, int _id, int count, float weight)
+    public Item(string itemName, int _id, int count, float weight, string description = "")
     {
         this._itemName = itemName;
         this._id = _id;
         this._count = count;
         this._weight = weight;
+        _description = description;
     }
 
     public Item(Item item)
@@ -27,7 +29,8 @@ public class Item
         this._id = item._id;
         this._count = item._count;
         this._weight = item._weight;
-        _sprite = item._sprite;
+        this._sprite = item._sprite;
+        this._description = item._description;
     }
 
     public Sprite sprite
@@ -56,6 +59,12 @@ public class Item
     {
         get => _weight;
         set => _weight = value;
+    }
+
+    public string description
+    {
+        get => _description;
+        set => _description = value;
     }
 
     public void Add(Item item)
