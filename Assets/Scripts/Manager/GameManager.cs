@@ -31,12 +31,13 @@ public class GameManager : Singleton<GameManager>
     public bool ManagerUsingUi()
     {
         if(isMenuOn||isCraftOn) return true;
+        if(activePanel != null) return true;
         return false;
     }
 
     public void EscapeMenu(bool range = false)
     {
-        if(activePanel != null) { activePanel.SetActive(false); return; }
+        if(activePanel != null) { activePanel.SetActive(false); activePanel = null; return; }
         if (range) return; // 패널만 닫을 때
         if (isCraftOn) { OnCraft(); return; }
         OnMenu();
@@ -69,5 +70,22 @@ public class GameManager : Singleton<GameManager>
             CraftingPanel.SetActive(true);
             isCraftOn = true;
         }
+    }
+    public string CountString(int count)
+    {
+        string countString;
+        if (count < 10)
+        {
+            countString = "00" + count;
+        }
+        else if (count < 100)
+        {
+            countString = "0" + count;
+        }
+        else
+        {
+            countString = count.ToString();
+        }
+        return countString;
     }
 }

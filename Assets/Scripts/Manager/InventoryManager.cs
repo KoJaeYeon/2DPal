@@ -6,18 +6,25 @@ public class InventoryManager : Singleton<InventoryManager>
 {
     public GameObject UIInventorySlot;
     
+    public TMPro.TextMeshProUGUI textMeshProUGUI;
     public Dictionary<int, Item> inventory = new Dictionary<int, Item>();
     private int maxInvetory = 20;
     public float playerWeight;
 
     public static Dictionary<int,int> inventorySum = new Dictionary<int,int>();
-
+    public static int sphereCount = 0;
+    public int Debugint = 0;
 
     public Item DebugItem;
+
+    public Slot startSlot;
+    public Slot endSlot;
     private void Awake()
     {
         inventory.Clear();
         // 저장된 데이터에서 인벤토리 받아오기
+
+        textMeshProUGUI.text = GameManager.Instance.CountString(sphereCount);
     }
 
     void UpdateSlot(int i,Item item)
@@ -27,9 +34,23 @@ public class InventoryManager : Singleton<InventoryManager>
         slot.UpdateSlot(item);
     }
 
+    public void EndSlot(Slot endSlot)
+    {
+        this.endSlot = endSlot;
+    }
+
+    public void SwapSlot()
+    {
+        if (endSlot == null || startSlot.name.Equals(endSlot.name)) return;
+        //Item tempItem;
+    }
+
     public void DropItem(Item item)
     {
-        if(inventory.ContainsValue(item)) //인벤토리에 아이템이 이미 존재하는 경우
+        if (item.id == 1001) sphereCount += item.count;
+        Debugint = sphereCount;
+        textMeshProUGUI.text = GameManager.Instance.CountString(sphereCount);
+        if (inventory.ContainsValue(item)) //인벤토리에 아이템이 이미 존재하는 경우
         {
             foreach (int i in inventory.Keys)
             {
@@ -60,6 +81,9 @@ public class InventoryManager : Singleton<InventoryManager>
 
     public void UseItem(Item item)
     {
+        if (item.id == 1001) sphereCount -= item.count;
+        Debugint = sphereCount;
+        textMeshProUGUI.text = GameManager.Instance.CountString(sphereCount);
         while (item.count > 0)
         {
             if (inventory.ContainsValue(item))
@@ -86,6 +110,47 @@ public class InventoryManager : Singleton<InventoryManager>
                 }
             }
             else if( false) //창고 확인
+            {
+                //for(int i = 0; i < Chect.Count; i++)
+                //{
+
+                //}
+            }
+        }
+
+    }
+    public void UseItem(int id)
+    {
+        Item item = new Item("", id, 1, 0);
+        if (item.id == 1001) sphereCount -= item.count;
+        Debugint = sphereCount;
+        textMeshProUGUI.text = GameManager.Instance.CountString(sphereCount);
+        while (item.count > 0)
+        {
+            if (inventory.ContainsValue(item))
+            {
+                foreach (int i in inventory.Keys)
+                {
+                    if (inventory[i].Equals(item))
+                    {
+                        if (inventory[i].count >= item.count) // 인벤토리 총합이 많을때
+                        {
+                            inventory[i].Substarct(item);
+                            inventorySum[item.id] -= item.count;
+                            item.count = 0;
+                            UpdateSlot(i, inventory[i]);
+                        }
+                        else // 인벤토리 총합이 적을때
+                        {
+                            item.Substarct(inventory[i]);
+                            inventorySum[item.id] -= inventory[i].count;
+                            inventory[i].count = 0;
+                            UpdateSlot(i, null);
+                        }
+                    }
+                }
+            }
+            else if (false) //창고 확인
             {
                 //for(int i = 0; i < Chect.Count; i++)
                 //{

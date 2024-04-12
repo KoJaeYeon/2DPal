@@ -7,7 +7,8 @@ public enum BuildingStatement
     FreeBuilding = 0,
     isBuilding =1,
     Built = 2,
-    Working = 3
+    Working = 3,
+    Done = 4
 }
 public class Building : MonoBehaviour
 {
@@ -18,16 +19,22 @@ public class Building : MonoBehaviour
     bool isContact = false;
     public float MaxConstructTime;
     public float nowConstructTime;
+    public float MaxWorkTime;
+    public float nowWorkTime;
 
     SpriteRenderer spriteRenderer;
     BoxCollider2D boxCollider2d;
     Rigidbody2D rigidbody2d;
+    public PalAI workingPal;
+
+    public List<Building> todoList;
 
     protected void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         boxCollider2d = GetComponent<BoxCollider2D>();
         rigidbody2d = GetComponent<Rigidbody2D>();
+        todoList = PalManager.Instance.buildings;
     }
 
 
@@ -38,6 +45,7 @@ public class Building : MonoBehaviour
         boxCollider2d.isTrigger = true;
         rigidbody2d.bodyType = RigidbodyType2D.Dynamic;
         nowConstructTime = 0;
+        workingPal = null;
     }
 
     public virtual void Action()
@@ -64,16 +72,36 @@ public class Building : MonoBehaviour
         }
     }
 
+    public virtual void Work(float work)
+    {
+        if (buildingStatement == BuildingStatement.Built) return;
+        nowWorkTime += work;
+        if (nowWorkTime > MaxWorkTime)
+        {
+            workingPal = null;
+            buildingStatement = BuildingStatement.Done;
+            todoList.Remove(this);
+            PlayerControll playerControll = GameManager.Instance.playerController.GetComponent<PlayerControll>();
+            if (playerControll.statement == Statement.Action)
+            {
+                playerControll.EndConstruct(this);
+            }
+        }
+    }
+
     public void Cancel() // C를 계속눌러 취소됐을 때
     {
-        if(buildingStatement == BuildingStatement.isBuilding)
+        switch(buildingStatement)
         {
-            CraftManager.Instance.ReturnBuilding(id);
-            PalManager.Instance.buildings.Remove(this);
-            transform.parent = FurnitureDatabase.Instance.poolParent.transform;
-            gameObject.SetActive(false);
+            case BuildingStatement.isBuilding:
+                CraftManager.Instance.ReturnBuilding(id);
+                PalManager.Instance.buildings.Remove(this);
+                transform.parent = FurnitureDatabase.Instance.poolParent.transform;
+                gameObject.SetActive(false);
+                break;
+            case BuildingStatement.Working:
+                break;
         }
-
     }
     public bool ContactCheck()
     {
@@ -87,9 +115,13 @@ public class Building : MonoBehaviour
         return false;
     }
 
-    public float GetLeftWork()
+    public float GetLeftBuild()
     {
         return MaxConstructTime - nowConstructTime;
+    }
+    public float GetLeftWork()
+    {
+        return MaxWorkTime - nowWorkTime;
     }
 
     private void OnTriggerStay2D(Collider2D collision)

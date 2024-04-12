@@ -1,3 +1,4 @@
+using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -42,15 +43,20 @@ public class PlayerControll : MonoBehaviour
     public Transform GetTargetTrans;
     public Slider slider;
     public Image image;
+#pragma warning disable CS0108 // ¸â¹ö°¡ »ó¼ÓµÈ ¸â¹ö¸¦ ¼û±é´Ï´Ù. new Å°¿öµå°¡ ¾ø½À´Ï´Ù.
+    public CinemachineVirtualCamera camera;
+#pragma warning restore CS0108 // ¸â¹ö°¡ »ó¼ÓµÈ ¸â¹ö¸¦ ¼û±é´Ï´Ù. new Å°¿öµå°¡ ¾ø½À´Ï´Ù.
 
     public bool running = false;
     public bool fire = false;
     public bool moving = false;
     public bool istired = false;
     public bool isaction = false;
+    public bool isthorwing = false;
 
     public float speed = 0.01f;
     public float run = 1;
+    public float throwPower = 0;
 
     public float maxStamina = 100;
     public float nowStamina = 100;
@@ -65,6 +71,8 @@ public class PlayerControll : MonoBehaviour
     Rigidbody2D rigid;
     GetTarget getTarget;
     public Building building;
+    public GameObject palSphere;
+    public PalSphere palsphere_PalSphere;
 
     private void Awake()
     {
@@ -77,25 +85,44 @@ public class PlayerControll : MonoBehaviour
         animator = animator_Equip[0];
         animator_Equip[0] = null;
         equip = new GameObject[6];
-        for (int i = 0; i < animator_Equip.Length - 1;  i++)
+        for (int i = 0; i < animator_Equip.Length - 1; i++)
         {
-            equip[i] = transform.GetChild(i+1).gameObject;
+            equip[i] = transform.GetChild(i + 1).gameObject;
             animator_Equip[i] = animator_Equip[i + 1];
         }
         for (int i = 0; i < equip.Length; i++)
         {
-            if((int)nowEquip != i)
-            equip[i].SetActive(false);
+            if ((int)nowEquip != i)
+                equip[i].SetActive(false);
 
         }
     }
     private void Update()
     {
         Stamina();
-        if(statement== Statement.Building)
+        switch (statement)
         {
-            building.Build(1);
+            case Statement.Building:
+                building.Build(1);
+                break;
+            case Statement.Action:
+                building.Work(0.2f);
+                break;
         }
+        if(isthorwing)
+        {
+            Vector3 point = Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
+            Vector3 normal = (point - transform.position).normalized;
+            palSphere.transform.position = transform.position + normal * 2;
+            if (throwPower < 600f) throwPower += 0.2f;
+            palsphere_PalSphere.SetRotateSpeed(throwPower);
+            if (camera.m_Lens.OrthographicSize < 12) camera.m_Lens.OrthographicSize += 0.001f;
+        }
+        else
+        {
+            if(camera.m_Lens.OrthographicSize > 8) camera.m_Lens.OrthographicSize -= 0.001f;
+        }
+
     }
 
 
@@ -147,7 +174,7 @@ public class PlayerControll : MonoBehaviour
     {
         equip[(int)nowEquip].SetActive(true);
         GetTargetTrans.gameObject.SetActive(true);
-        statement = Statement.Idle;        
+        statement = Statement.Idle;
         freeBuilding = null;
         CraftManager.Instance.BuildingPanel.SetActive(false);
     }
@@ -157,7 +184,7 @@ public class PlayerControll : MonoBehaviour
         equip[(int)nowEquip].SetActive(false);
         GetTargetTrans.gameObject.SetActive(false);
         freeBuilding.transform.parent = transform;
-        switch(viewdirection)
+        switch (viewdirection)
         {
             case ViewDirection.Up:
                 freeBuilding.transform.localPosition = new Vector2(0, 2.5f);
@@ -171,12 +198,12 @@ public class PlayerControll : MonoBehaviour
             case ViewDirection.Left:
                 freeBuilding.transform.localPosition = new Vector2(-2, 0);
                 break;
-        }        
+        }
     }
 
     public void EndConstruct(Building building)
     {
-        if(this.building.Equals(building))
+        if (this.building.Equals(building))
         {
             statement = Statement.Idle;
         }
@@ -202,6 +229,31 @@ public class PlayerControll : MonoBehaviour
         return GetTargetTrans.transform.position;
     }
 
+    private void OnThrow(InputValue inputValue)
+    {
+        if (InventoryManager.sphereCount == 0) return;
+        isthorwing = inputValue.isPressed;
+        if (isthorwing)
+        {
+            palSphere = BattleManager.Instance.GiveSphere();
+            palsphere_PalSphere = palSphere.GetComponent<PalSphere>();
+            Vector3 point = Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
+            Vector3 normal = (point - transform.position).normalized;
+            palSphere.transform.position = transform.position + normal * 2;
+            InventoryManager.Instance.UseItem(1001);
+        }
+        else
+        {
+            BattleManager.Instance.ThorwSphere(throwPower);
+            Vector3 point = Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
+            Vector3 normal = (point - transform.position).normalized;
+            Rigidbody2D rb = palSphere.GetComponent<Rigidbody2D>();
+            rb.AddForce(normal.normalized * throwPower * 2f);
+            throwPower = 0;
+            palsphere_PalSphere.Go();
+        }
+    }
+
     private void OnEscape(InputValue inputValue)
     {
         if (statement == Statement.Crafting)
@@ -223,15 +275,24 @@ public class PlayerControll : MonoBehaviour
             building = target.GetComponent<Building>();
             isaction = inputValue.isPressed;
 
-            if (isaction && building.buildingStatement == BuildingStatement.isBuilding)
+            if (isaction)
             {
-                statement = Statement.Building;
+                switch (building.buildingStatement)
+                {
+                    case BuildingStatement.isBuilding:
+                        statement = Statement.Building;
+                        break;
+                    case BuildingStatement.Built:
+                        building.Action();
+                        break;
+                    case BuildingStatement.Working:
+                        statement = Statement.Action;
+                        break;
+                    case BuildingStatement.Done:
+                        building.Action();
+                        break;
+                }
             }
-            else if (isaction && building.buildingStatement == BuildingStatement.Built)
-            {
-                building.Action();
-            }
-                //statement = Statement.Action;
             else
             {
                 building = null;
@@ -242,9 +303,8 @@ public class PlayerControll : MonoBehaviour
     private void OnFire(InputValue inputValue) // Fire1
     {
         if (GameManager.Instance.ManagerUsingUi()) return;
-        if (istired) return;
         if (statement == Statement.Action) return;
-        if (statement == Statement.Crafting)
+        else if (statement == Statement.Crafting)
         {
             if (freeBuilding.GetComponent<Building>().ContactCheck()) return;
             else
@@ -256,6 +316,7 @@ public class PlayerControll : MonoBehaviour
                 return;
             }
         }
+        if (istired) return;
         fire = inputValue.isPressed;
         animator_Equip[(int)nowEquip].SetBool("Fire", fire);
         GiveResourceData();
@@ -332,7 +393,7 @@ public class PlayerControll : MonoBehaviour
     private void OnMove(InputValue inputValue)
     {
         if (statement == Statement.Action) return;
-        direction  = inputValue.Get<Vector2>();
+        direction = inputValue.Get<Vector2>();
         moving = true;
         if (direction.x == 0 && direction.y != 0)
         {
@@ -340,7 +401,7 @@ public class PlayerControll : MonoBehaviour
             if (direction.y < 0)
             {
                 viewdirection = ViewDirection.Down;
-                if(statement == Statement.Crafting)
+                if (statement == Statement.Crafting)
                 {
                     freeBuilding.transform.localPosition = new Vector2(0, -2.5f);
                 }
@@ -396,7 +457,7 @@ public class PlayerControll : MonoBehaviour
                 viewdirection = ViewDirection.Right;
                 if (statement == Statement.Crafting)
                 {
-                    freeBuilding.transform.localPosition = new Vector2(2,0);
+                    freeBuilding.transform.localPosition = new Vector2(2, 0);
                 }
                 else GetTargetTrans.localPosition = new Vector2(1, 0);
                 if (animator.GetInteger("Direction") != (int)viewdirection)
@@ -411,7 +472,7 @@ public class PlayerControll : MonoBehaviour
         else if (direction.x == 0 && direction.y == 0)
         {
             moving = false;
-            animator.SetBool("Idle",true);
+            animator.SetBool("Idle", true);
         }
     }
 

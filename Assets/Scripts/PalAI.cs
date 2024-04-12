@@ -18,6 +18,7 @@ public class PalAI : MonoBehaviour
     public Building targetBulding;
 
     public bool thisPalCanbuild = true;
+    public bool thisPalCanProduce = false;
 
     #region Astar Pathfinding
     Astar astar;
@@ -52,10 +53,24 @@ public class PalAI : MonoBehaviour
     }
     IEnumerator Search()
     {
-        Debug.Log("Search");
         if (palState == PalStates.Idle)
         {
-            if(thisPalCanbuild == true && PalManager.Instance.buildings.Count > 0)
+            if(thisPalCanProduce && PalManager.Instance.producing.Count > 0)
+            {
+                int count = PalManager.Instance.producing.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    targetBulding = PalManager.Instance.producing[i];
+                    if(targetBulding.workingPal == null)
+                    {
+                        targetBulding.workingPal = this;
+                        target = targetBulding.gameObject;
+                        OnGo();
+                        break;
+                    }
+                }
+            }
+           if(thisPalCanbuild == true && PalManager.Instance.buildings.Count > 0 && palState == PalStates.Idle)
             {
                 targetBulding = PalManager.Instance.buildings[0];
                 target = targetBulding.gameObject;
@@ -65,9 +80,10 @@ public class PalAI : MonoBehaviour
         }
         else if (palState == PalStates.Move) 
         {
-            if(thisPalCanbuild == true && targetBulding.buildingStatement == BuildingStatement.Built) //가기 전에 건물 완공되면 업무취소
+            if(targetBulding.buildingStatement == BuildingStatement.Built || targetBulding.buildingStatement == BuildingStatement.Done) //가기 전에 건물 완공되면 업무취소
             {
                 palState = PalStates.Idle;
+                target = null;
             }
             
         }
@@ -93,19 +109,25 @@ public class PalAI : MonoBehaviour
 
     void PalWork()
     {
-        if(targetBulding.buildingStatement == BuildingStatement.Built)
+        switch(targetBulding.buildingStatement)
         {
-            palState = PalStates.Idle;
-        }
-        else if(targetBulding.buildingStatement == BuildingStatement.isBuilding)
-        {
-            targetBulding.Build(1);
-            if(!targetBulding.gameObject.activeSelf)
-            {
+            case BuildingStatement.Built:
                 palState = PalStates.Idle;
-            }
-        }
-        
+                break;
+            case BuildingStatement.isBuilding:
+                targetBulding.Build(1);
+                if (!targetBulding.gameObject.activeSelf)
+                {
+                    palState = PalStates.Idle;
+                }
+                break;
+            case BuildingStatement.Working:
+                targetBulding.Work(0.1f);
+                break;
+            case BuildingStatement.Done:
+                palState = PalStates.Idle;
+                break;
+        }        
     }
 
     public void PalMove() // Astar pathFinding

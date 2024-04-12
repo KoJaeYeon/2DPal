@@ -17,7 +17,7 @@ public class NeedPanel : MonoBehaviour
         itemData = GetComponentsInChildren<TextMeshProUGUI>();
         gameObject.SetActive(false);
     }
-    public bool UpdateDataPanel(Item item, int needNum)
+    public bool UpdateDataPanel(Item item, int needNum, int count = 1)
     {
         bool canBuild = true;
         this.item = item;
@@ -26,8 +26,8 @@ public class NeedPanel : MonoBehaviour
         itemData[0].text = item.itemName;
         bool nowNumIn = InventoryManager.inventorySum.ContainsKey(item.id);
         int nowNum = nowNumIn ? InventoryManager.inventorySum[item.id] : 0;
-        itemData[1].text = nowNum+ "/" + needNum;
-        if(nowNum < needNum)
+        itemData[1].text = nowNum+ "/" + needNum * count;
+        if(nowNum < needNum * count)
         {
             itemData[1].color = Color.red;
             canBuild = false;

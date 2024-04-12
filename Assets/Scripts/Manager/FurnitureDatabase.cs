@@ -20,7 +20,7 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
         id = 102; furniture = new Furniture("원시적인 화로", id, new int[,] { { 1, 20 }, { 2, 50 } }); furniture.sprite = sprites[index++]; furnitures.Add(id, furniture);
         id = 103; furniture = new Furniture("팰 상자", id, new int[,] {{ 1, 8 },{ 2, 3 }, {3,1 } }); furniture.sprite = sprites[index++]; furnitures.Add(id, furniture);
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < furnitures.Count; i++)
         {
             GameObject prefab = Instantiate(Prefabs[i]);
             furniturePrefabs[i] = new List<GameObject>();
