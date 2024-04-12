@@ -18,7 +18,9 @@ public class InventoryManager : Singleton<InventoryManager>
     public Item DebugItem;
 
     public Slot startSlot;
+    public int startSlotkey;
     public Slot endSlot;
+    public int endSlotkey;
     private void Awake()
     {
         inventory.Clear();
@@ -41,8 +43,25 @@ public class InventoryManager : Singleton<InventoryManager>
 
     public void SwapSlot()
     {
-        if (endSlot == null || startSlot.name.Equals(endSlot.name)) return;
-        //Item tempItem;
+        if (endSlot == null || startSlot.Equals(endSlot)) return;
+        if (startSlot.item == null || startSlot.item.count == 0) return;
+        if (endSlot.item == null || endSlot.item.count == 0)
+        {            
+            inventory.Add(endSlot.key, startSlot.item);
+            inventory.Remove(startSlot.key);
+            endSlot.UpdateSlot(startSlot.item);
+            startSlot.RemoveSlot();
+
+        }
+        else
+        {
+            Item tempItem = startSlot.item;
+            inventory[startSlot.key] = endSlot.item;
+            inventory[endSlot.key] = tempItem;
+            startSlot.UpdateSlot(endSlot.item);
+            endSlot.UpdateSlot(tempItem);
+        }
+
     }
 
     public void DropItem(Item item)
@@ -98,6 +117,7 @@ public class InventoryManager : Singleton<InventoryManager>
                             inventorySum[item.id] -= item.count;
                             item.count = 0;
                             UpdateSlot(i, inventory[i]);
+                            return;
                         }
                         else // 인벤토리 총합이 적을때
                         {

@@ -9,11 +9,11 @@ public class Slot : MonoBehaviour
 {
     public Item item;
     public Image image;
+    public int key;
     public TextMeshProUGUI[] itemData = new TextMeshProUGUI[2]; //0 : Count, 1 : Weight
     Vector3 inititalVec;
 
     bool dragOn;
-
     private void Awake()
     {
         image = GetComponent<Image>();
@@ -49,18 +49,16 @@ public class Slot : MonoBehaviour
     }
     public void EnterMouse()
     {
-        Debug.Log(this);
         InventoryManager.Instance.EndSlot(this);
     }
     public void ExitMouse()
     {
-        Debug.Log(null);
         InventoryManager.Instance.EndSlot(null);
     }
 
     public void UpdateSlot(Item item)
-    {
-        if (item == null)
+    {        
+        if (item == null || item.count == 0)
         {
             RemoveSlot();
         }
@@ -74,10 +72,22 @@ public class Slot : MonoBehaviour
         }
 
     }
-
     public void RemoveSlot()
     {
         item = null;
         image.gameObject.SetActive(false);
+        if (InventoryManager.Instance.inventory.ContainsKey(key)) InventoryManager.Instance.inventory.Remove(key);
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (obj == null) return false;
+        Slot other = obj as Slot;
+        if (other.key == key) return true;
+        else return false;
+    }
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
     }
 }
