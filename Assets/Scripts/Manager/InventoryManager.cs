@@ -17,10 +17,11 @@ public class InventoryManager : Singleton<InventoryManager>
 
     public Item DebugItem;
 
-    public Slot startSlot;
     public int startSlotkey;
-    public Slot endSlot;
     public int endSlotkey;
+
+    public Slot tempSlot;
+
     private void Awake()
     {
         inventory.Clear();
@@ -29,39 +30,62 @@ public class InventoryManager : Singleton<InventoryManager>
         textMeshProUGUI.text = GameManager.Instance.CountString(sphereCount);
     }
 
+    private void Start()
+    {
+        //DropItem(new Item("sdf",1001,5,0));
+    }
+
     void UpdateSlot(int i,Item item)
     {
         Slot slot = UIInventorySlot.transform.GetChild(i).GetChild(0).GetComponent<Slot>();
         DebugItem = item;
         slot.UpdateSlot(item);
     }
-
-    public void EndSlot(Slot endSlot)
+    void UpdateSlot(int i)
     {
-        this.endSlot = endSlot;
+        Slot slot = UIInventorySlot.transform.GetChild(i).GetChild(0).GetComponent<Slot>();
+        slot.UpdateSlot();
     }
+
+
+
 
     public void SwapSlot()
     {
-        if (endSlot == null || startSlot.Equals(endSlot)) return;
-        if (startSlot.item == null || startSlot.item.count == 0) return;
-        if (endSlot.item == null || endSlot.item.count == 0)
-        {            
-            inventory.Add(endSlot.key, startSlot.item);
-            inventory.Remove(startSlot.key);
-            endSlot.UpdateSlot(startSlot.item);
-            startSlot.RemoveSlot();
-
-        }
-        else
+        Debug.Log("SwapSlot");
+        if (!inventory.ContainsKey(endSlotkey)) // 빈 공간이면
         {
-            Item tempItem = startSlot.item;
-            inventory[startSlot.key] = endSlot.item;
-            inventory[endSlot.key] = tempItem;
-            startSlot.UpdateSlot(endSlot.item);
-            endSlot.UpdateSlot(tempItem);
+            inventory[startSlotkey].Substarct(tempSlot.item);
+            inventory.Add(endSlotkey,tempSlot.item);
+            UpdateSlot(startSlotkey);
+            UpdateSlot(endSlotkey, inventory[endSlotkey]);
+            Debug.Log("case1");
         }
+        else if (tempSlot.item.Equals(inventory[endSlotkey])) // 같은 종류의 아이템이면
+        {
+            inventory[startSlotkey].Substarct(tempSlot.item);
+            inventory[endSlotkey].Add(tempSlot.item);
+            UpdateSlot(startSlotkey);
+            UpdateSlot(endSlotkey, inventory[endSlotkey]);
+            Debug.Log("case2");
+        }
+        else // 다른종류의 아이템이면
+        {
+            if (inventory[startSlotkey].count != tempSlot.item.count) // 바꾸기가 아니라 갯수가 달라졌으면 취소
+            {
+                Debug.Log("case3");
+                return;
+            }
+            else // 자리 바꾸기
+            {
+                inventory[startSlotkey] = inventory[endSlotkey];
+                inventory[endSlotkey] = tempSlot.item;
+                UpdateSlot(startSlotkey, inventory[startSlotkey]);
+                UpdateSlot(endSlotkey, inventory[endSlotkey]);
+                Debug.Log("case4");
+            }
 
+        }
     }
 
     public void DropItem(Item item)
@@ -107,24 +131,29 @@ public class InventoryManager : Singleton<InventoryManager>
         {
             if (inventory.ContainsValue(item))
             {
+                int[] keysArray = new int[inventory.Count];
+                int keyIndex = 0;
                 foreach (int i in inventory.Keys)
                 {
-                    if (inventory[i].Equals(item))
+                    keysArray[keyIndex++] = i;
+                }
+                for (int i = 0; i < keysArray.Length; i++)
+                {
+                    if (inventory[keysArray[i]].Equals(item))
                     {
-                        if (inventory[i].count >= item.count) // 인벤토리 총합이 많을때
+                        if (inventory[keysArray[i]].count >= item.count) // 인벤토리 총합이 많을때
                         {
-                            inventory[i].Substarct(item);
+                            inventory[keysArray[i]].Substarct(item);
                             inventorySum[item.id] -= item.count;
                             item.count = 0;
-                            UpdateSlot(i, inventory[i]);
-                            return;
+                            UpdateSlot(keysArray[i], inventory[keysArray[i]]);
                         }
                         else // 인벤토리 총합이 적을때
                         {
-                            item.Substarct(inventory[i]);
-                            inventorySum[item.id] -= inventory[i].count;
-                            inventory[i].count = 0;
-                            UpdateSlot(i, null);
+                            item.Substarct(inventory[keysArray[i]]);
+                            inventorySum[item.id] -= inventory[keysArray[i]].count;
+                            inventory[keysArray[i]].count = 0;
+                            UpdateSlot(keysArray[i], null);
                         }
                     }
                 }
@@ -142,42 +171,6 @@ public class InventoryManager : Singleton<InventoryManager>
     public void UseItem(int id)
     {
         Item item = new Item("", id, 1, 0);
-        if (item.id == 1001) sphereCount -= item.count;
-        Debugint = sphereCount;
-        textMeshProUGUI.text = GameManager.Instance.CountString(sphereCount);
-        while (item.count > 0)
-        {
-            if (inventory.ContainsValue(item))
-            {
-                foreach (int i in inventory.Keys)
-                {
-                    if (inventory[i].Equals(item))
-                    {
-                        if (inventory[i].count >= item.count) // 인벤토리 총합이 많을때
-                        {
-                            inventory[i].Substarct(item);
-                            inventorySum[item.id] -= item.count;
-                            item.count = 0;
-                            UpdateSlot(i, inventory[i]);
-                        }
-                        else // 인벤토리 총합이 적을때
-                        {
-                            item.Substarct(inventory[i]);
-                            inventorySum[item.id] -= inventory[i].count;
-                            inventory[i].count = 0;
-                            UpdateSlot(i, null);
-                        }
-                    }
-                }
-            }
-            else if (false) //창고 확인
-            {
-                //for(int i = 0; i < Chect.Count; i++)
-                //{
-
-                //}
-            }
-        }
-
+        UseItem(item);
     }
 }

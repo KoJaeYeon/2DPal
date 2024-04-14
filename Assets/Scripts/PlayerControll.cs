@@ -229,21 +229,22 @@ public class PlayerControll : MonoBehaviour
         return GetTargetTrans.transform.position;
     }
 
-    private void OnThrow(InputValue inputValue)
-    {
-        if (InventoryManager.sphereCount == 0) return;
+    private void OnThrow(InputValue inputValue) // Q
+    {        
         isthorwing = inputValue.isPressed;
         if (isthorwing)
         {
+            if (InventoryManager.sphereCount == 0) { isthorwing = false; return; }
             palSphere = BattleManager.Instance.GiveSphere();
             palsphere_PalSphere = palSphere.GetComponent<PalSphere>();
             Vector3 point = Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
             Vector3 normal = (point - transform.position).normalized;
-            palSphere.transform.position = transform.position + normal * 2;
-            InventoryManager.Instance.UseItem(1001);
+            palSphere.transform.position = transform.position + normal * 2;            
         }
         else
         {
+            if (palsphere_PalSphere == null) return;
+            InventoryManager.Instance.UseItem(1001);
             BattleManager.Instance.ThorwSphere(throwPower);
             Vector3 point = Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
             Vector3 normal = (point - transform.position).normalized;
@@ -251,10 +252,12 @@ public class PlayerControll : MonoBehaviour
             rb.AddForce(normal.normalized * throwPower * 2f);
             throwPower = 0;
             palsphere_PalSphere.Go();
+            palSphere = null;
+            palsphere_PalSphere = null;
         }
     }
 
-    private void OnEscape(InputValue inputValue)
+    private void OnEscape(InputValue inputValue) // Esc
     {
         if (statement == Statement.Crafting)
         {

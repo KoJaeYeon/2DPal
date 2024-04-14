@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GiveKey : MonoBehaviour
 {
-    Slot[] slots;
+    public Slot[] slots;
 
     private void Awake()
     {
@@ -12,6 +12,7 @@ public class GiveKey : MonoBehaviour
         for(int i = 0; i < slots.Length; i++)
         {
             slots[i].key = i;
+            slots[i].gameObject.SetActive(false);
         }
     }
 }

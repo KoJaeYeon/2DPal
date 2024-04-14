@@ -25,12 +25,12 @@ public class PalSphere : MonoBehaviour
     {
         yield return new WaitForSeconds(1);
         Vector3 dir = rb.velocity.normalized;
-        rb.AddForce(-dir * rotateSpeed  * 2 / 4);
+        rb.AddForce(-dir * rotateSpeed  / 2);
         yield return new WaitForSeconds(1);
-        rb.AddForce(-dir * rotateSpeed  * 2 / 4);
+        rb.AddForce(-dir * rotateSpeed  / 2);
         yield return new WaitForSeconds(1);
-        rb.AddForce(-dir * rotateSpeed * 2 / 4);
-
+        rb.velocity = Vector3.zero;
+        yield return new WaitForSeconds(2);
         gameObject.SetActive(false);
         yield break;
     }
