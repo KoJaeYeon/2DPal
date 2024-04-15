@@ -14,8 +14,8 @@ public class RecipeSlot : MonoBehaviour
 
     private void Awake()
     {
-        image = transform.GetChild(0).GetComponent<Image>();
         needPanel = GetComponentsInChildren<NeedPanel_Craft>();
+        image = transform.GetChild(0).GetComponent<Image>();        
         itemData[0] = transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
         itemData[1] = transform.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>();
     }
@@ -30,6 +30,7 @@ public class RecipeSlot : MonoBehaviour
 
     public void UpdateSlot()
     {
+        if(needPanel.Length == 0) needPanel = GetComponentsInChildren<NeedPanel_Craft>();
         int[,] needIngredients = CraftDatabase.Instance.NeedItem(id);
         for(int i = 0; i < needIngredients.GetLength(0); i++)
         {

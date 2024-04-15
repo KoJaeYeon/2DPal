@@ -12,7 +12,7 @@ public class NeedPanel_Craft : MonoBehaviour
     public TextMeshProUGUI[] itemData = new TextMeshProUGUI[2]; //0 : Item Name, 1 : Need Count
     public GameObject OffPanel;
 
-    private void Start()
+    private void Awake()
     {
         image = transform.GetChild(1).GetComponent<Image>();
         itemData = GetComponentsInChildren<TextMeshProUGUI>();

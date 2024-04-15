@@ -6,7 +6,7 @@ public class GiveKey : MonoBehaviour
 {
     public Slot[] slots;
 
-    private void Awake()
+    private void Start()
     {
         slots = GetComponentsInChildren<Slot>();
         for(int i = 0; i < slots.Length; i++)

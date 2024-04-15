@@ -6,12 +6,15 @@ public class PrimitiveWorkbench : Building
 {
     public GameObject RecipePanel;
     public Product production;
+
     
     private new void Awake()
     {
         base.Awake();
         RecipePanel = GameManager.Instance.RecipePanel;
         todoList = todoList = PalManager.Instance.producing;
+        buildingType = BuildingType.Recipe;
+
     }
     public override void Action()
     {
@@ -19,8 +22,12 @@ public class PrimitiveWorkbench : Building
         {
             case BuildingStatement.Built:
                 RecipePanel.SetActive(true);
-                ProductManager.Instance.primitiveWorkbench = this;
                 ProductManager.Instance.ResetPanel();
+                foreach(GameObject recipe in FurnitureDatabase.Instance.workbenchRecipeSlots)
+                {
+                    recipe.SetActive(true);
+                }
+                ProductManager.Instance.primitiveWorkbench = this;
                 GameManager.Instance.activePanel = RecipePanel;
                 break;
             case BuildingStatement.Done:

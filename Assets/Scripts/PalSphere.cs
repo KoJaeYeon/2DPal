@@ -6,15 +6,15 @@ public class PalSphere : MonoBehaviour
 {
     public float rotateSpeed = 1.0f;
     Rigidbody2D rb;
-
+    Coroutine coroutine;
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        transform.Rotate(Vector3.forward * rotateSpeed / 300);
+        transform.Rotate(Vector3.forward * rotateSpeed / 30);
     }
 
     public void SetRotateSpeed(float throwPower)
@@ -36,6 +36,16 @@ public class PalSphere : MonoBehaviour
     }
     public void Go()
     {
-        StartCoroutine(Disapear());
+        coroutine = StartCoroutine(Disapear());
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("EnemyPal"))
+        {
+            StopCoroutine(coroutine);
+            rb.velocity = Vector2.zero;
+            BattleManager.Instance.Captured(this,collision.gameObject);
+            rotateSpeed = 50;
+        }
     }
 }

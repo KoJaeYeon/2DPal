@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -13,6 +14,9 @@ public enum PalStates
 
 public class PalAI : MonoBehaviour
 {
+    public Pal pal;
+    public int id;
+
     public PalStates palState;    
     public GameObject target;
     public Building targetBulding;
@@ -33,6 +37,7 @@ public class PalAI : MonoBehaviour
         astar = GetComponent<Astar>();
     }
 
+
     void OnGo()
     {
         astar.SetDestination(target); // 타켓 목적지 설정
@@ -49,6 +54,7 @@ public class PalAI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        pal = PalDatabase.Instance.GetPal(id);
         StartCoroutine(Search());
     }
     IEnumerator Search()

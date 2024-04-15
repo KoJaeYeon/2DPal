@@ -8,7 +8,8 @@ public class GetTarget : MonoBehaviour
     PlayerControll playerControll;
     public GameObject ActionPanel;
     TextMeshProUGUI Number; // BuildingPanel
-    TextMeshProUGUI Number2; // WrokingPanel
+    TextMeshProUGUI Number2; // WorkingPanel
+    TextMeshProUGUI interactiveText;
     Building building;
 
     public Animator[] animators;
@@ -18,6 +19,7 @@ public class GetTarget : MonoBehaviour
         playerControll = transform.parent.GetComponent<PlayerControll>();
         Number = ActionPanel.GetComponent<ActionPanel>().Number.GetComponent<TextMeshProUGUI>();
         Number2 = ActionPanel.GetComponent<ActionPanel>().Number2.GetComponent<TextMeshProUGUI>();
+        interactiveText = ActionPanel.transform.GetChild(1).GetComponentInChildren<TextMeshProUGUI>();
         animators = ActionPanel.GetComponentsInChildren<Animator>();
         ActionPanel.gameObject.SetActive(false);
     }
@@ -49,7 +51,7 @@ public class GetTarget : MonoBehaviour
                     ActionPanel.transform.GetChild(0).gameObject.SetActive(false);
                     ActionPanel.transform.GetChild(1).gameObject.SetActive(true);
                     ActionPanel.transform.GetChild(2).gameObject.SetActive(false);
-                    ActionPanel.transform.GetChild(3).gameObject.SetActive(false);
+                    ActionPanel.transform.GetChild(3).gameObject.SetActive(false);                    
                     break;
                 case BuildingStatement.Working:
                     leftwork = building.GetLeftWork();
@@ -115,6 +117,16 @@ public class GetTarget : MonoBehaviour
             ActionPanel.SetActive(false);
             ActionPanel.SetActive(true);
             building = collision.gameObject.GetComponent<Building>();
+            //텍스트 변경 Interactive
+            switch(building.buildingType)
+            {
+                case Building.BuildingType.Recipe:
+                    interactiveText.text = "레시피 선택";
+                    break;
+                case Building.BuildingType.Pal:
+                    interactiveText.text = "팰 상자 관리 메뉴";
+                    break;
+            }
         }
     }
     private void OnTriggerStay2D(Collider2D collision)

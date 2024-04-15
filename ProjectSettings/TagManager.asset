@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Equipment
   - Furniture
+  - EnemyPal
   layers:
   - Default
   - TransparentFX
@@ -16,7 +17,7 @@ TagManager:
   - Resources
   - Furniture
   - Pal
-  - 
+  - Enemy
   - 
   - 
   - 

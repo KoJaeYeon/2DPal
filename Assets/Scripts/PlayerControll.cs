@@ -54,6 +54,14 @@ public class PlayerControll : MonoBehaviour
     public bool isaction = false;
     public bool isthorwing = false;
 
+    //Player Data
+    public int lv;
+    public int exp;
+    public int hungry;
+    public int health;
+    public int moveWeight;
+    public int skillPoint;
+
     public float speed = 0.01f;
     public float run = 1;
     public float throwPower = 0;
@@ -245,7 +253,6 @@ public class PlayerControll : MonoBehaviour
         {
             if (palsphere_PalSphere == null) return;
             InventoryManager.Instance.UseItem(1001);
-            BattleManager.Instance.ThorwSphere(throwPower);
             Vector3 point = Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
             Vector3 normal = (point - transform.position).normalized;
             Rigidbody2D rb = palSphere.GetComponent<Rigidbody2D>();

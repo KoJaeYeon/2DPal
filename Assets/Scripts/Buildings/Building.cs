@@ -22,6 +22,9 @@ public class Building : MonoBehaviour
     public float MaxWorkTime;
     public float nowWorkTime;
 
+    public enum BuildingType { Recipe, Pal}
+    public BuildingType buildingType;
+
     SpriteRenderer spriteRenderer;
     BoxCollider2D boxCollider2d;
     Rigidbody2D rigidbody2d;

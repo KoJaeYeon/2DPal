@@ -91,9 +91,6 @@ public class Slot : MonoBehaviour
     {
         InventoryManager.Instance.endSlotkey = -1;
     }
-    public void Drag()
-    {
-    }
     #endregion
     public void UpdateSlot(Item item)
     {        
@@ -121,7 +118,7 @@ public class Slot : MonoBehaviour
     {
         item = null;
         image.gameObject.SetActive(false);
-        if (InventoryManager.Instance.inventory.ContainsKey(key)) InventoryManager.Instance.inventory.Remove(key);
+        if (InventoryManager.Instance.inventory[0].ContainsKey(key)) InventoryManager.Instance.inventory[0].Remove(key);
     }
 
     public override bool Equals(object obj)

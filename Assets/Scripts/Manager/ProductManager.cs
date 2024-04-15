@@ -9,10 +9,12 @@ using static UnityEditor.Progress;
 public class ProductManager : Singleton<ProductManager>
 {
     public GameObject productionPanel;
+    public GameObject frunacePanel;
 
     public PrimitiveWorkbench primitiveWorkbench;
+    public PrimitiveFurnature PrimitiveFurnature;
     public GameObject DataPanel;
-    public GameObject ConfirmPanel;
+    public GameObject ConfirmPanel;    
     public Image productImage;
     public TextMeshProUGUI productName;
     public TextMeshProUGUI productHasCount;
@@ -39,11 +41,12 @@ public class ProductManager : Singleton<ProductManager>
     public void ResetPanel()
     {
         setProduct = null;
+        primitiveWorkbench = null;
+        PrimitiveFurnature = null;
         count = 1;
         countText.text = GameManager.Instance.CountString(count);
         DataPanel.SetActive(false);
         ConfirmPanel.SetActive(false);
-
     }
 
     public void UpdateProductPanel(Product product)

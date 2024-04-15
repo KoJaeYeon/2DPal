@@ -1741,8 +1741,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 0
   image: {fileID: 0}
-  needPanel:
-  - {fileID: 0}
+  product:
+    _itemName: 
+    _id: 0
+    _count: 0
+    _weight: 0
+    _description: 
+    _sprite: {fileID: 0}
+  needPanel: []
   itemData:
   - {fileID: 0}
   - {fileID: 0}
