@@ -7,10 +7,11 @@ public class InventoryManager : Singleton<InventoryManager>
 {
     public GameObject UIInventorySlot;
     public GameObject chestInventorySlot;
+    public GameObject chestBoxSlot;
 
 
     public TMPro.TextMeshProUGUI textMeshProUGUI; //팰스피어 갯수 표시 UI
-    public List<Dictionary<int,Item>> inventory = new List<Dictionary<int,Item>>();
+    public Dictionary<int,Item> inventory = new Dictionary<int,Item>();
     private int maxInvetory = 21;
     public float playerWeight = 0;
     public float maxPlayerWeight = 300;
@@ -30,9 +31,24 @@ public class InventoryManager : Singleton<InventoryManager>
 
     private void Awake()
     {
-        inventory.Add(new Dictionary<int, Item>());
+        inventory = new Dictionary<int, Item>();
         // 저장된 데이터에서 인벤토리 받아오기
         textMeshProUGUI.text = GameManager.Instance.CountString(sphereCount);
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.V))
+        {
+            foreach(int i in inventory.Keys)
+            {
+                Debug.Log(i);
+            }
+            foreach (Item i in inventory.Values)
+            {
+                Debug.Log(i);
+            }
+        }
     }
 
     private void Start()
@@ -42,7 +58,7 @@ public class InventoryManager : Singleton<InventoryManager>
 
     void UpdateSlot(int i,Item item)
     {
-        if(i < 20)
+        if(i < 21)
         {
             Slot slot = UIInventorySlot.transform.GetChild(i).GetChild(0).GetComponent<Slot>();
             DebugItem = item;
@@ -50,40 +66,50 @@ public class InventoryManager : Singleton<InventoryManager>
             Slot_Chest slot2 = chestInventorySlot.transform.GetChild(i).GetChild(0).GetComponent<Slot_Chest>();
             slot2.UpdateSlot(item);
         }
+        else if (i >= 50)
+        {
+            Slot_Chest slot2 = chestBoxSlot.transform.GetChild(i%50).GetChild(0).GetComponent<Slot_Chest>();
+            slot2.UpdateSlot(item);
+        }
 
     }
     void UpdateSlot(int i)
     {
-        if(i < 20)
+        if(i < 21)
         {
             Slot slot = UIInventorySlot.transform.GetChild(i).GetChild(0).GetComponent<Slot>();
             slot.UpdateSlot();
             Slot_Chest slot2 = chestInventorySlot.transform.GetChild(i).GetChild(0).GetComponent<Slot_Chest>();
             slot2.UpdateSlot();
         }
+        else if (i >= 50)
+        {
+            Slot_Chest slot2 = chestBoxSlot.transform.GetChild(i%50).GetChild(0).GetComponent<Slot_Chest>();
+            slot2.UpdateSlot();
+        }
 
     }
     public void SwapSlot()
     {
-        if (!inventory[0].ContainsKey(endSlotkey)) // 빈 공간이면
+        if (!inventory.ContainsKey(endSlotkey)) // 빈 공간이면
         {
             Debug.Log("case1");
-            inventory[0][startSlotkey].Substarct(tempSlot.item);
-            inventory[0].Add(endSlotkey,tempSlot.item);
+            inventory[startSlotkey].Substarct(tempSlot.item);
+            inventory.Add(endSlotkey,tempSlot.item);
             UpdateSlot(startSlotkey);
-            UpdateSlot(endSlotkey, inventory[0][endSlotkey]);
+            UpdateSlot(endSlotkey, inventory[endSlotkey]);
         }
-        else if (tempSlot.item.Equals(inventory[0][endSlotkey])) // 같은 종류의 아이템이면
+        else if (tempSlot.item.Equals(inventory[endSlotkey])) // 같은 종류의 아이템이면
         {
             Debug.Log("case2");
-            inventory[0][startSlotkey].Substarct(tempSlot.item);
-            inventory[0][endSlotkey].Add(tempSlot.item);
+            inventory[startSlotkey].Substarct(tempSlot.item);
+            inventory[endSlotkey].Add(tempSlot.item);
             UpdateSlot(startSlotkey);
-            UpdateSlot(endSlotkey, inventory[0][endSlotkey]);
+            UpdateSlot(endSlotkey, inventory[endSlotkey]);
         }
         else // 다른종류의 아이템이면
         {
-            if (inventory[0][startSlotkey].count != tempSlot.item.count) // 바꾸기가 아니라 갯수가 달라졌으면 취소
+            if (inventory[startSlotkey].count != tempSlot.item.count) // 바꾸기가 아니라 갯수가 달라졌으면 취소
             {
                 Debug.Log("case3");
                 return;
@@ -91,10 +117,10 @@ public class InventoryManager : Singleton<InventoryManager>
             else // 자리 바꾸기
             {
                 Debug.Log("case4");
-                inventory[0][startSlotkey] = inventory[0][endSlotkey];
-                inventory[0][endSlotkey] = tempSlot.item;
-                UpdateSlot(startSlotkey, inventory[0][startSlotkey]);
-                UpdateSlot(endSlotkey, inventory[0][endSlotkey]);
+                inventory[startSlotkey] = inventory[endSlotkey];
+                inventory[endSlotkey] = tempSlot.item;
+                UpdateSlot(startSlotkey, inventory[startSlotkey]);
+                UpdateSlot(endSlotkey, inventory[endSlotkey]);
             }
 
         }
@@ -102,25 +128,25 @@ public class InventoryManager : Singleton<InventoryManager>
 
     public void SwapSlot2()
     {
-        if (!inventory[0].ContainsKey(endSlotkey)) // 빈 공간이면
+        if (!inventory.ContainsKey(endSlotkey)) // 빈 공간이면
         {
             Debug.Log("case1");
-            inventory[0][startSlotkey].Substarct(tempSlot2.item);
-            inventory[0].Add(endSlotkey, tempSlot2.item);
+            inventory[startSlotkey].Substarct(tempSlot2.item);
+            inventory.Add(endSlotkey, tempSlot2.item);
             UpdateSlot(startSlotkey);
-            UpdateSlot(endSlotkey, inventory[0][endSlotkey]);
+            UpdateSlot(endSlotkey, inventory[endSlotkey]);
         }
-        else if (tempSlot2.item.Equals(inventory[0][endSlotkey])) // 같은 종류의 아이템이면
+        else if (tempSlot2.item.Equals(inventory[endSlotkey])) // 같은 종류의 아이템이면
         {
             Debug.Log("case2");
-            inventory[0][startSlotkey].Substarct(tempSlot2.item);
-            inventory[0][endSlotkey].Add(tempSlot2.item);
+            inventory[startSlotkey].Substarct(tempSlot2.item);
+            inventory[endSlotkey].Add(tempSlot2.item);
             UpdateSlot(startSlotkey);
-            UpdateSlot(endSlotkey, inventory[0][endSlotkey]);
+            UpdateSlot(endSlotkey, inventory[endSlotkey]);
         }
         else // 다른종류의 아이템이면
         {
-            if (inventory[0][startSlotkey].count != tempSlot2.item.count) // 바꾸기가 아니라 갯수가 달라졌으면 취소
+            if (inventory[startSlotkey].count != tempSlot2.item.count) // 바꾸기가 아니라 갯수가 달라졌으면 취소
             {
                 Debug.Log("case3");
                 return;
@@ -128,10 +154,10 @@ public class InventoryManager : Singleton<InventoryManager>
             else // 자리 바꾸기
             {
                 Debug.Log("case4");
-                inventory[0][startSlotkey] = inventory[0][endSlotkey];
-                inventory[0][endSlotkey] = tempSlot2.item;
-                UpdateSlot(startSlotkey, inventory[0][startSlotkey]);
-                UpdateSlot(endSlotkey, inventory[0][endSlotkey]);
+                inventory[startSlotkey] = inventory[endSlotkey];
+                inventory[endSlotkey] = tempSlot2.item;
+                UpdateSlot(startSlotkey, inventory[startSlotkey]);
+                UpdateSlot(endSlotkey, inventory[endSlotkey]);
             }
 
         }
@@ -142,17 +168,17 @@ public class InventoryManager : Singleton<InventoryManager>
         if (item.id == 1001) sphereCount += item.count;
         Debugint = sphereCount;
         textMeshProUGUI.text = GameManager.Instance.CountString(sphereCount);
-        if (inventory[0].ContainsValue(item)) //인벤토리에 아이템이 이미 존재하는 경우
+        if (inventory.ContainsValue(item)) //인벤토리에 아이템이 이미 존재하는 경우
         {
-            foreach (int i in inventory[0].Keys)
+            foreach (int i in inventory.Keys)
             {
-                if (inventory[0][i].Equals(item))
+                if (inventory[i].Equals(item))
                 {
-                    inventory[0][i].Add(item);
+                    inventory[i].Add(item);
                     inventorySum[item.id] += item.count;
                     playerWeight += item.count * item.weight;
                     weihgtPanel.UpdateWeight(playerWeight, maxPlayerWeight);
-                    UpdateSlot(i, inventory[0][i]);
+                    UpdateSlot(i, inventory[i]);
                 }
             }
         }    
@@ -160,9 +186,9 @@ public class InventoryManager : Singleton<InventoryManager>
         {
             for (int i = 0;i < maxInvetory; i++)
             {
-                if (!inventory[0].ContainsKey(i))
+                if (!inventory.ContainsKey(i))
                 {
-                    inventory[0].Add(i, item);
+                    inventory.Add(i, item);
                     if(!inventorySum.TryAdd(item.id,item.count)) inventorySum[item.id] += item.count;
                     playerWeight += item.count * item.weight;
                     weihgtPanel.UpdateWeight(playerWeight, maxPlayerWeight);
@@ -180,35 +206,37 @@ public class InventoryManager : Singleton<InventoryManager>
         textMeshProUGUI.text = GameManager.Instance.CountString(sphereCount);
         while (item.count > 0)
         {
-            if (inventory[0].ContainsValue(item))
+            if (inventory.ContainsValue(item))
             {
-                int[] keysArray = new int[inventory[0].Count];
-                int keyIndex = 0;
-                foreach (int i in inventory[0].Keys)
+                //int[] keysArray = new int[inventory.Count];
+                //int keyIndex = 0;
+                //foreach (int i in inventory.Keys)
+                //{
+                //    keysArray[keyIndex++] = i;
+                //}
+                for (int i = 0; i < maxInvetory; i++)
                 {
-                    keysArray[keyIndex++] = i;
-                }
-                for (int i = 0; i < keysArray.Length; i++)
-                {
-                    if (inventory[0][keysArray[i]].Equals(item))
+                    if (!inventory.ContainsKey(i)) continue;
+                    if (inventory[i].Equals(item))
                     {
-                        if (inventory[0][keysArray[i]].count >= item.count) // 인벤토리 총합이 많을때
+                        if (inventory[i].count >= item.count) // 인벤토리 총합이 많을때
                         {
                             playerWeight -= item.count * item.weight;
                             weihgtPanel.UpdateWeight(playerWeight, maxPlayerWeight);
-                            inventory[0][keysArray[i]].Substarct(item);
+                            inventory[i].Substarct(item);
                             inventorySum[item.id] -= item.count;
                             item.count = 0;
-                            UpdateSlot(keysArray[i], inventory[0][keysArray[i]]);
+                            UpdateSlot(i, inventory[i]);
+                            return;
                         }
                         else // 인벤토리 총합이 적을때
                         {
                             playerWeight -= item.count * item.weight;
                             weihgtPanel.UpdateWeight(playerWeight, maxPlayerWeight);
-                            item.Substarct(inventory[0][keysArray[i]]);
-                            inventorySum[item.id] -= inventory[0][keysArray[i]].count;
-                            inventory[0][keysArray[i]].count = 0;
-                            UpdateSlot(keysArray[i], null);
+                            item.Substarct(inventory[i]);
+                            inventorySum[item.id] -= inventory[i].count;
+                            inventory[i].count = 0;
+                            UpdateSlot(i, null);
                         }
                     }
                 }

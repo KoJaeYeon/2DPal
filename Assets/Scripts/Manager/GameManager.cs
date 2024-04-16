@@ -15,6 +15,7 @@ public class GameManager : Singleton<GameManager>
     public GameObject RecipePanel;
     public GameObject recipeCraftPanel;
     public GameObject palBoxPanel;
+    public GameObject chestPanel;
 
     public GameObject activePanel;
 
@@ -35,6 +36,7 @@ public class GameManager : Singleton<GameManager>
         OnCraft();
         RecipePanel.SetActive(false);
         palBoxPanel.SetActive(false);
+        chestPanel.SetActive(false);
     }
     public void ActivePanel(GameObject panel)
     {

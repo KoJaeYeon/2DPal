@@ -14,7 +14,7 @@ public class Building : MonoBehaviour
 {
     public int id;
     public int index;
-    static int worldIndexNum;
+    static int worldIndexNum = 1;
     public BuildingStatement buildingStatement = BuildingStatement.FreeBuilding;
     bool isContact = false;
     public float MaxConstructTime;

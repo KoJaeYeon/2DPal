@@ -118,7 +118,7 @@ public class Slot_Chest : MonoBehaviour
     {
         item = null;
         image.gameObject.SetActive(false);
-        if (InventoryManager.Instance.inventory[0].ContainsKey(key)) InventoryManager.Instance.inventory[0].Remove(key);
+        if (InventoryManager.Instance.inventory.ContainsKey(key)) InventoryManager.Instance.inventory.Remove(key);
     }
 
     public override bool Equals(object obj)
