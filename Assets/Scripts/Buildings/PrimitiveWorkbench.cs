@@ -25,7 +25,7 @@ public class PrimitiveWorkbench : Building
                 RecipePanel.SetActive(true);
                 ProductManager.Instance.ResetPanel();
                 ProductManager.Instance.buildingName.text = buildingName;
-                foreach (GameObject recipe in FurnitureDatabase.Instance.workbenchRecipeSlots)
+                foreach (GameObject recipe in FurnitureDatabase.Instance.RecipeSlots[0])
                 {
                     recipe.SetActive(true);
                 }
@@ -34,6 +34,7 @@ public class PrimitiveWorkbench : Building
                 break;
             case BuildingStatement.Done:
                 InventoryManager.Instance.DropItem(production);
+                GameManager.Instance.GetExp(production.count * 2);
                 buildingStatement = BuildingStatement.Built;
                 break;
         }
@@ -53,7 +54,7 @@ public class PrimitiveWorkbench : Building
     }
     public override void ResetPanel()
     {
-        foreach (GameObject recipe in FurnitureDatabase.Instance.workbenchRecipeSlots)
+        foreach (GameObject recipe in FurnitureDatabase.Instance.RecipeSlots[0])
         {
             recipe.SetActive(false);
         }

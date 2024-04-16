@@ -30,17 +30,15 @@ public class Slot_Pal : MonoBehaviour
     #region SwapPoint
     public void DragOn()
     {
-        Debug.Log("DragOn");
         SetSlot();
     }
     public void PointerClick()
     {
-        Debug.Log("Click");
     }
 
     void SetSlot()
     {
-        if (pal == null) { Debug.Log("return"); return; } // 빈칸이 시작지점일 때
+        if (pal == null) {  return; } // 빈칸이 시작지점일 때
         Vector3 point = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
         PalBoxManager.Instance.startSlotkey = this.key;
         PalBoxManager.Instance.tempSlot.gameObject.SetActive(true);
@@ -55,7 +53,6 @@ public class Slot_Pal : MonoBehaviour
 
     public void EndDrag()
     {
-        Debug.Log("DragEnd");
         if (!PalBoxManager.Instance.tempSlot.gameObject.activeSelf) return; // Temp 슬롯이 비 활성화일 때(인벤토리 꺼졌을때 드래그 유지 중)
         PalBoxManager.Instance.tempSlot.gameObject.SetActive(false);
         PalBoxManager.Instance.tempSlot2.gameObject.SetActive(false);
@@ -104,7 +101,6 @@ public class Slot_Pal : MonoBehaviour
 
     public void RemoveSlot() // 보류
     {
-        Debug.Log("remove");
         pal = null;
         gameObject.SetActive(false);
         if( key < 5 )

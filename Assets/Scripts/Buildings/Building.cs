@@ -69,6 +69,7 @@ public class Building : MonoBehaviour
             StartCoroutine(falshCoroutine());
             PalManager.Instance.buildings.Remove(this);
             PlayerControll playerControll = GameManager.Instance.playerController.GetComponent<PlayerControll>();
+            GameManager.Instance.GetExp((int)(MaxConstructTime / 5 * 2));
             if (playerControll.statement == Statement.Building)
             {
                 playerControll.EndConstruct(this);

@@ -24,7 +24,7 @@ public class PrimitiveFurnature : Building
                 RecipePanel.SetActive(true);
                 ProductManager.Instance.ResetPanel();
                 ProductManager.Instance.buildingName.text = buildingName;
-                foreach (GameObject recipe in FurnitureDatabase.Instance.furnaceRecipeSlots)
+                foreach (GameObject recipe in FurnitureDatabase.Instance.RecipeSlots[1])
                 {
                     recipe.SetActive(true);
                 }
@@ -53,7 +53,7 @@ public class PrimitiveFurnature : Building
 
     public override void ResetPanel()
     {
-        foreach (GameObject recipe in FurnitureDatabase.Instance.furnaceRecipeSlots)
+        foreach (GameObject recipe in FurnitureDatabase.Instance.RecipeSlots[1])
         {
             recipe.SetActive(false);
         }

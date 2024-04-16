@@ -158,5 +158,11 @@ MonoBehaviour:
   id: 103
   index: 0
   buildingStatement: 0
-  MaxConstructTime: 500
+  MaxConstructTime: 10
   nowConstructTime: 0
+  MaxWorkTime: 0
+  nowWorkTime: 0
+  buildingType: 0
+  workingPal: {fileID: 0}
+  todoList: []
+  palBoxPanel: {fileID: 0}

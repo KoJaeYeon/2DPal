@@ -121,14 +121,14 @@ public class PalAI : MonoBehaviour
                 palState = PalStates.Idle;
                 break;
             case BuildingStatement.isBuilding:
-                targetBulding.Build(1);
+                targetBulding.Build(0.1f);
                 if (!targetBulding.gameObject.activeSelf)
                 {
                     palState = PalStates.Idle;
                 }
                 break;
             case BuildingStatement.Working:
-                targetBulding.Work(0.1f);
+                targetBulding.Work(0.01f);
                 break;
             case BuildingStatement.Done:
                 palState = PalStates.Idle;

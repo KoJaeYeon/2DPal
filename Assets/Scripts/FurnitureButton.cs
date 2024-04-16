@@ -3,13 +3,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class FurnitureButton : MonoBehaviour
+public class FurnitureButton : MonoBehaviour // 크래프트 패널에서 선택되는 건축물
 {
     [SerializeField] int id;
     private void Start()
     {
         GetComponent<Image>().sprite = FurnitureDatabase.Instance.furnitures[id].sprite;
         GetComponentInChildren<TextMeshProUGUI>().text = FurnitureDatabase.Instance.furnitures[id].itemName;
+        if(id != 101) gameObject.SetActive(false);
     }
     public void PressFurnitureButton()
     {

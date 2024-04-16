@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class FurnitureDatabase : Singleton<FurnitureDatabase>
@@ -13,18 +14,22 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
     public Material flashMaterial;
     public GameObject recipePrefab;
 
+    public GameObject[] furnitureButton;
+
     public Furniture testFur;
 
-    public List<GameObject> workbenchRecipeSlots = new List<GameObject>();
-    public List<GameObject> furnaceRecipeSlots = new List<GameObject>();
-    public List<GameObject> campfireRecipeSlots = new List<GameObject>();
+    public List<GameObject>[] RecipeSlots = new List<GameObject>[4];
+
+    public GameObject UnlockPanel;
+    private TechButton techButton;
     private void Awake()
     {
         int index = 0;
         int id = 101; Furniture furniture = new Furniture("원시적인 작업대", id, new int[,] { { 1, 2 } }); furniture.sprite = sprites[index++]; furnitures.Add(id, furniture);
         id = 102; furniture = new Furniture("원시적인 화로", id, new int[,] { { 1, 20 }, { 2, 50 } }); furniture.sprite = sprites[index++]; furnitures.Add(id, furniture);
-        id = 103; furniture = new Furniture("팰 상자", id, new int[,] {{ 1, 8 },{ 2, 3 }, {3,1 } }); furniture.sprite = sprites[index++]; furnitures.Add(id, furniture);
-
+        id = 103; furniture = new Furniture("팰 상자", id, new int[,] { { 1, 8 }, { 2, 3 }, { 3, 1 } }); furniture.sprite = sprites[index++]; furnitures.Add(id, furniture);
+        id = 104; furniture = new Furniture("모닥불", id, new int[,] { { 1, 10 } }); furniture.sprite = sprites[index++]; furnitures.Add(id, furniture);
+        id = 105; furniture = new Furniture("나무 상자", id, new int[,] { { 1, 15 }, { 2, 5 } }); furniture.sprite = sprites[index++]; furnitures.Add(id, furniture);
         for (int i = 0; i < furnitures.Count; i++)
         {
             GameObject prefab = Instantiate(Prefabs[i]);
@@ -34,13 +39,17 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
             prefab.SetActive(false);
         }
 
-        
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < RecipeSlots.Length; i++)
+        {
+            RecipeSlots[i] = new List<GameObject>();
+        }
+
+        for (int i = 0; i < 4; i++)
         {
             GameObject prefab = Instantiate(recipePrefab);
             RecipeSlot slot = prefab.GetComponent<RecipeSlot>();
-            slot.id = 1001 + i;
-            workbenchRecipeSlots.Add(prefab);
+            slot.id = 1002 + i;
+            RecipeSlots[0].Add(prefab);
             prefab.SetActive(false);
             prefab.transform.SetParent(GameManager.Instance.recipeCraftPanel.transform);
             prefab.transform.localScale = Vector3.one;
@@ -51,7 +60,7 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
             GameObject prefab = Instantiate(recipePrefab);
             RecipeSlot slot = prefab.GetComponent<RecipeSlot>();
             slot.id = 1100 + i;
-            furnaceRecipeSlots.Add(prefab);
+            RecipeSlots[1].Add(prefab);
             prefab.SetActive(false);
             prefab.transform.SetParent(GameManager.Instance.recipeCraftPanel.transform);
             prefab.transform.localScale = Vector3.one;
@@ -62,30 +71,45 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
             GameObject prefab = Instantiate(recipePrefab);
             RecipeSlot slot = prefab.GetComponent<RecipeSlot>();
             slot.id = 1200 + i;
-            campfireRecipeSlots.Add(prefab);
+            RecipeSlots[2].Add(prefab);
             prefab.SetActive(false);
             prefab.transform.SetParent(GameManager.Instance.recipeCraftPanel.transform);
             prefab.transform.localScale = Vector3.one;
         }
     }
 
-    public GameObject GiveFurniture(int id)
+    public GameObject GiveFurniture(int id) // 가구 프리펩 오브젝트 전달
     {
         id %= 100;
-        foreach(GameObject furniture in furniturePrefabs[id-1])
+        foreach (GameObject furniture in furniturePrefabs[id - 1])
         {
-            if(!furniture.activeSelf)
+            if (!furniture.activeSelf)
             {
                 furniture.SetActive(true);
                 return furniture;
             }
         }
-        GameObject prefab = Instantiate(Prefabs[id-1]);
-        furniturePrefabs[id-1].Add(prefab);
+        GameObject prefab = Instantiate(Prefabs[id - 1]);
+        furniturePrefabs[id - 1].Add(prefab);
         return prefab;
     }
+    public void OpenUnlockPanel(TechButton techButton) // 기술 해금 창 열기
+    {
+        this.techButton = techButton;
+        UnlockPanel.SetActive(true);
+        UnlockPanel.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = techButton.text[0].text + "을(를) 해방할까요?";
+    }
+    public void UnlockTech() // 기술 해금
+    {
+        techButton.ActiveSlot();
+    }
 
-    public int[,] NeedItem(int id)
+    public void OpenFruniture(int id) // 가구 해금
+    {
+        furnitureButton[id - 102].SetActive(true);
+    }
+
+    public int[,] NeedItem(int id) // 건축 필요 재료 전달하기
     {
         testFur = furnitures[id];
         return furnitures[id].buildingItems;

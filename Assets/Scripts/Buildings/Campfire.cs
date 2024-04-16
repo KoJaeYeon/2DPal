@@ -23,7 +23,7 @@ public class Campfire : Building
                 RecipePanel.SetActive(true);
                 ProductManager.Instance.ResetPanel();
                 ProductManager.Instance.buildingName.text = buildingName;
-                foreach (GameObject recipe in FurnitureDatabase.Instance.campfireRecipeSlots)
+                foreach (GameObject recipe in FurnitureDatabase.Instance.RecipeSlots[2])
                 {
                     recipe.SetActive(true);
                 }
@@ -52,7 +52,7 @@ public class Campfire : Building
 
     public override void ResetPanel()
     {
-        foreach (GameObject recipe in FurnitureDatabase.Instance.campfireRecipeSlots)
+        foreach (GameObject recipe in FurnitureDatabase.Instance.RecipeSlots[2])
         {
             recipe.SetActive(false);
         }

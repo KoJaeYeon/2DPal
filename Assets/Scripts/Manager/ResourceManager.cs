@@ -12,6 +12,7 @@ public class ResourceManager : Singleton<ResourceManager>
     public PlayerControll playerControll;
 
     public float attackDamage = 0;
+    public int expCheck;
 
     private void Awake()
     {
@@ -45,13 +46,14 @@ public class ResourceManager : Singleton<ResourceManager>
         {
             attackDamage += damage;
             Item giveItem = nowAttackBricks.Attack(damage);
+            PlusExp(giveItem.count);
             if (nowAttackBricks.duration < 0)
             {
                 if (playerControll.viewdirection == ViewDirection.Left || playerControll.viewdirection == ViewDirection.Right)
                 {
                     
                     if (nowAttackBricks.DestroyTile(bricsPosition))
-                    {
+                    {                        
                         InventoryManager.Instance.DropItem(giveItem);
                         DataClear();
                     }
@@ -93,5 +95,14 @@ public class ResourceManager : Singleton<ResourceManager>
         }
 
     }
-    //정보 없으면 데이터 다시 받아오기
+
+    public void PlusExp(int count)
+    {
+        expCheck += count;
+        if(expCheck > 20)
+        {
+            GameManager.Instance.GetExp(expCheck / 20);
+            expCheck %= 20;
+        }
+    }
 }

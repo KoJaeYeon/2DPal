@@ -61,6 +61,7 @@ public class PlayerControll : MonoBehaviour
     public int health;
     public int moveWeight;
     public int skillPoint;
+    public int TechPoint = 10;
 
     public float speed = 0.01f;
     public float run = 1;
@@ -68,6 +69,7 @@ public class PlayerControll : MonoBehaviour
 
     public float maxStamina = 100;
     public float nowStamina = 100;
+
 
     Animator animator;
 
@@ -111,10 +113,10 @@ public class PlayerControll : MonoBehaviour
         switch (statement)
         {
             case Statement.Building:
-                building.Build(1);
+                building.Build(0.1f);
                 break;
             case Statement.Action:
-                building.Work(0.2f);
+                building.Work(0.02f);
                 break;
         }
         if(isthorwing)
@@ -279,6 +281,7 @@ public class PlayerControll : MonoBehaviour
     }
     private void OnAction(InputValue inputValue) //F
     {
+        if (GameManager.Instance.ManagerUsingUi()) return;
         if (target == null) return;
         if (target.CompareTag("Furniture"))
         {
@@ -325,22 +328,25 @@ public class PlayerControll : MonoBehaviour
     }
     private void OnFire(InputValue inputValue) // Fire1
     {
-        if (GameManager.Instance.ManagerUsingUi()) return;
-        if (statement == Statement.Action) return;
-        else if (statement == Statement.Crafting)
-        {
-            if (freeBuilding.GetComponent<Building>().ContactCheck()) return;
-            else
-            {
-                if (!CraftManager.Instance.canBuild) return; // 재료 부족으로 건축 불가능 시 리턴, 없으면 프로그램 터짐
-                freeBuilding.transform.parent = FurnitureDatabase.Instance.parent.transform;
-                EndBuilding();
-                CraftManager.Instance.PayBuilding();
-                return;
-            }
-        }
-        if (istired) return;
         fire = inputValue.isPressed;
+        if (fire)
+        {
+            if (GameManager.Instance.ManagerUsingUi()) return;
+            if (statement == Statement.Action) return;
+            else if (statement == Statement.Crafting)
+            {
+                if (freeBuilding.GetComponent<Building>().ContactCheck()) return;
+                else
+                {
+                    if (!CraftManager.Instance.canBuild) return; // 재료 부족으로 건축 불가능 시 리턴, 없으면 프로그램 터짐
+                    freeBuilding.transform.parent = FurnitureDatabase.Instance.parent.transform;
+                    EndBuilding();
+                    CraftManager.Instance.PayBuilding();
+                    return;
+                }
+            }
+            if (istired) return;
+        }
         animator_Equip[(int)nowEquip].SetBool("Fire", fire);
         GiveResourceData();
         if (!fire)

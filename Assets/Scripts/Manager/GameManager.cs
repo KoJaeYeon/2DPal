@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GameManager : Singleton<GameManager>
 {
     public GameObject playerController;
+
+    private PlayerControll playerControll;
 
     public GameObject OptionPanel;
     public GameObject CraftingPanel;
@@ -15,9 +18,15 @@ public class GameManager : Singleton<GameManager>
 
     public GameObject activePanel;
 
+    public TextMeshProUGUI technicPoint;
+
     bool isMenuOn = false;
     bool isCraftOn = false;
 
+    private void Awake()
+    {
+        playerControll = playerController.GetComponent<PlayerControll>();
+    }
     private void Start()
     {
         OnMenu();
@@ -47,6 +56,7 @@ public class GameManager : Singleton<GameManager>
     }
     private void OnMenu()
     {
+        if (activePanel != null) {  return; }
         if (isCraftOn) return;
         if (isMenuOn)
         {
@@ -60,6 +70,22 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    public void GetExp(int exp)
+    {
+        playerControll.exp += exp;
+    }
+
+    public void TechnicPoint(int point)
+    {
+        playerControll.TechPoint += point;
+        technicPoint.text = playerControll.TechPoint.ToString();
+    }
+
+    public bool CheckTechPoint(int point)
+    {
+        if(point < playerControll.TechPoint) return false;
+        else return true;
+    }
     public void OnCraft()
     {
         if (isMenuOn) return;
