@@ -9,7 +9,6 @@ public class GiveKey_Pal : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("sdf");
         slots = GetComponentsInChildren<Slot_Pal>();
         for(int i = startKey; i < slots.Length + startKey; i++)
         {

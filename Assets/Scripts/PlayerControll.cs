@@ -309,6 +309,19 @@ public class PlayerControll : MonoBehaviour
                 statement = Statement.Idle;
             }
         }
+        else if (target.CompareTag("DropItem"))
+        {
+            DropItem dropItem = target.GetComponent<DropItem>();
+
+            if (inputValue.isPressed)
+            {
+                foreach(Item item in dropItem.items)
+                {
+                    InventoryManager.Instance.DropItem(item);
+                }                
+                dropItem.gameObject.SetActive(false);
+            }
+        }
     }
     private void OnFire(InputValue inputValue) // Fire1
     {

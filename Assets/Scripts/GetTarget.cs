@@ -27,58 +27,69 @@ public class GetTarget : MonoBehaviour
     {
         if(ActionPanel.activeSelf)
         {
-            switch(building.buildingStatement)
+            if(building != null)
             {
-                case BuildingStatement.isBuilding:
-                    float leftwork = building.GetLeftBuild();
-                    leftwork = leftwork < 0 ? 0 : leftwork;
-                    Number.text = leftwork.ToString("0.0");
-                    ActionPanel.transform.GetChild(0).gameObject.SetActive(true);
-                    ActionPanel.transform.GetChild(1).gameObject.SetActive(false);
-                    ActionPanel.transform.GetChild(2).gameObject.SetActive(false);
-                    ActionPanel.transform.GetChild(3).gameObject.SetActive(false);
+                switch (building.buildingStatement)
+                {
+                    case BuildingStatement.isBuilding:
+                        float leftwork = building.GetLeftBuild();
+                        leftwork = leftwork < 0 ? 0 : leftwork;
+                        Number.text = leftwork.ToString("0.0");
+                        ActionPanel.transform.GetChild(0).gameObject.SetActive(true);
+                        ActionPanel.transform.GetChild(1).gameObject.SetActive(false);
+                        ActionPanel.transform.GetChild(2).gameObject.SetActive(false);
+                        ActionPanel.transform.GetChild(3).gameObject.SetActive(false);
 
-                    if (playerControll.statement == Statement.Building)
-                    {
-                        animators[1].SetBool("Press", true);
-                    }
-                    else
-                    {
-                        animators[1].SetBool("Press", false);
-                    }
-                    break;
-                case BuildingStatement.Built:
-                    ActionPanel.transform.GetChild(0).gameObject.SetActive(false);
-                    ActionPanel.transform.GetChild(1).gameObject.SetActive(true);
-                    ActionPanel.transform.GetChild(2).gameObject.SetActive(false);
-                    ActionPanel.transform.GetChild(3).gameObject.SetActive(false);                    
-                    break;
-                case BuildingStatement.Working:
-                    leftwork = building.GetLeftWork();
-                    leftwork = leftwork < 0 ? 0 : leftwork;
-                    Number2.text = leftwork.ToString("0.0");
-                    ActionPanel.transform.GetChild(0).gameObject.SetActive(false);
-                    ActionPanel.transform.GetChild(1).gameObject.SetActive(false);
-                    ActionPanel.transform.GetChild(2).gameObject.SetActive(true);
-                    ActionPanel.transform.GetChild(3).gameObject.SetActive(false);
-                    if (playerControll.statement == Statement.Action)
-                    {
-                        animators[3].SetBool("Press", true);
-                    }
-                    else
-                    {
-                        animators[3].SetBool("Press", false);
-                    }
-                    break;
-                case BuildingStatement.Done:
-                    ActionPanel.transform.GetChild(0).gameObject.SetActive(false);
-                    ActionPanel.transform.GetChild(1).gameObject.SetActive(false);
-                    ActionPanel.transform.GetChild(2).gameObject.SetActive(false);
-                    ActionPanel.transform.GetChild(3).gameObject.SetActive(true);
-                    break;
-                default:
-                    break;
+                        if (playerControll.statement == Statement.Building)
+                        {
+                            animators[1].SetBool("Press", true);
+                        }
+                        else
+                        {
+                            animators[1].SetBool("Press", false);
+                        }
+                        break;
+                    case BuildingStatement.Built:
+                        ActionPanel.transform.GetChild(0).gameObject.SetActive(false);
+                        ActionPanel.transform.GetChild(1).gameObject.SetActive(true);
+                        ActionPanel.transform.GetChild(2).gameObject.SetActive(false);
+                        ActionPanel.transform.GetChild(3).gameObject.SetActive(false);
+                        break;
+                    case BuildingStatement.Working:
+                        leftwork = building.GetLeftWork();
+                        leftwork = leftwork < 0 ? 0 : leftwork;
+                        Number2.text = leftwork.ToString("0.0");
+                        ActionPanel.transform.GetChild(0).gameObject.SetActive(false);
+                        ActionPanel.transform.GetChild(1).gameObject.SetActive(false);
+                        ActionPanel.transform.GetChild(2).gameObject.SetActive(true);
+                        ActionPanel.transform.GetChild(3).gameObject.SetActive(false);
+                        if (playerControll.statement == Statement.Action)
+                        {
+                            animators[3].SetBool("Press", true);
+                        }
+                        else
+                        {
+                            animators[3].SetBool("Press", false);
+                        }
+                        break;
+                    case BuildingStatement.Done:
+                        ActionPanel.transform.GetChild(0).gameObject.SetActive(false);
+                        ActionPanel.transform.GetChild(1).gameObject.SetActive(false);
+                        ActionPanel.transform.GetChild(2).gameObject.SetActive(false);
+                        ActionPanel.transform.GetChild(3).gameObject.SetActive(true);
+                        break;
+                    default:
+                        break;
+                }
             }
+            else
+            {
+                ActionPanel.transform.GetChild(0).gameObject.SetActive(false);
+                ActionPanel.transform.GetChild(1).gameObject.SetActive(false);
+                ActionPanel.transform.GetChild(2).gameObject.SetActive(false);
+                ActionPanel.transform.GetChild(3).gameObject.SetActive(true);
+            }
+            
         }
     }
 
@@ -128,6 +139,11 @@ public class GetTarget : MonoBehaviour
                     break;
             }
         }
+        else if(collision.gameObject.CompareTag("DropItem"))
+        {
+            ActionPanel.SetActive(false);
+            ActionPanel.SetActive(true);
+        }
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
@@ -136,7 +152,8 @@ public class GetTarget : MonoBehaviour
     private void OnTriggerExit2D(Collider2D collision)
     {
         playerControll.target = null;
-        if (collision.gameObject.CompareTag("Furniture"))
+        building = null;
+        if (collision.gameObject.CompareTag("Furniture") || collision.gameObject.CompareTag("DropItem"))
         {
             animators[0].Play("UnShowEffect");
         }

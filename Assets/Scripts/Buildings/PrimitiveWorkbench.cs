@@ -10,6 +10,7 @@ public class PrimitiveWorkbench : Building
     
     private new void Awake()
     {
+        buildingName = "원시적인 작업대";
         base.Awake();
         RecipePanel = GameManager.Instance.RecipePanel;
         todoList = todoList = PalManager.Instance.producing;
@@ -23,11 +24,12 @@ public class PrimitiveWorkbench : Building
             case BuildingStatement.Built:
                 RecipePanel.SetActive(true);
                 ProductManager.Instance.ResetPanel();
-                foreach(GameObject recipe in FurnitureDatabase.Instance.workbenchRecipeSlots)
+                ProductManager.Instance.buildingName.text = buildingName;
+                foreach (GameObject recipe in FurnitureDatabase.Instance.workbenchRecipeSlots)
                 {
                     recipe.SetActive(true);
                 }
-                ProductManager.Instance.primitiveWorkbench = this;
+                ProductManager.Instance.nowBuilding = this;
                 GameManager.Instance.activePanel = RecipePanel;
                 break;
             case BuildingStatement.Done:
@@ -40,7 +42,7 @@ public class PrimitiveWorkbench : Building
     {        
         base.Work(work);
     }
-    public void ConfirmProduct(Product product)
+    public override void ConfirmProduct(Product product)
     {
         GameManager.Instance.EscapeMenu(true);
         production = product;
@@ -48,5 +50,12 @@ public class PrimitiveWorkbench : Building
         todoList.Add(this);
         MaxWorkTime = production.lavor * production.count;
         nowWorkTime = 0;
+    }
+    public override void ResetPanel()
+    {
+        foreach (GameObject recipe in FurnitureDatabase.Instance.workbenchRecipeSlots)
+        {
+            recipe.SetActive(false);
+        }
     }
 }

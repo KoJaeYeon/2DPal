@@ -21,6 +21,7 @@ public class Building : MonoBehaviour
     public float nowConstructTime;
     public float MaxWorkTime;
     public float nowWorkTime;
+    protected string buildingName;
 
     public enum BuildingType { Recipe, Pal}
     public BuildingType buildingType;
@@ -75,6 +76,15 @@ public class Building : MonoBehaviour
         }
     }
 
+    public virtual void ConfirmProduct(Product product)
+    {
+
+    }
+
+    public virtual void ResetPanel()
+    {
+
+    }
     public virtual void Work(float work)
     {
         if (buildingStatement == BuildingStatement.Built) return;

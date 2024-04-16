@@ -160,3 +160,16 @@ MonoBehaviour:
   buildingStatement: 0
   MaxConstructTime: 3000
   nowConstructTime: 0
+  MaxWorkTime: 0
+  nowWorkTime: 0
+  buildingType: 0
+  workingPal: {fileID: 0}
+  todoList: []
+  RecipePanel: {fileID: 0}
+  production:
+    _itemName: 
+    _id: 0
+    _count: 0
+    _weight: 0
+    _description: 
+    _sprite: {fileID: 0}

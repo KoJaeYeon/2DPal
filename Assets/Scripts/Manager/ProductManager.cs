@@ -11,14 +11,16 @@ public class ProductManager : Singleton<ProductManager>
     public GameObject productionPanel;
     public GameObject frunacePanel;
 
-    public PrimitiveWorkbench primitiveWorkbench;
-    public PrimitiveFurnature PrimitiveFurnature;
+    public Building nowBuilding;
     public GameObject DataPanel;
+    public GameObject IngredientPanel;
     public GameObject ConfirmPanel;    
     public Image productImage;
     public TextMeshProUGUI productName;
     public TextMeshProUGUI productHasCount;
     public TextMeshProUGUI countText;
+
+    public TextMeshProUGUI buildingName;
 
     public NeedPanel[] needPanel;
     public Product setProduct;
@@ -28,6 +30,7 @@ public class ProductManager : Singleton<ProductManager>
     private void Awake()
     {
         DataPanel = productionPanel.transform.GetChild(0).gameObject;
+        IngredientPanel = productionPanel.transform.GetChild(1).gameObject;
         ConfirmPanel = productionPanel.transform.GetChild(2).gameObject;
         productImage = productionPanel.transform.GetChild(0).GetChild(0).GetComponent<Image>();
         productName = productionPanel.transform.GetChild(0).GetChild(2).GetComponent<TextMeshProUGUI>();
@@ -41,11 +44,12 @@ public class ProductManager : Singleton<ProductManager>
     public void ResetPanel()
     {
         setProduct = null;
-        primitiveWorkbench = null;
-        PrimitiveFurnature = null;
+        if(nowBuilding != null) { nowBuilding.ResetPanel(); }        
+        nowBuilding = null;
         count = 1;
         countText.text = GameManager.Instance.CountString(count);
         DataPanel.SetActive(false);
+        IngredientPanel.SetActive(false);
         ConfirmPanel.SetActive(false);
     }
 
@@ -53,6 +57,7 @@ public class ProductManager : Singleton<ProductManager>
     {
         setProduct = product;
         DataPanel.SetActive(true);
+        IngredientPanel.SetActive(true);
         ConfirmPanel.SetActive(true);
         for (int i = 0; i < needPanel.Length; i++)
         {
@@ -90,7 +95,7 @@ public class ProductManager : Singleton<ProductManager>
     public void ConfirmProduct()
     {
         setProduct.count = count;
-        primitiveWorkbench.ConfirmProduct(setProduct);
+        nowBuilding.ConfirmProduct(setProduct);
         int[,] needIngredients = setProduct.ingredients;
         for (int i = 0; i < needIngredients.GetLength(0); i++)
         {

@@ -17,6 +17,7 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
 
     public List<GameObject> workbenchRecipeSlots = new List<GameObject>();
     public List<GameObject> furnaceRecipeSlots = new List<GameObject>();
+    public List<GameObject> campfireRecipeSlots = new List<GameObject>();
     private void Awake()
     {
         int index = 0;
@@ -40,6 +41,28 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
             RecipeSlot slot = prefab.GetComponent<RecipeSlot>();
             slot.id = 1001 + i;
             workbenchRecipeSlots.Add(prefab);
+            prefab.SetActive(false);
+            prefab.transform.SetParent(GameManager.Instance.recipeCraftPanel.transform);
+            prefab.transform.localScale = Vector3.one;
+        }
+
+        for (int i = 0; i < 1; i++)
+        {
+            GameObject prefab = Instantiate(recipePrefab);
+            RecipeSlot slot = prefab.GetComponent<RecipeSlot>();
+            slot.id = 1100 + i;
+            furnaceRecipeSlots.Add(prefab);
+            prefab.SetActive(false);
+            prefab.transform.SetParent(GameManager.Instance.recipeCraftPanel.transform);
+            prefab.transform.localScale = Vector3.one;
+        }
+
+        for (int i = 0; i < 2; i++)
+        {
+            GameObject prefab = Instantiate(recipePrefab);
+            RecipeSlot slot = prefab.GetComponent<RecipeSlot>();
+            slot.id = 1200 + i;
+            campfireRecipeSlots.Add(prefab);
             prefab.SetActive(false);
             prefab.transform.SetParent(GameManager.Instance.recipeCraftPanel.transform);
             prefab.transform.localScale = Vector3.one;
