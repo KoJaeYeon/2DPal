@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PrimitiveWorkbench : Building
@@ -33,6 +34,7 @@ public class PrimitiveWorkbench : Building
                 GameManager.Instance.activePanel = RecipePanel;
                 break;
             case BuildingStatement.Done:
+                Debug.Log(production is Equip);
                 InventoryManager.Instance.DropItem(production);
                 GameManager.Instance.GetExp(production.count * 2);
                 buildingStatement = BuildingStatement.Built;
@@ -45,7 +47,8 @@ public class PrimitiveWorkbench : Building
     }
     public override void ConfirmProduct(Product product)
     {
-        GameManager.Instance.EscapeMenu(true);
+        Debug.Log(product is Equip);
+        GameManager.Instance.ExitMenu();
         production = product;
         buildingStatement = BuildingStatement.Working;
         todoList.Add(this);

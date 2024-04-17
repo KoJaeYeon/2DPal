@@ -16,7 +16,7 @@ public class CraftManager : Singleton<CraftManager>
     public TextMeshProUGUI holeTMP;
     public Sprite initialImage;
     public NeedPanel[] needPanels; //왼쪽 정보창에 뜨는 아이템 패널
-    public NeedPanel_Build[] needPanels_Build; // 오른쪽 정보창에 뜨는 건축 패널
+    public NeedPanel_Build[] needPanels_Build; // 오른쪽 정보창에 뜨는 건축 패널 -> 해체는 GetTarget에서 관리
 
     public bool canBuild;
 
@@ -31,7 +31,7 @@ public class CraftManager : Singleton<CraftManager>
         holeImage = Hole.GetComponent<Image>();
         holeTMP = Hole.GetComponentInChildren<TextMeshProUGUI>();
         needPanels = DataPanel.GetComponentsInChildren<NeedPanel>();
-        needPanels_Build = BuildingPanel.GetComponentsInChildren<NeedPanel_Build>();
+        needPanels_Build = BuildingPanel.transform.GetChild(0).GetComponentsInChildren<NeedPanel_Build>();
         initialImage = holeImage.sprite;
         holeTMP.text = "";
         Hole.SetActive(false);
@@ -83,11 +83,14 @@ public class CraftManager : Singleton<CraftManager>
         }
         else // 제작가능
         {
-            if(!player) GameManager.Instance.OnCraft();
+            if (!player) GameManager.Instance.ExitMenu();
+            GameManager.Instance.activePanel = BuildingPanel;
             playerControll.statement = Statement.Crafting;
             playerControll.freeBuilding = FurnitureDatabase.Instance.GiveFurniture(id);
             playerControll.FreeBuilding();
             BuildingPanel.SetActive(true);
+            BuildingPanel.transform.GetChild(0).gameObject.SetActive(true);
+            BuildingPanel.transform.GetChild(1).gameObject.SetActive(false);
             canBuild = true;
             int[,] needItem = FurnitureDatabase.Instance.furnitures[id].buildingItems;
             for (int i = 0; i < needItem.GetLength(0); i++)

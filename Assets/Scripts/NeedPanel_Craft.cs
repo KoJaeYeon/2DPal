@@ -16,6 +16,9 @@ public class NeedPanel_Craft : MonoBehaviour
     {
         image = transform.GetChild(1).GetComponent<Image>();
         itemData = GetComponentsInChildren<TextMeshProUGUI>();
+    }
+    private void Start()
+    {
         transform.parent.gameObject.SetActive(false);
     }
     public bool UpdateDataPanel(Item item, int needNum)

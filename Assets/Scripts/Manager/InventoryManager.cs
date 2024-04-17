@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEditor.Progress;
 
@@ -8,6 +9,7 @@ public class InventoryManager : Singleton<InventoryManager>
     public GameObject UIInventorySlot;
     public GameObject chestInventorySlot;
     public GameObject chestBoxSlot;
+    public GameObject UIEquipmentSlot;
 
 
     public TMPro.TextMeshProUGUI textMeshProUGUI; //팰스피어 갯수 표시 UI
@@ -38,16 +40,9 @@ public class InventoryManager : Singleton<InventoryManager>
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.V))
+        if (Input.GetKeyDown(KeyCode.V))
         {
-            foreach(int i in inventory.Keys)
-            {
-                Debug.Log(i);
-            }
-            foreach (Item i in inventory.Values)
-            {
-                Debug.Log(i);
-            }
+            Debug.Log(inventory[2] is Equip);
         }
     }
 
@@ -66,6 +61,15 @@ public class InventoryManager : Singleton<InventoryManager>
             Slot_Chest slot2 = chestInventorySlot.transform.GetChild(i).GetChild(0).GetComponent<Slot_Chest>();
             slot2.UpdateSlot(item);
         }
+        else if(i < 25)
+        {
+            Slot slot = UIEquipmentSlot.transform.GetChild(i - 21).GetChild(0).GetComponent<Slot>();
+            slot.UpdateSlot(item);
+            Debug.Log("update");
+            //무기 교체
+            if(item == null) WeaponManager.Instance.GetWeapon(500, i);
+            else WeaponManager.Instance.GetWeapon(item.id, i);
+        }
         else if (i >= 50)
         {
             Slot_Chest slot2 = chestBoxSlot.transform.GetChild(i%50).GetChild(0).GetComponent<Slot_Chest>();
@@ -82,6 +86,11 @@ public class InventoryManager : Singleton<InventoryManager>
             Slot_Chest slot2 = chestInventorySlot.transform.GetChild(i).GetChild(0).GetComponent<Slot_Chest>();
             slot2.UpdateSlot();
         }
+        else if (i < 25)
+        {
+            Slot slot = UIEquipmentSlot.transform.GetChild(i - 21).GetChild(0).GetComponent<Slot>();
+            slot.UpdateSlot();
+        }
         else if (i >= 50)
         {
             Slot_Chest slot2 = chestBoxSlot.transform.GetChild(i%50).GetChild(0).GetComponent<Slot_Chest>();
@@ -91,12 +100,16 @@ public class InventoryManager : Singleton<InventoryManager>
     }
     public void SwapSlot()
     {
+        if(21 <= endSlotkey && endSlotkey < 25)
+        {
+            if (!(tempSlot.item is Equip)) return;
+        }
         if (!inventory.ContainsKey(endSlotkey)) // 빈 공간이면
         {
             Debug.Log("case1");
             inventory[startSlotkey].Substarct(tempSlot.item);
             inventory.Add(endSlotkey,tempSlot.item);
-            UpdateSlot(startSlotkey);
+            UpdateSlot(startSlotkey, null);
             UpdateSlot(endSlotkey, inventory[endSlotkey]);
         }
         else if (tempSlot.item.Equals(inventory[endSlotkey])) // 같은 종류의 아이템이면
@@ -165,23 +178,23 @@ public class InventoryManager : Singleton<InventoryManager>
 
     public void DropItem(Item item)
     {
-        if (item.id == 1001) sphereCount += item.count;
+        if (item.id == 1000) sphereCount += item.count;
         Debugint = sphereCount;
         textMeshProUGUI.text = GameManager.Instance.CountString(sphereCount);
-        if (inventory.ContainsValue(item)) //인벤토리에 아이템이 이미 존재하는 경우
+        bool alreadyHas = false;
+        int index = 0;
+        for (int i = 0; i < maxInvetory; i++)
         {
-            foreach (int i in inventory.Keys)
-            {
-                if (inventory[i].Equals(item))
-                {
-                    inventory[i].Add(item);
-                    inventorySum[item.id] += item.count;
-                    playerWeight += item.count * item.weight;
-                    weihgtPanel.UpdateWeight(playerWeight, maxPlayerWeight);
-                    UpdateSlot(i, inventory[i]);
-                }
-            }
-        }    
+            if(inventory.ContainsKey(i) && inventory[i].Equals(item)) {  alreadyHas = true; index = i; break; }
+        }
+        if (alreadyHas) //인벤토리에 아이템이 이미 존재하는 경우
+        {
+            inventory[index].Add(item);
+            inventorySum[item.id] += item.count;
+            playerWeight += item.count * item.weight;
+            weihgtPanel.UpdateWeight(playerWeight, maxPlayerWeight);
+            UpdateSlot(index, inventory[index]);
+        }
         else // 인벤토리에 아이템이 없는 경우
         {
             for (int i = 0;i < maxInvetory; i++)
@@ -201,7 +214,7 @@ public class InventoryManager : Singleton<InventoryManager>
 
     public void UseItem(Item item)
     {
-        if (item.id == 1001) sphereCount -= item.count;
+        if (item.id == 1000) sphereCount -= item.count;
         Debugint = sphereCount;
         textMeshProUGUI.text = GameManager.Instance.CountString(sphereCount);
         while (item.count > 0)

@@ -21,8 +21,6 @@ public class GameManager : Singleton<GameManager>
 
     public TextMeshProUGUI technicPoint;
 
-    bool isMenuOn = false;
-    bool isCraftOn = false;
 
     private void Awake()
     {
@@ -30,13 +28,12 @@ public class GameManager : Singleton<GameManager>
     }
     private void Start()
     {
-        OnMenu();
-        OnMenu();
-        OnCraft();
-        OnCraft();
+        OptionPanel.SetActive(false);
+        CraftingPanel.SetActive(false);
         RecipePanel.SetActive(false);
         palBoxPanel.SetActive(false);
         chestPanel.SetActive(false);
+        CraftManager.Instance.BuildingPanel.SetActive(false);
     }
     public void ActivePanel(GameObject panel)
     {
@@ -44,32 +41,47 @@ public class GameManager : Singleton<GameManager>
     }
     public bool ManagerUsingUi()
     {
-        if(isMenuOn||isCraftOn) return true;
         if(activePanel != null) return true;
         return false;
     }
 
-    public void EscapeMenu(bool range = false)
+
+    public void ExitMenu(bool range = false)
     {
-        if(activePanel != null) { activePanel.SetActive(false); activePanel = null; return; }
-        if (range) return; // 패널만 닫을 때
-        if (isCraftOn) { OnCraft(); return; }
-        OnMenu();
+        if (activePanel != null) { activePanel.SetActive(false); activePanel = null; return; }
+        if (!range) { return; }
+        activePanel = OptionPanel; OptionPanel.SetActive(true);
     }
-    private void OnMenu()
+    public void OnCraft()
     {
-        if (activePanel != null) {  return; }
-        if (isCraftOn) return;
-        if (isMenuOn)
+        if(activePanel == null)
         {
-            OptionPanel.SetActive(false);
-            isMenuOn = false;
+            CraftingPanel.SetActive(true);
+            activePanel = CraftingPanel;
+        }
+        else if(activePanel == CraftingPanel)
+        {
+            playerControll.statement = Statement.Disassembling;
+            CraftingPanel.SetActive(false);
+            activePanel = CraftManager.Instance.BuildingPanel;
+            CraftManager.Instance.BuildingPanel.SetActive(true);
+            CraftManager.Instance.BuildingPanel.transform.GetChild(0).gameObject.SetActive(false);
+            CraftManager.Instance.BuildingPanel.transform.GetChild(1).gameObject.SetActive(true);
         }
         else
         {
-            OptionPanel.SetActive(true);
-            isMenuOn = true;
+            return;
         }
+    }
+
+    public void OnMenu()
+    {
+        if (activePanel == null)
+        {
+            activePanel = OptionPanel;
+            OptionPanel.SetActive(true);
+        }
+        else if (activePanel == OptionPanel) { ExitMenu(); }
     }
 
     public void GetExp(int exp)
@@ -88,20 +100,7 @@ public class GameManager : Singleton<GameManager>
         if(point < playerControll.TechPoint) return false;
         else return true;
     }
-    public void OnCraft()
-    {
-        if (isMenuOn) return;
-        if (isCraftOn)
-        {
-            CraftingPanel.SetActive(false);
-            isCraftOn = false;
-        }
-        else
-        {
-            CraftingPanel.SetActive(true);
-            isCraftOn = true;
-        }
-    }
+
     public string CountString(int count)
     {
         string countString;

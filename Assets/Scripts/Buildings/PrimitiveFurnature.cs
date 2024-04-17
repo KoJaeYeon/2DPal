@@ -43,7 +43,7 @@ public class PrimitiveFurnature : Building
     }
     public override void ConfirmProduct(Product product)
     {
-        GameManager.Instance.EscapeMenu(true);
+        GameManager.Instance.ExitMenu();
         production = product;
         buildingStatement = BuildingStatement.Working;
         todoList.Add(this);

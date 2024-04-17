@@ -8,9 +8,12 @@ public class PalBoxManager : Singleton<PalBoxManager>
     public GameObject inventoryPalSlot;
     public GameObject palboxPalSlot;
 
+    public List<PalBox> palBoxBuilding;
+
     public TMPro.TextMeshProUGUI textMeshProUGUI;
     public Dictionary<int, Pal>[] palBox = new Dictionary<int, Pal>[3];
-    private int maxPalBox = 100;
+    public Dictionary<int, GameObject> spawnPal = new Dictionary<int, GameObject>();
+    private int maxPalBox = 110;
 
     public int Debugint = 0;
 
@@ -45,14 +48,14 @@ public class PalBoxManager : Singleton<PalBoxManager>
             Slot_Pal boxSlot = palboxPalSlot.transform.GetChild(0).GetChild(0).GetChild(i).GetChild(0).GetComponent<Slot_Pal>();
             boxSlot.UpdateSlot(pal);
         }
-        else if (i < 90)
+        else if (i < 95)
         {
             Slot_Pal boxSlot = palboxPalSlot.transform.GetChild(1).GetChild(0).GetChild(i-5).GetChild(0).GetComponent<Slot_Pal>();
             boxSlot.UpdateSlot(pal);
         }
         else
         {
-            Slot_Pal boxSlot = palboxPalSlot.transform.GetChild(2).GetChild(0).GetChild(i - 90).GetChild(0).GetComponent<Slot_Pal>();
+            Slot_Pal boxSlot = palboxPalSlot.transform.GetChild(2).GetChild(0).GetChild(i - 95).GetChild(0).GetComponent<Slot_Pal>();
             boxSlot.UpdateSlot(pal);
         }
 
@@ -66,14 +69,14 @@ public class PalBoxManager : Singleton<PalBoxManager>
             Slot_Pal boxSlot = palboxPalSlot.transform.GetChild(0).GetChild(0).GetChild(i).GetChild(0).GetComponent<Slot_Pal>();
             boxSlot.UpdateSlot();
         }
-        else if(i < 90)
+        else if(i < 95)
         {
             Slot_Pal boxSlot = palboxPalSlot.transform.GetChild(1).GetChild(0).GetChild(i-5).GetChild(0).GetComponent<Slot_Pal>();
             boxSlot.UpdateSlot();
         }
         else
         {
-            Slot_Pal boxSlot = palboxPalSlot.transform.GetChild(2).GetChild(0).GetChild(i - 90).GetChild(0).GetComponent<Slot_Pal>();
+            Slot_Pal boxSlot = palboxPalSlot.transform.GetChild(2).GetChild(0).GetChild(i - 95).GetChild(0).GetComponent<Slot_Pal>();
             boxSlot.UpdateSlot();
         }
 
@@ -89,7 +92,7 @@ public class PalBoxManager : Singleton<PalBoxManager>
                 return;
             }
         }
-        for (int i = 5; i < maxPalBox - 10; i++) // 지니고 있는 팰이 다 찼으면 박스로 보내기
+        for (int i = 5; i < maxPalBox - 5; i++) // 지니고 있는 팰이 다 찼으면 박스로 보내기
         {
             if (!palBox[1].ContainsKey(i))
             {
@@ -102,16 +105,40 @@ public class PalBoxManager : Singleton<PalBoxManager>
         Debug.Log("Box is Full!");
     }
 
+    public void Dispawn()
+    {
+        for(int i = 95; i < maxPalBox; i++)
+        {
+            if(spawnPal.ContainsKey(i))
+            {
+                spawnPal[i].SetActive(false);
+                spawnPal.Remove(i);
+                for (int j = 5; j < 95; j++)
+                {
+                    if (!palBox[1].ContainsKey(j))
+                    {
+                        Debug.Log(palBox[2][i]);
+                        palBox[1].Add(j, palBox[2][i]);
+                        palBox[2].Remove(i);
+                        UpdateSlot(i, null);
+                        UpdateSlot(j, palBox[1][j]);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     public void SwapSlot()
     {
-        if (endSlotkey < 5 && !palBox[0].ContainsKey(endSlotkey))
+        if (endSlotkey < 5 && !palBox[0].ContainsKey(endSlotkey)) // 보유 팰이 빈 공간이면
         {
             Dictionary<int, Pal> startPalBox;
             if (startSlotkey < 5)
             {
                 startPalBox = palBox[0];
             }
-            else if (startSlotkey < 90)
+            else if (startSlotkey < 95)
             {
                 startPalBox = palBox[1];
             }
@@ -123,15 +150,20 @@ public class PalBoxManager : Singleton<PalBoxManager>
             palBox[0].Add(endSlotkey, tempSlot.pal);
             UpdateSlot(startSlotkey, null);
             UpdateSlot(endSlotkey, palBox[0][endSlotkey]);
+            if(startSlotkey >= 95) // 소환된 팰 삭제
+            {
+                spawnPal[startSlotkey].SetActive(false);
+                spawnPal.Remove(startSlotkey);
+            }
         }
-        else if (endSlotkey >=5 &&endSlotkey < 90 && !palBox[1].ContainsKey(endSlotkey)) // 빈 공간이면
+        else if (endSlotkey >=5 &&endSlotkey < 95 && !palBox[1].ContainsKey(endSlotkey)) // 창고가 빈 공간이면
         {
             Dictionary<int, Pal> startPalBox;
             if (startSlotkey < 5)
             {
                 startPalBox = palBox[0];
             }
-            else if (startSlotkey < 90)
+            else if (startSlotkey < 95)
             {
                 startPalBox = palBox[1];
             }
@@ -143,19 +175,24 @@ public class PalBoxManager : Singleton<PalBoxManager>
             palBox[1].Add(endSlotkey, tempSlot.pal);
             UpdateSlot(startSlotkey, null);
             UpdateSlot(endSlotkey, palBox[1][endSlotkey]);
+            if (startSlotkey >= 95) // 소환된 팰 삭제
+            {
+                spawnPal[startSlotkey].SetActive(false);
+                spawnPal.Remove(startSlotkey);
+            }
         }
-        else if (endSlotkey >= 90 && endSlotkey < 100 && !palBox[2].ContainsKey(endSlotkey)) // 빈 공간이면
+        else if (endSlotkey >= 95 && endSlotkey < maxPalBox && !palBox[2].ContainsKey(endSlotkey))// 거점 팰이 빈 공간이면
         {
             Dictionary<int, Pal> startPalBox;
             if (startSlotkey < 5)
             {
                 startPalBox = palBox[0];
             }
-            else if (startSlotkey < 90)
+            else if (startSlotkey < 95)
             {
                 startPalBox = palBox[1];
             }
-            else
+            else 
             {
                 startPalBox = palBox[2];
             }
@@ -163,9 +200,19 @@ public class PalBoxManager : Singleton<PalBoxManager>
             palBox[2].Add(endSlotkey, tempSlot.pal);
             UpdateSlot(startSlotkey, null);
             UpdateSlot(endSlotkey, palBox[2][endSlotkey]);
+            if (startSlotkey >= 95) //스폰된 팰을 옮길 때
+            {
+                spawnPal.Add(endSlotkey, spawnPal[startSlotkey]);
+                spawnPal.Remove(startSlotkey);
+            }
+            else // 새로 스폰할 때
+            {
+                spawnPal.Add(endSlotkey, PalDatabase.Instance.GivePal(palBox[2][endSlotkey].id));
+                spawnPal[endSlotkey].transform.position = palBoxBuilding[0].transform.position + Vector3.down * 2;                
+            }
+            
         }
-
-        else
+        else //Swap
         {
             Dictionary<int, Pal> startPalBox;
             Dictionary<int, Pal> endPalBox;
@@ -173,7 +220,7 @@ public class PalBoxManager : Singleton<PalBoxManager>
             {
                 startPalBox = palBox[0];
             }
-            else if (startSlotkey < 90)
+            else if (startSlotkey < 95)
             {
                 startPalBox = palBox[1];
             }
@@ -186,7 +233,7 @@ public class PalBoxManager : Singleton<PalBoxManager>
             {
                 endPalBox = palBox[0];
             }
-            else if (endSlotkey < 90)
+            else if (endSlotkey < 95)
             {
                 endPalBox = palBox[1];
             }
@@ -199,6 +246,29 @@ public class PalBoxManager : Singleton<PalBoxManager>
             endPalBox[endSlotkey] = tempSlot.pal;
             UpdateSlot(startSlotkey, startPalBox[startSlotkey]);
             UpdateSlot(endSlotkey, endPalBox[endSlotkey]);
+
+            if (startSlotkey < 95 && endSlotkey>= 95) // 교체해서 새로 소환할 때
+            {
+                spawnPal[endSlotkey].SetActive(false); //기존 팰 삭제
+                spawnPal.Remove(endSlotkey);
+
+                spawnPal.Add(endSlotkey, PalDatabase.Instance.GivePal(palBox[2][endSlotkey].id)); // 새로 팰 추가
+                spawnPal[endSlotkey].transform.position = palBoxBuilding[0].transform.position + Vector3.down * 2;
+            }
+            else if(startSlotkey >= 95 && endSlotkey < 95)
+            {
+                spawnPal[startSlotkey].SetActive(false); //기존 팰 삭제
+                spawnPal.Remove(startSlotkey);
+
+                spawnPal.Add(startSlotkey, PalDatabase.Instance.GivePal(palBox[2][endSlotkey].id)); // 새로 팰 추가
+                spawnPal[startSlotkey].transform.position = palBoxBuilding[0].transform.position + Vector3.down * 2;
+            }
+            else if(startSlotkey >= 95 && endSlotkey >= 95) // Swap
+            {
+                GameObject temp = spawnPal[startSlotkey];
+                spawnPal[startSlotkey] = spawnPal[endSlotkey];
+                spawnPal[endSlotkey] = temp;
+            }
         }
         
     }
@@ -218,18 +288,23 @@ public class PalBoxManager : Singleton<PalBoxManager>
         dataPanel.SetActive(false);
     }
 
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.V))
-        {
-            foreach(int i in palBox[0].Keys)
-            {
-                Debug.Log("box : 0, " + palBox[0][i].ToString());
-            }
-            foreach (int i in palBox[1].Keys)
-            {
-                Debug.Log("box : 1, "  + palBox[1][i].ToString());
-            }
-        }
-    }
+    //private void Update()
+    //{
+    //    if(Input.GetKeyDown(KeyCode.V))
+    //    {
+    //        Debug.Log("v");
+    //        foreach(int i in palBox[0].Keys)
+    //        {
+    //            Debug.Log("box : 0, " + palBox[0][i].ToString());
+    //        }
+    //        foreach (int i in palBox[1].Keys)
+    //        {
+    //            Debug.Log("box : 1, "  + palBox[1][i].ToString());
+    //        }
+    //        foreach (int i in palBox[2].Keys)
+    //        {
+    //            Debug.Log("box : 2, " + palBox[2][i].ToString());
+    //        }
+    //    }
+    //}
 }

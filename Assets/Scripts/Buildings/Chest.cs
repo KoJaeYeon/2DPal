@@ -12,7 +12,7 @@ public class Chest : Building
         base.Awake();
         chestPanel = GameManager.Instance.chestPanel;
         todoList = todoList = PalManager.Instance.producing;
-        buildingType = BuildingType.Pal;
+        buildingType = BuildingType.Chest;
         chestKey = InventoryManager.Instance.chestBoxSlot.GetComponent<GiveKey_Chest>();
     }
 

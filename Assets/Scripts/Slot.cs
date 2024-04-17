@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -67,11 +68,15 @@ public class Slot : MonoBehaviour
 
     void SetSlot()
     {
-        if (item == null){ Debug.Log("return"); return; } // ∫Ûƒ≠¿Ã Ω√¿€¡ˆ¡°¿œ ∂ß
+        if (item == null) { Debug.Log("return"); return; } // ∫Ûƒ≠¿Ã Ω√¿€¡ˆ¡°¿œ ∂ß
         InventoryManager.Instance.startSlotkey = this.key;
         InventoryManager.Instance.tempSlot.gameObject.SetActive(true);
-        InventoryManager.Instance.tempSlot.item = new Item(item);
-        if(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) InventoryManager.Instance.tempSlot.item.count /= 2;
+        {
+            if (item is Equip) InventoryManager.Instance.tempSlot.item = new Equip((Equip)item);
+            else if (item is Product) InventoryManager.Instance.tempSlot.item = new Product((Product)item);
+            else InventoryManager.Instance.tempSlot.item = new Item(item);
+        }
+        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) InventoryManager.Instance.tempSlot.item.count /= 2;
         else if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) InventoryManager.Instance.tempSlot.item.count = 1;
         InventoryManager.Instance.tempSlot.UpdateSlot();
     }
@@ -102,7 +107,7 @@ public class Slot : MonoBehaviour
         {
             this.item = item;
             image.sprite = item.sprite;
-            image.gameObject.SetActive(true);
+            gameObject.SetActive(true);
             itemData[0].text = item.count.ToString();
             itemData[1].text = (item.count * item.weight).ToString();
         }

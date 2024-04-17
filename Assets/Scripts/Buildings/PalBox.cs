@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PalBox : Building
@@ -12,6 +13,17 @@ public class PalBox : Building
         todoList = todoList = PalManager.Instance.producing;
         buildingType = BuildingType.Pal;
     }
+    private new void OnEnable()
+    {
+        base.OnEnable();
+        PalBoxManager.Instance.palBoxBuilding.Add(this);
+    }
+    private void OnDisable()
+    {
+        PalBoxManager.Instance.palBoxBuilding.Remove(this);
+        PalBoxManager.Instance.Dispawn();
+    }
+
     public override void Action()
     {
         switch (buildingStatement)

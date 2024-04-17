@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2906565930652152874}
   - component: {fileID: 2906565930652152869}
   - component: {fileID: 2906565930652152872}
-  - component: {fileID: 2906565930652152875}
+  - component: {fileID: 8928478272081766420}
   m_Layer: 8
   m_Name: "\uAF2C\uAF2C\uB2ED"
   m_TagString: Untagged
@@ -132,7 +132,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2906565930652152865}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c4800df746b141d4786071e7bf3adb04, type: 3}
   m_Name: 
@@ -189,8 +189,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!61 &2906565930652152875
-BoxCollider2D:
+--- !u!60 &8928478272081766420
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -212,6 +212,11 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_Points:
+    m_Paths:
+    - - {x: -0.1875, y: 0.5}
+      - {x: -0.5, y: 0.25}
+      - {x: -0.5, y: -0.5}
+      - {x: 0.5, y: -0.5}
+      - {x: 0.5, y: 0.4375}
+      - {x: 0.375, y: 0.5}

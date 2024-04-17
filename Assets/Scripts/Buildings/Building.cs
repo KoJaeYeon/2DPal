@@ -23,7 +23,7 @@ public class Building : MonoBehaviour
     public float nowWorkTime;
     protected string buildingName;
 
-    public enum BuildingType { Recipe, Pal}
+    public enum BuildingType { Recipe, Pal, Chest}
     public BuildingType buildingType;
 
     SpriteRenderer spriteRenderer;
@@ -42,7 +42,7 @@ public class Building : MonoBehaviour
     }
 
 
-    private void OnEnable()
+    protected void OnEnable()
     {
         buildingStatement = BuildingStatement.FreeBuilding;
         isContact = false;
@@ -111,6 +111,7 @@ public class Building : MonoBehaviour
                 CraftManager.Instance.ReturnBuilding(id);
                 PalManager.Instance.buildings.Remove(this);
                 transform.parent = FurnitureDatabase.Instance.poolParent.transform;
+                buildingStatement = BuildingStatement.FreeBuilding;
                 gameObject.SetActive(false);
                 break;
             case BuildingStatement.Working:
@@ -127,6 +128,15 @@ public class Building : MonoBehaviour
         index = worldIndexNum++;
         PalManager.Instance.buildings.Add(this);
         return false;
+    }
+
+    public void DestroyBuilding()
+    {
+        if(buildingStatement == BuildingStatement.isBuilding) { PalManager.Instance.buildings.Remove(this); }
+        CraftManager.Instance.ReturnBuilding(id);
+        transform.parent = FurnitureDatabase.Instance.poolParent.transform;
+        buildingStatement = BuildingStatement.FreeBuilding;
+        gameObject.SetActive(false);
     }
 
     public float GetLeftBuild()

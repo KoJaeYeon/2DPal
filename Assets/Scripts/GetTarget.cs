@@ -14,6 +14,7 @@ public class GetTarget : MonoBehaviour
 
     public Animator[] animators;
 
+    public NeedPanel_Build[] needPanels_DisAsseble; // 오른쪽 정보창에 뜨는 해체 패널
     private void Awake()
     {
         playerControll = transform.parent.GetComponent<PlayerControll>();
@@ -22,6 +23,7 @@ public class GetTarget : MonoBehaviour
         interactiveText = ActionPanel.transform.GetChild(1).GetComponentInChildren<TextMeshProUGUI>();
         animators = ActionPanel.GetComponentsInChildren<Animator>();
         ActionPanel.gameObject.SetActive(false);
+        needPanels_DisAsseble = CraftManager.Instance.BuildingPanel.transform.GetChild(1).GetComponentsInChildren<NeedPanel_Build>();
     }
     private void Update()
     {
@@ -125,19 +127,37 @@ public class GetTarget : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Furniture"))
         {
-            ActionPanel.SetActive(false);
-            ActionPanel.SetActive(true);
             building = collision.gameObject.GetComponent<Building>();
-            //텍스트 변경 Interactive
-            switch(building.buildingType)
+
+            if (playerControll.statement == Statement.Disassembling) // 분해모드 일 때
             {
-                case Building.BuildingType.Recipe:
-                    interactiveText.text = "레시피 선택";
-                    break;
-                case Building.BuildingType.Pal:
-                    interactiveText.text = "팰 상자 관리 메뉴";
-                    break;
+                int[,] needItem = FurnitureDatabase.Instance.furnitures[building.id].buildingItems;
+                for (int i = 0; i < needItem.GetLength(0); i++)
+                {
+                    int needId = needItem[i, 0];
+                    int needNum = needItem[i, 1];
+                    needPanels_DisAsseble[i].UpdateDataPanel(ItemDatabase.Instance.items[needId], needNum);
+                }
             }
+            else
+            {
+                ActionPanel.SetActive(false);
+                ActionPanel.SetActive(true);
+                //텍스트 변경 Interactive
+                switch (building.buildingType)
+                {
+                    case Building.BuildingType.Recipe:
+                        interactiveText.text = "레시피 선택";
+                        break;
+                    case Building.BuildingType.Pal:
+                        interactiveText.text = "팰 상자 관리 메뉴";
+                        break;
+                    case Building.BuildingType.Chest:
+                        interactiveText.text = "열기";
+                        break;
+                }
+            }
+
         }
         else if(collision.gameObject.CompareTag("DropItem"))
         {
@@ -155,8 +175,22 @@ public class GetTarget : MonoBehaviour
         building = null;
         if (collision.gameObject.CompareTag("Furniture") || collision.gameObject.CompareTag("DropItem"))
         {
-            animators[0].Play("UnShowEffect");
+            if(playerControll.statement == Statement.Disassembling)
+            {
+                int length = needPanels_DisAsseble.Length;
+                for (int i = 0; i < length; i++)
+                {
+                    needPanels_DisAsseble[i].RemoveDataPanel();
+                }
+            }
+            else
+            {
+                animators[0].Play("UnShowEffect");
+            }
         }
-        GameManager.Instance.EscapeMenu(true);
+        if(playerControll.statement != Statement.Disassembling)
+        {
+            GameManager.Instance.ExitMenu();
+        }
     }
 }

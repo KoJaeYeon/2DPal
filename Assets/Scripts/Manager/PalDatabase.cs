@@ -39,13 +39,32 @@ public class PalDatabase : Singleton<PalDatabase>
         {
             if (!pal.activeSelf)
             {
+                if (basePal)
+                {
+                    pal.GetComponent<PalAI>().enabled = true;
+                    pal.GetComponent<Enemy_Pal>().enabled = false;
+                }
+                else
+                {
+                    pal.GetComponent<PalAI>().enabled = true;
+                    pal.GetComponent<Enemy_Pal>().enabled = true;
+                }
                 pal.SetActive(true);
                 return pal;
             }
         }
         GameObject prefab = Instantiate(Prefabs[id - 1]);
         palPrefabs[id - 1].Add(prefab);
-
+        if (basePal)
+        {
+            prefab.GetComponent<PalAI>().enabled = true;
+            prefab.GetComponent<Enemy_Pal>().enabled = false;
+        }
+        else
+        {
+            prefab.GetComponent<PalAI>().enabled = true;
+            prefab.GetComponent<Enemy_Pal>().enabled = true;
+        }
         return prefab;
     }
 

@@ -105,7 +105,6 @@ public class Slot_Pal : MonoBehaviour
         gameObject.SetActive(false);
         if( key < 5 )
         {
-            Debug.Log(PalBoxManager.Instance.palBox[0]);
             if (PalBoxManager.Instance.palBox[0].ContainsKey(key)) PalBoxManager.Instance.palBox[0].Remove(key);
         }
         //조건추가

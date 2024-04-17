@@ -48,7 +48,7 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
         {
             GameObject prefab = Instantiate(recipePrefab);
             RecipeSlot slot = prefab.GetComponent<RecipeSlot>();
-            slot.id = 1002 + i;
+            slot.id = 501 + i;
             RecipeSlots[0].Add(prefab);
             prefab.SetActive(false);
             prefab.transform.SetParent(GameManager.Instance.recipeCraftPanel.transform);

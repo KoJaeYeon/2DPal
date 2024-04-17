@@ -24,6 +24,11 @@ public class PalAI : MonoBehaviour
     public bool thisPalCanbuild = true;
     public bool thisPalCanProduce = false;
 
+    Coroutine coroutine;
+    Coroutine playing;
+
+    public bool thisPalPlaying = false;
+
     #region Astar Pathfinding
     Astar astar;
     private List<Node> path;
@@ -49,52 +54,86 @@ public class PalAI : MonoBehaviour
         palState = PalStates.Move;
         pathInitIndex = 0; // 초기화
         pathFinalIndex = path.Count;
+        if(thisPalPlaying) StopCoroutine(playing);
     }
 
     // Start is called before the first frame update
     void Start()
     {
         pal = PalDatabase.Instance.GetPal(id);
-        StartCoroutine(Search());
+        coroutine = StartCoroutine(Search());
     }
     IEnumerator Search()
     {
-        if (palState == PalStates.Idle)
+        while (true)
         {
-            if(thisPalCanProduce && PalManager.Instance.producing.Count > 0)
+            if (palState == PalStates.Idle)
             {
-                int count = PalManager.Instance.producing.Count;
-                for (int i = 0; i < count; i++)
+                if (thisPalCanProduce && PalManager.Instance.producing.Count > 0)
                 {
-                    targetBulding = PalManager.Instance.producing[i];
-                    if(targetBulding.workingPal == null)
+                    int count = PalManager.Instance.producing.Count;
+                    for (int i = 0; i < count; i++)
                     {
-                        targetBulding.workingPal = this;
-                        target = targetBulding.gameObject;
-                        OnGo();
-                        break;
+                        targetBulding = PalManager.Instance.producing[i];
+                        if (targetBulding.workingPal == null)
+                        {
+                            targetBulding.workingPal = this;
+                            target = targetBulding.gameObject;
+                            OnGo();
+                            break;
+                        }
                     }
                 }
-            }
-           if(thisPalCanbuild == true && PalManager.Instance.buildings.Count > 0 && palState == PalStates.Idle)
-            {
-                targetBulding = PalManager.Instance.buildings[0];
-                target = targetBulding.gameObject;
-                OnGo();
-            }
+                if (thisPalCanbuild == true && PalManager.Instance.buildings.Count > 0 && palState == PalStates.Idle)
+                {
+                    targetBulding = PalManager.Instance.buildings[0];
+                    target = targetBulding.gameObject;
+                    OnGo();
+                }
 
-        }
-        else if (palState == PalStates.Move) 
-        {
-            if(targetBulding.buildingStatement == BuildingStatement.Built || targetBulding.buildingStatement == BuildingStatement.Done) //가기 전에 건물 완공되면 업무취소
-            {
-                palState = PalStates.Idle;
-                target = null;
+                if (palState == PalStates.Idle)
+                {
+                    if (Random.Range(0, 100) > 80)
+                    {
+                        if(thisPalPlaying) StopCoroutine(playing);
+                        float x = Random.Range(-1, 1);
+                        x = transform.position.x + x;
+                        if (x < PalBoxManager.Instance.palBoxBuilding[0].transform.position.x - 10) x = PalBoxManager.Instance.palBoxBuilding[0].transform.position.x - 10;
+                        else if(x > PalBoxManager.Instance.palBoxBuilding[0].transform.position.x + 10) x = PalBoxManager.Instance.palBoxBuilding[0].transform.position.x + 10;
+                        float y = Random.Range(-1, 1);
+                        y = transform.position.y + y;
+                        if (y < PalBoxManager.Instance.palBoxBuilding[0].transform.position.y - 10) y = PalBoxManager.Instance.palBoxBuilding[0].transform.position.y - 10;
+                        else if (y > PalBoxManager.Instance.palBoxBuilding[0].transform.position.y + 10) y = PalBoxManager.Instance.palBoxBuilding[0].transform.position.y + 10;
+                        Vector2 newPos = new Vector3(x, y);
+                        playing = StartCoroutine(PlayAlone(newPos));
+                    }
+
+                }
+
             }
-            
+            else if (palState == PalStates.Move)
+            {
+                if (targetBulding.buildingStatement != BuildingStatement.isBuilding) //가기 전에 건물 완공되면 업무취소
+                {
+                    palState = PalStates.Idle;
+                    target = null;
+                }
+
+            }
+            yield return new WaitForSeconds(1f);
         }
-        yield return new WaitForSeconds(1f);
-        StartCoroutine(Search());
+
+    }
+
+    IEnumerator PlayAlone(Vector2 pos)
+    {
+        while (true)
+        {
+            thisPalPlaying = true;            
+            PalWorking(pos);
+            yield return new WaitForSeconds(0.02f);
+        }
+
     }
 
     private void FixedUpdate()
@@ -134,6 +173,11 @@ public class PalAI : MonoBehaviour
                 palState = PalStates.Idle;
                 break;
         }        
+    }
+
+    public void PalWorking(Vector2 pos)
+    {
+        transform.position = Vector3.MoveTowards(transform.position, pos, 0.03f);
     }
 
     public void PalMove() // Astar pathFinding

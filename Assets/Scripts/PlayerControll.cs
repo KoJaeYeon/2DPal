@@ -31,7 +31,8 @@ public enum Statement
     Idle = 0,
     Crafting = 1,
     Action = 2,
-    Building = 3
+    Building = 3,
+    Disassembling = 4
 }
 
 public class PlayerControll : MonoBehaviour
@@ -93,13 +94,17 @@ public class PlayerControll : MonoBehaviour
         GetTargetTrans = transform.GetChild(0);
         animator_Equip = GetComponentsInChildren<Animator>();
         animator = animator_Equip[0];
-        animator_Equip[0] = null;
-        equip = new GameObject[6];
-        for (int i = 0; i < animator_Equip.Length - 1; i++)
+        equip = new GameObject[4];
         {
-            equip[i] = transform.GetChild(i + 1).gameObject;
-            animator_Equip[i] = animator_Equip[i + 1];
+            Animator[] tempAni = new Animator[4];
+            for (int i = 0; i < animator_Equip.Length - 1; i++)
+            {
+                equip[i] = transform.GetChild(i + 1).gameObject;
+                tempAni[i] = animator_Equip[i + 1];
+            }
+            animator_Equip = tempAni;
         }
+
         for (int i = 0; i < equip.Length; i++)
         {
             if ((int)nowEquip != i)
@@ -186,7 +191,7 @@ public class PlayerControll : MonoBehaviour
         GetTargetTrans.gameObject.SetActive(true);
         statement = Statement.Idle;
         freeBuilding = null;
-        CraftManager.Instance.BuildingPanel.SetActive(false);
+        GameManager.Instance.ExitMenu();
     }
 
     public void FreeBuilding()
@@ -273,15 +278,18 @@ public class PlayerControll : MonoBehaviour
             freeBuilding.transform.parent = FurnitureDatabase.Instance.poolParent.transform;
             freeBuilding.SetActive(false);
             EndBuilding();
+            
         }
         else
         {
-            GameManager.Instance.EscapeMenu();
+            statement = Statement.Idle;
+            GameManager.Instance.ExitMenu(true);
         }
     }
     private void OnAction(InputValue inputValue) //F
     {
-        if (GameManager.Instance.ManagerUsingUi()) return;
+        if (GameManager.Instance.activePanel == getTarget.ActionPanel) { }
+        else if (GameManager.Instance.ManagerUsingUi()) return;
         if (target == null) return;
         if (target.CompareTag("Furniture"))
         {
@@ -331,7 +339,8 @@ public class PlayerControll : MonoBehaviour
         fire = inputValue.isPressed;
         if (fire)
         {
-            if (GameManager.Instance.ManagerUsingUi()) return;
+            if (GameManager.Instance.activePanel == CraftManager.Instance.BuildingPanel) { }
+            else if (GameManager.Instance.ManagerUsingUi()) return;
             if (statement == Statement.Action) return;
             else if (statement == Statement.Crafting)
             {
@@ -343,6 +352,15 @@ public class PlayerControll : MonoBehaviour
                     EndBuilding();
                     CraftManager.Instance.PayBuilding();
                     return;
+                }
+            }
+            else if(statement == Statement.Disassembling)
+            {
+                if (target == null) return;
+                if (target.CompareTag("Furniture"))
+                {
+                    building = target.GetComponent<Building>();
+                    if (building.buildingStatement != BuildingStatement.Working) building.DestroyBuilding(); // 작업중이면 파괴 x
                 }
             }
             if (istired) return;
@@ -402,7 +420,7 @@ public class PlayerControll : MonoBehaviour
         if (istired) return;
 
         float change = inputValue.Get<Vector2>().y;
-        if (change > 0 && (int)nowEquip != 5)
+        if (change > 0 && (int)nowEquip != 3)
         {
             equip[(int)nowEquip].SetActive(false);
             nowEquip += 1;

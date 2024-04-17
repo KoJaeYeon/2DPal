@@ -14,6 +14,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
     public Sprite[] sprites;
     public Sprite[] dropSprites;
     public Sprite[] sprites_product;
+    public Sprite[] sprites_equip;
     public Sprite[] sprites_fire;
     public Sprite[] sprites_cook;
 
@@ -31,11 +32,13 @@ public class ItemDatabase : Singleton<ItemDatabase>
         id = 6; item = new Item("버섯", id, 1, 1f, "그냥 먹어도 되는 버섯.\n섬을 돌아다니다 보면 쉽게 보인다."); item.sprite = sprites[index++]; items.Add(id, item);
 
         index = 0;
-        id = 1001; Product product = new Product("팰 스피어", id, 1, 0, 5, "던져서 팰을 포획하는 도구", new int[,] { { 1, 3 }, { 2, 3 }, { 3, 1 } }); product.sprite = sprites_product[index++]; items.Add(id, product);
-        id = 1002; product = new Product("나무 곤봉", id, 1, 10, 30, "근접 전투용 나무 곤봉.\n팰과 싸우기엔 좀 불안하다.", new int[,] { { 1, 5 } }); product.sprite = sprites_product[index++]; items.Add(id, product);
-        id = 1003; product = new Product("휴대형 횃불", id, 1, 5, 20, "들고 있으면 주변이 환해지는 휴대형 횃불.\n어느 정도 근접 전투도 가능하다.", new int[,] { { 1, 2 }, { 2, 2 } }); product.sprite = sprites_product[index++]; items.Add(id, product);
-        id = 1004; product = new Product("돌 곡괭이", id, 1, 10, 30, "돌 곡괭이다.", new int[,] { { 1, 5 }, { 2, 5 } }); product.sprite = sprites_product[index++]; items.Add(id, product);
-        id = 1005; product = new Product("돌 도끼", id, 1, 10, 30, "돌 도끼다.", new int[,] { { 1, 5 }, { 2, 5 } }); product.sprite = sprites_product[index++]; items.Add(id, product);
+        id = 1000; Product product = new Product("팰 스피어", id, 1, 0, 5, "던져서 팰을 포획하는 도구", new int[,] { { 1, 3 }, { 2, 3 }, { 3, 1 } }); product.sprite = sprites_product[index++]; items.Add(id, product);
+
+        index = 0;
+        id = 501; Equip equip = new Equip("나무 곤봉", id, 1, 10, 30, "근접 전투용 나무 곤봉.\n팰과 싸우기엔 좀 불안하다.", new int[,] { { 1, 5 } }); equip.sprite = sprites_equip[index++]; items.Add(id, equip);
+        id = 502; equip = new Equip("휴대형 횃불", id, 1, 5, 20, "들고 있으면 주변이 환해지는 휴대형 횃불.\n어느 정도 근접 전투도 가능하다.", new int[,] { { 1, 2 }, { 2, 2 } }); equip.sprite = sprites_equip[index++]; items.Add(id, equip);
+        id = 503; equip = new Equip("돌 곡괭이", id, 1, 10, 30, "돌 곡괭이다.", new int[,] { { 1, 5 }, { 2, 5 } }); equip.sprite = sprites_equip[index++]; items.Add(id, equip);
+        id = 504; equip = new Equip("돌 도끼", id, 1, 10, 30, "돌 도끼다.", new int[,] { { 1, 5 }, { 2, 5 } }); equip.sprite = sprites_equip[index++]; items.Add(id, equip);
 
         ////DropItemId  
         //나무 드랍 오브젝트 드랍리스트
@@ -45,10 +48,11 @@ public class ItemDatabase : Singleton<ItemDatabase>
         //팰지움 파편
         id = 203; dropList = new List<Item>(); item = GetItem(3); item.count = 1; dropList.Add(item); dropDics.Add(id, dropList);
         //팰스피어
-        id = 204; dropList = new List<Item>(); product = GetProduct(1001); product.count = 1; dropList.Add(item); dropDics.Add(id, dropList);
+        id = 204; dropList = new List<Item>(); product = GetProduct(1000); product.count = 1; dropList.Add(item); dropDics.Add(id, dropList);
 
         index = 0;
         id = 1100; product = new Product("금속 주괴", id, 1, 0.15f, 10, "금속제 무기나 방어구를 만들 때 필요한 소재.\n금속 광석을 화로에 제련해서 만든다.", new int[,] { { 4, 2 } }); product.sprite = sprites_fire[index++]; items.Add(id, product);
+
         index = 0;
         id = 1200; product = new Product("구운 열매", id, 1, 0.15f, 5, "구우면 영양가가 높아진다.\n신기할 정도로 포만감이 좋다.", new int[,] { { 5, 1 } }); product.sprite = sprites_cook[index++]; items.Add(id, product);
         id = 1201; product = new Product("구운 버섯", id, 1, 1, 5, "구우면 영양가가 높아지는 버섯.\n신기할 정도로 포만감이 좋다.", new int[,] { { 6, 1 } }); product.sprite = sprites_cook[index++]; items.Add(id, product);
@@ -99,7 +103,12 @@ public class ItemDatabase : Singleton<ItemDatabase>
 
     public  Product GetProduct(int id)
     {
-        Product product = new Product((Product)ItemDatabase.Instance.items[id]);
+        if (items[id] is Equip)
+        {
+            Equip equip = new Equip((Equip)items[id]);
+            return equip;
+        }
+        Product product = new Product((Product)items[id]);
         return product;
     }
 

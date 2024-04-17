@@ -158,10 +158,13 @@ MonoBehaviour:
   id: 0
   index: 0
   buildingStatement: 0
-  MaxConstructTime: 0
+  MaxConstructTime: 10
   nowConstructTime: 0
   MaxWorkTime: 0
   nowWorkTime: 0
   buildingType: 0
   workingPal: {fileID: 0}
   todoList: []
+  chestPanel: {fileID: 0}
+  volume: 10
+  chestKey: {fileID: 0}
