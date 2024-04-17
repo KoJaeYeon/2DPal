@@ -65,10 +65,10 @@ public class InventoryManager : Singleton<InventoryManager>
         {
             Slot slot = UIEquipmentSlot.transform.GetChild(i - 21).GetChild(0).GetComponent<Slot>();
             slot.UpdateSlot(item);
-            Debug.Log("update");
             //무기 교체
-            if(item == null) WeaponManager.Instance.GetWeapon(500, i);
-            else WeaponManager.Instance.GetWeapon(item.id, i);
+            Debug.Log(item);
+            if(item == null) WeaponManager.Instance.Equip(500, i);
+            else WeaponManager.Instance.Equip(item.id, i);
         }
         else if (i >= 50)
         {

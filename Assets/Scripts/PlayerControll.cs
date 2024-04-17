@@ -92,25 +92,9 @@ public class PlayerControll : MonoBehaviour
         getTarget = GetTargetTrans.gameObject.GetComponent<GetTarget>();
 
         GetTargetTrans = transform.GetChild(0);
-        animator_Equip = GetComponentsInChildren<Animator>();
-        animator = animator_Equip[0];
         equip = new GameObject[4];
-        {
-            Animator[] tempAni = new Animator[4];
-            for (int i = 0; i < animator_Equip.Length - 1; i++)
-            {
-                equip[i] = transform.GetChild(i + 1).gameObject;
-                tempAni[i] = animator_Equip[i + 1];
-            }
-            animator_Equip = tempAni;
-        }
-
-        for (int i = 0; i < equip.Length; i++)
-        {
-            if ((int)nowEquip != i)
-                equip[i].SetActive(false);
-
-        }
+        animator_Equip = new Animator[4];
+        animator = GetComponent<Animator>();
     }
     private void Update()
     {

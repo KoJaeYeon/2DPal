@@ -57,7 +57,6 @@ public class ProductManager : Singleton<ProductManager>
     public void UpdateProductPanel(Product product)
     {
         setProduct = product;
-        Debug.Log(setProduct is Equip);
         DataPanel.SetActive(true);
         IngredientPanel.SetActive(true);
         ConfirmPanel.SetActive(true);
@@ -96,7 +95,6 @@ public class ProductManager : Singleton<ProductManager>
 
     public void ConfirmProduct()
     {
-        Debug.Log(setProduct is Equip);
         setProduct.count = count;
         nowBuilding.ConfirmProduct(setProduct);
         int[,] needIngredients = setProduct.ingredients;

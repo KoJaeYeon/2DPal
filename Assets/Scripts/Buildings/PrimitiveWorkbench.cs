@@ -47,7 +47,6 @@ public class PrimitiveWorkbench : Building
     }
     public override void ConfirmProduct(Product product)
     {
-        Debug.Log(product is Equip);
         GameManager.Instance.ExitMenu();
         production = product;
         buildingStatement = BuildingStatement.Working;
