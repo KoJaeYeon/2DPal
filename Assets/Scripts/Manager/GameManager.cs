@@ -22,6 +22,7 @@ public class GameManager : Singleton<GameManager>
     public TextMeshProUGUI technicPoint;
 
 
+
     private void Awake()
     {
         playerControll = playerController.GetComponent<PlayerControll>();
@@ -35,6 +36,7 @@ public class GameManager : Singleton<GameManager>
         chestPanel.SetActive(false);
         CraftManager.Instance.BuildingPanel.SetActive(false);
     }
+
     public void ActivePanel(GameObject panel)
     {
         activePanel = panel;
@@ -49,6 +51,7 @@ public class GameManager : Singleton<GameManager>
     public void ExitMenu(bool range = false)
     {
         if (activePanel != null) { activePanel.SetActive(false); activePanel = null; return; }
+        if(activePanel == InventoryManager.Instance.FoodPanel) { activePanel = OptionPanel; InventoryManager.Instance.FoodPanel.SetActive(false); return; }
         if (!range) { return; }
         activePanel = OptionPanel; OptionPanel.SetActive(true);
     }
@@ -84,14 +87,19 @@ public class GameManager : Singleton<GameManager>
         else if (activePanel == OptionPanel) { ExitMenu(); }
     }
 
+    public void GetDamage(float damage)
+    {
+        playerControll.health -= damage;
+    }
+
     public void GetExp(int exp)
     {
         playerControll.exp += exp;
     }
 
-    public void TechnicPoint(int point)
+    public void TechnicPointUse(int point)
     {
-        playerControll.TechPoint += point;
+        playerControll.TechPoint -= point;
         technicPoint.text = playerControll.TechPoint.ToString();
     }
 

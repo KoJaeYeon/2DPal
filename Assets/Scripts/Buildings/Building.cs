@@ -23,7 +23,7 @@ public class Building : MonoBehaviour
     public float nowWorkTime;
     protected string buildingName;
 
-    public enum BuildingType { Recipe, Pal, Chest}
+    public enum BuildingType { Recipe, Pal, Chest, None}
     public BuildingType buildingType;
 
     SpriteRenderer spriteRenderer;

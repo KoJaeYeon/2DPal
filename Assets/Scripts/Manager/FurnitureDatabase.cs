@@ -30,6 +30,7 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
         id = 103; furniture = new Furniture("ÆÓ »óÀÚ", id, new int[,] { { 1, 8 }, { 2, 3 }, { 3, 1 } }); furniture.sprite = sprites[index++]; furnitures.Add(id, furniture);
         id = 104; furniture = new Furniture("¸ð´ÚºÒ", id, new int[,] { { 1, 10 } }); furniture.sprite = sprites[index++]; furnitures.Add(id, furniture);
         id = 105; furniture = new Furniture("³ª¹« »óÀÚ", id, new int[,] { { 1, 15 }, { 2, 5 } }); furniture.sprite = sprites[index++]; furnitures.Add(id, furniture);
+        id = 106; furniture = new Furniture("Â¤ ÆÓ Ä§´ë", id, new int[,] { { 1, 10 }, { 2, 5 } }); furniture.sprite = sprites[index++]; furnitures.Add(id, furniture);
         for (int i = 0; i < furnitures.Count; i++)
         {
             GameObject prefab = Instantiate(Prefabs[i]);
@@ -44,37 +45,19 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
             RecipeSlots[i] = new List<GameObject>();
         }
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 4; i++) //Á¦ÀÛ´ë ÃÖÃÊ ½½·Ô ºÎ¿©
         {
-            GameObject prefab = Instantiate(recipePrefab);
-            RecipeSlot slot = prefab.GetComponent<RecipeSlot>();
-            slot.id = 501 + i;
-            RecipeSlots[0].Add(prefab);
-            prefab.SetActive(false);
-            prefab.transform.SetParent(GameManager.Instance.recipeCraftPanel.transform);
-            prefab.transform.localScale = Vector3.one;
+            MakeSlot(0, 501 + i);
         }
 
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 1; i++) //È­·Î ÃÖÃÊ ½½·Ô ºÎ¿©
         {
-            GameObject prefab = Instantiate(recipePrefab);
-            RecipeSlot slot = prefab.GetComponent<RecipeSlot>();
-            slot.id = 1100 + i;
-            RecipeSlots[1].Add(prefab);
-            prefab.SetActive(false);
-            prefab.transform.SetParent(GameManager.Instance.recipeCraftPanel.transform);
-            prefab.transform.localScale = Vector3.one;
+            MakeSlot(1,1100 + i);
         }
 
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < 2; i++) //¸ð´ÚºÒ ÃÖÃÊ ½½·Ô ºÎ¿©
         {
-            GameObject prefab = Instantiate(recipePrefab);
-            RecipeSlot slot = prefab.GetComponent<RecipeSlot>();
-            slot.id = 1200 + i;
-            RecipeSlots[2].Add(prefab);
-            prefab.SetActive(false);
-            prefab.transform.SetParent(GameManager.Instance.recipeCraftPanel.transform);
-            prefab.transform.localScale = Vector3.one;
+            MakeSlot(2,1200 + i);
         }
     }
 
@@ -113,5 +96,16 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
     {
         testFur = furnitures[id];
         return furnitures[id].buildingItems;
+    }
+
+    public void MakeSlot(int type, int id)
+    {
+        GameObject prefab = Instantiate(recipePrefab);
+        RecipeSlot slot = prefab.GetComponent<RecipeSlot>();
+        slot.id = id;
+        RecipeSlots[type].Add(prefab);
+        prefab.SetActive(false);
+        prefab.transform.SetParent(GameManager.Instance.recipeCraftPanel.transform);
+        prefab.transform.localScale = Vector3.one;
     }
 }

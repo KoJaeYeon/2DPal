@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5929124016223552262}
   - component: {fileID: 5929124016223552261}
+  - component: {fileID: 6259491033202281125}
   m_Layer: 0
   m_Name: Sword
   m_TagString: Untagged
@@ -48,6 +49,18 @@ CircleCollider2D:
   m_Offset: {x: 0.1, y: 0.1}
   serializedVersion: 2
   m_Radius: 0.3
+--- !u!114 &6259491033202281125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5929124016223552263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16934bcba925dbd468f17f890164b709, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5929124017056955180
 GameObject:
   m_ObjectHideFlags: 0
@@ -118,6 +131,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 501
   weapon_damage: 100
+  list: 0
+  canAttack: 0
+  equip: 0
 --- !u!1 &5929124017066136622
 GameObject:
   m_ObjectHideFlags: 0
@@ -142,14 +158,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5929124017066136622}
-  m_LocalRotation: {x: 0, y: 0, z: -0.92387956, w: 0.38268343}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.5, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5929124017056955179}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -135}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5929124017066136620
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -191,7 +207,7 @@ SpriteRenderer:
   m_SortingLayerID: 1577506835
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b2f3327f47464544293b6b9018e1296e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 06140cc248b05d2488fbb6493ce5fd11, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

@@ -15,7 +15,7 @@ public class TechButton : MonoBehaviour
     public GameObject recipeSlot;
     public RecipeSlot slot;
 
-    public bool[] able = new bool[4];
+    public bool[] able = new bool[4]; //1 workbench, 2furnace, 3campfire
 
     private void Awake()
     {
@@ -60,7 +60,7 @@ public class TechButton : MonoBehaviour
 
     public void ActiveSlot() // 기술 해금 활성화
     {
-        GameManager.Instance.TechnicPoint(point);
+        GameManager.Instance.TechnicPointUse(point);
         if(!furniture)
         {
             for (int i = 0; i < FurnitureDatabase.Instance.RecipeSlots.Length; i++)

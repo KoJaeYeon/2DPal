@@ -13,7 +13,7 @@ public class PrimitiveFurnature : Building
         buildingName = "원시적인 화로";
         base.Awake();
         RecipePanel = GameManager.Instance.RecipePanel;
-        todoList = todoList = PalManager.Instance.producing;
+        todoList = PalManager.Instance.producing;
         buildingType = BuildingType.Recipe;
     }
     public override void Action()

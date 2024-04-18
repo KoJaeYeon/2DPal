@@ -28,7 +28,7 @@ public class Slot : MonoBehaviour
         SetSlot();
     }
     public void PointerClick()
-    {
+    {        
         if (InventoryManager.Instance.tempSlot.gameObject.activeSelf) // 잡고있는게 있으면
         {
             if(InventoryManager.Instance.startSlotkey == key) // 원래 위치랑 같을 때
@@ -63,7 +63,55 @@ public class Slot : MonoBehaviour
         {
             SetSlot();
         }
+    }
 
+    public void PointerRightClick()
+    {
+        if (InventoryManager.Instance.tempSlot.gameObject.activeSelf) // 잡고있는게 있으면
+        {
+            // 그자리에 놓기
+            {
+                Debug.Log("else1");
+                InventoryManager.Instance.tempSlot.gameObject.SetActive(false);
+            }
+        }
+        else
+        {            
+            if (item == null) { Debug.Log("return"); return; } // 빈칸이 시작지점일 때
+            {
+                if (item is Equip)
+                {
+                    int endkey;
+                    if (key < 21)
+                    {
+                       endkey = InventoryManager.Instance.CheckWeapon();
+                    }
+                    else if (key <= 25)
+                    {
+                        endkey = InventoryManager.Instance.CheckNull();
+                    }
+                    else return;
+
+
+                    if (endkey == -1)
+                    {
+                        return;
+                    }
+                    InventoryManager.Instance.startSlotkey = this.key;
+                    InventoryManager.Instance.tempSlot.item = new Equip((Equip)item);
+                    InventoryManager.Instance.tempSlot.UpdateSlot();
+                    InventoryManager.Instance.endSlotkey = endkey;
+                    InventoryManager.Instance.tempSlot.gameObject.SetActive(false);
+                    InventoryManager.Instance.SwapSlot();
+                }
+                else if (item is Food)
+                {
+                    InventoryManager.Instance.FoodPanel.gameObject.SetActive(true);
+                    GameManager.Instance.activePanel = InventoryManager.Instance.FoodPanel;
+                }
+                else return;
+            }
+        }
     }
 
     void SetSlot()

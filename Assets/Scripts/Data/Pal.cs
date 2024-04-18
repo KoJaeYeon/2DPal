@@ -10,18 +10,20 @@ public class Pal
     private string _palName;
     private int _lv;
     private int _exp;
+    public float _attack;
     private float _hungry;
     private float _health;
     private float _maxHealth;
     private string _description;
     private Sprite _portrait;
 
-    public Pal(int id, string palName, int lv, int exp, int hungry, int health, string description = "")
+    public Pal(int id, string palName, int lv, int exp, float attack, int hungry, int health, string description = "")
     {
         _id = id;
         _palName = palName;
         _lv = lv;
         _exp = exp;
+        _attack = attack;
         _hungry = hungry;
         _health = health;
         _maxHealth = health;
@@ -34,6 +36,7 @@ public class Pal
         _palName = pal._palName;
         _lv = pal._lv;
         _exp = pal._exp;
+        _attack = pal._attack;
         _hungry= pal._hungry;
         _health = pal._health;
         _maxHealth = pal._maxHealth;
@@ -50,6 +53,7 @@ public class Pal
     public string palName { get => _palName; set => _palName = value; }
     public int lv { get => _lv; set => _lv = value; }
     public int exp { get => _exp; set => _exp = value; }
+    public float attack { get => _attack; set => _attack = value; }
     public float hungry { get => _hungry; set => _hungry = value; }
     public float health { get => _health; set => _health = value; }
     public float maxHealth { get => _maxHealth; set => _maxHealth = value; }

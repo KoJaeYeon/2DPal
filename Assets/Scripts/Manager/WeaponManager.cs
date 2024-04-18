@@ -12,7 +12,8 @@ public class WeaponManager : Singleton<WeaponManager>
     public PlayerControll playerControll;
 
     public GameObject[] WeaponIndex = new GameObject[4];
-
+    public bool[] debugAble0;
+    public bool[] debugAble1;
     public bool actived;
 
     private void Awake()
@@ -27,16 +28,18 @@ public class WeaponManager : Singleton<WeaponManager>
         weaponAble = new bool[weaponPrefabs.Length][];
         for(int i = 0; i < weaponAble.Length; i++)
         {
-            weaponAble[i] = new bool[4];
+            weaponAble[i] = new bool[5];
         }
         for (int i = 0; i < weaponPrefabs.Length; i++)
         {
-            GameObject[] gameObjects = new GameObject[4];
-            for(int j = 0; j < 4; j++)
+            GameObject[] gameObjects = new GameObject[5];
+            for(int j = 0; j < 5; j++)
             {
                 gameObjects[j] = Instantiate(weaponPrefabs[i]);
                 gameObjects[j].SetActive(false);
                 gameObjects[j].transform.SetParent(poolparent.transform);
+                Weapon weapon = gameObjects[j].GetComponent<Weapon>();
+                weapon.list = j;
             }
             weaponPools.Add(gameObjects);            
         }
@@ -52,60 +55,44 @@ public class WeaponManager : Singleton<WeaponManager>
     }
     public void Equip(int id, int key)
     {
-        Debug.Log(id);
         id -= 500;
         int index = key - 21;
 
         UnEquip(index); //기존 위치 장착 해제
         
-        for(int i = 0; i < 4; i++)
-        {
-            Debug.Log(i + "" + key + "id" + id);
+        for(int i = 0; i < 5; i++)
+        {            
             if (weaponAble[id][i] == false) // 사용 가능이면
             {
-                Debug.Log(i + "" + key + "id" + id);
                 weaponAble[id][i] = true; // 사용 중으로 변경
                 GameObject weapon = weaponPools[id][i]; // 사용할 무기 받아오기
                 weapon.transform.SetParent(WeaponIndex[index].transform); // 플레이어에게 무기 부여
                 if(actived) weapon.gameObject.SetActive(true); // 사용중인 무기였으면 사용중으로 돌려주기
                 playerControll.equip[index] = weapon.gameObject; // 장비변경
                 playerControll.animator_Equip[index] = weapon.transform.GetComponent<Animator>(); // 애니메이션 변경
+                debugAble0 = weaponAble[0];
+                debugAble1 = weaponAble[1];
                 break;
             }
         }
+        
     }
 
     public void UnEquip(int index)
     {
-        if (WeaponIndex[index].transform.childCount == 0) return;
+        if (WeaponIndex[index].transform.childCount == 0) { return; } // 최초 실행시 해제할 장비가 없음
         actived = WeaponIndex[index].transform.GetChild(0).gameObject.activeSelf;
         WeaponIndex[index].transform.GetChild(0).gameObject.SetActive(true); // 비활성화시 받아오기 위한 활성화
         Weapon weapon =  WeaponIndex[index].GetComponentInChildren<Weapon>(); // ID 받아오기 위한 컴포넌트
         int id = weapon.id;
+        int list = weapon.list;
         weapon.transform.SetParent(poolparent.transform);
         weapon.gameObject.SetActive(false); // 무기 비활성화
-        SetFalse(id); // 무기 회수로 인한 대기상태
+        SetFalse(id, list); // 무기 회수로 인한 대기상태
     }
 
-    public void SetFalse(int id)
+    public void SetFalse(int id, int list) // 해당하는 무기위치 비활성화
     {
-        for (int i = 0; i < 4; i++)
-        {
-            if (weaponAble[id - 500][i])
-            {
-                weaponAble[id - 500][i] = false;
-                break;
-            }
-
-        }
+        weaponAble[id - 500][list] = false;
     }
-    public void SetTrue(int id)
-    {
-        for (int i = 0; i < 4; i++)
-        {
-            weaponAble[id][i] = true;
-            break;
-        }
-    }
-
 }

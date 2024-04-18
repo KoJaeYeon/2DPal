@@ -15,17 +15,6 @@ public enum ViewDirection
     Left = 2,
     Right = 3
 }
-
-public enum Equipment
-{
-    None = 0,
-    Pickage = 1,
-    Axe = 2,
-    Sword = 3,
-    Gun = 4,
-    Bow = 5
-}
-
 public enum Statement
 {
     Idle = 0,
@@ -58,9 +47,9 @@ public class PlayerControll : MonoBehaviour
     //Player Data
     public int lv;
     public int exp;
-    public int hungry;
-    public int health;
-    public int moveWeight;
+    public float hungry;
+    public float health;
+    public float moveWeight;
     public int skillPoint;
     public int TechPoint = 10;
 
@@ -76,7 +65,7 @@ public class PlayerControll : MonoBehaviour
 
     public GameObject[] equip;
     public Animator[] animator_Equip;
-    public Equipment nowEquip = Equipment.None;
+    public int nowEquip = 0;
 
     public GameObject freeBuilding;
     Rigidbody2D rigid;
@@ -84,6 +73,7 @@ public class PlayerControll : MonoBehaviour
     public Building building;
     public GameObject palSphere;
     public PalSphere palsphere_PalSphere;
+    CircleCollider2D circleCollider2D;
 
     private void Awake()
     {
@@ -154,7 +144,7 @@ public class PlayerControll : MonoBehaviour
             running = false;
             run = running ? 2 : 1;
             fire = false;
-            animator_Equip[(int)nowEquip].SetBool("Fire", fire);
+            animator_Equip[nowEquip].SetBool("Fire", fire);
             if (!fire)
             {
                 ResourceManager.Instance.DataClear();
@@ -171,7 +161,7 @@ public class PlayerControll : MonoBehaviour
 
     public void EndBuilding()
     {
-        equip[(int)nowEquip].SetActive(true);
+        equip[nowEquip].SetActive(true);
         GetTargetTrans.gameObject.SetActive(true);
         statement = Statement.Idle;
         freeBuilding = null;
@@ -180,7 +170,7 @@ public class PlayerControll : MonoBehaviour
 
     public void FreeBuilding()
     {
-        equip[(int)nowEquip].SetActive(false);
+        equip[nowEquip].SetActive(false);
         GetTargetTrans.gameObject.SetActive(false);
         freeBuilding.transform.parent = transform;
         switch (viewdirection)
@@ -214,7 +204,8 @@ public class PlayerControll : MonoBehaviour
         else if (target.layer.Equals(LayerMask.NameToLayer("Resources"))) // ÀÚ¿øÀ» Ä¶¶§
         {
             Bricks bricks = target.GetComponent<Bricks>();
-            ResourceManager.Instance.ReceiveResourceData(bricks, nowEquip, GetTargetTrans.transform.position);
+            Weapon weapon = equip[nowEquip].GetComponent<Weapon>();
+            ResourceManager.Instance.ReceiveResourceData(bricks, weapon.equip, GetTargetTrans.transform.position);
             return true;
         }
         else
@@ -230,11 +221,13 @@ public class PlayerControll : MonoBehaviour
 
     private void OnThrow(InputValue inputValue) // Q
     {        
-        isthorwing = inputValue.isPressed;
+        isthorwing = inputValue.isPressed;        
         if (isthorwing)
         {
             if (InventoryManager.sphereCount == 0) { isthorwing = false; return; }
             palSphere = BattleManager.Instance.GiveSphere();
+            circleCollider2D = palSphere.GetComponent<CircleCollider2D>();
+            circleCollider2D.enabled = false;
             palsphere_PalSphere = palSphere.GetComponent<PalSphere>();
             Vector3 point = Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
             Vector3 normal = (point - transform.position).normalized;
@@ -243,7 +236,8 @@ public class PlayerControll : MonoBehaviour
         else
         {
             if (palsphere_PalSphere == null) return;
-            InventoryManager.Instance.UseItem(1001);
+            InventoryManager.Instance.UseItem(1000);
+            circleCollider2D.enabled = true;
             Vector3 point = Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
             Vector3 normal = (point - transform.position).normalized;
             Rigidbody2D rb = palSphere.GetComponent<Rigidbody2D>();
@@ -404,21 +398,23 @@ public class PlayerControll : MonoBehaviour
         if (istired) return;
 
         float change = inputValue.Get<Vector2>().y;
-        if (change > 0 && (int)nowEquip != 3)
+        if (change > 0)
         {
-            equip[(int)nowEquip].SetActive(false);
-            nowEquip += 1;
-            equip[(int)nowEquip].SetActive(true);
-            animator_Equip[(int)nowEquip].SetInteger("Direction", (int)viewdirection);
-            animator_Equip[(int)nowEquip].SetTrigger("Move");
+            equip[nowEquip].SetActive(false);
+            if(nowEquip == 3) nowEquip = 0;
+            else nowEquip += 1;
+            equip[nowEquip].SetActive(true);
+            animator_Equip[nowEquip].SetInteger("Direction", (int)viewdirection);
+            animator_Equip[nowEquip].SetTrigger("Move");
         }
         else if (change < 0 && nowEquip != 0)
         {
-            equip[(int)nowEquip].SetActive(false);
-            nowEquip -= 1;
-            equip[(int)nowEquip].SetActive(true);
-            animator_Equip[(int)nowEquip].SetInteger("Direction", (int)viewdirection);
-            animator_Equip[(int)nowEquip].SetTrigger("Move");
+            equip[nowEquip].SetActive(false);
+            if (nowEquip == 0) nowEquip = 3;
+            else nowEquip -= 1;
+            equip[nowEquip].SetActive(true);
+            animator_Equip[nowEquip].SetInteger("Direction", (int)viewdirection);
+            animator_Equip[nowEquip].SetTrigger("Move");
         }
     }
     private void OnMove(InputValue inputValue)

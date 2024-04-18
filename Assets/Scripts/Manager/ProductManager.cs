@@ -65,7 +65,7 @@ public class ProductManager : Singleton<ProductManager>
             needPanel[i].RemoveDataPanel();
         }
         productImage.sprite = product.sprite;
-        productName.text = product.itemName + "x1";        
+        productName.text = product.itemName + "x" + product.count * 1;        
         if (InventoryManager.inventorySum.ContainsKey(product.id)) { productHasCount.text = InventoryManager.inventorySum[product.id].ToString(); }
         else productHasCount.text = "0";
 
@@ -95,7 +95,7 @@ public class ProductManager : Singleton<ProductManager>
 
     public void ConfirmProduct()
     {
-        setProduct.count = count;
+        setProduct.count = count * setProduct.count;
         nowBuilding.ConfirmProduct(setProduct);
         int[,] needIngredients = setProduct.ingredients;
         for (int i = 0; i < needIngredients.GetLength(0); i++)

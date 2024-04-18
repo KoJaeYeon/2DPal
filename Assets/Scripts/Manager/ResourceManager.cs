@@ -7,6 +7,7 @@ public class ResourceManager : Singleton<ResourceManager>
 {
     public Bricks nowAttackBricks;
     public Vector3 bricsPosition;
+    public Equipment brickEquip;
     public Equipment equipment;
 
     public PlayerControll playerControll;
@@ -22,6 +23,7 @@ public class ResourceManager : Singleton<ResourceManager>
     public void ReceiveResourceData(Bricks bricks, Equipment equipment, Vector3 position)
     {
         nowAttackBricks = bricks;
+        this.brickEquip = bricks.equipment;
         this.equipment = equipment;
         bricsPosition = position;
     }
@@ -44,6 +46,7 @@ public class ResourceManager : Singleton<ResourceManager>
         }
         if(nowAttackBricks != null)
         {
+            if (brickEquip == equipment) damage *= 3;
             attackDamage += damage;
             Item giveItem = nowAttackBricks.Attack(damage);
             PlusExp(giveItem.count);
@@ -86,7 +89,6 @@ public class ResourceManager : Singleton<ResourceManager>
                         DataClear();
                     }
                 }
-
             }
             else
             {

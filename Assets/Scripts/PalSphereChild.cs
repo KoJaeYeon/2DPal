@@ -4,8 +4,14 @@ using UnityEngine;
 
 public class PalSphereChild : MonoBehaviour
 {
+    PalSphere palSphere;
+
+    private void Awake()
+    {
+        palSphere = transform.parent.GetComponent<PalSphere>();
+    }
     public void Check(int count)
     {
-        BattleManager.Instance.Check(count);
+        palSphere.Check(count);
     }
 }

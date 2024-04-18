@@ -7,8 +7,12 @@ public class Bricks : MonoBehaviour
 {
     public Tilemap tilemap;
     public Item item;
+    public Item bonusItem;
+
+    public Equipment equipment;
 
     [SerializeField] int id;
+    [SerializeField] int bonusId;
 
     public float maxDuration = 250;
     public float duration = 250;
@@ -16,11 +20,13 @@ public class Bricks : MonoBehaviour
     public int count;
     public int givedItem = 0;
     public int leftItem;
+    
 
     private void Start()
     {
         tilemap = GetComponent<Tilemap>();
         item = ItemDatabase.Instance.items[id];
+        if(bonusId != 0 ) bonusItem = ItemDatabase.Instance.items[bonusId];
         count = item.count;
         leftItem = count;
     }
@@ -55,6 +61,7 @@ public class Bricks : MonoBehaviour
         duration = maxDuration;
         leftItem = count;
         givedItem = 0;
+        InventoryManager.Instance.DropItem(bonusItem);
         return true;
     }
 

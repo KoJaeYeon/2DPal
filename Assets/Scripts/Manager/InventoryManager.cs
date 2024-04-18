@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -10,6 +11,7 @@ public class InventoryManager : Singleton<InventoryManager>
     public GameObject chestInventorySlot;
     public GameObject chestBoxSlot;
     public GameObject UIEquipmentSlot;
+    public GameObject FoodPanel;
 
 
     public TMPro.TextMeshProUGUI textMeshProUGUI; //팰스피어 갯수 표시 UI
@@ -48,8 +50,29 @@ public class InventoryManager : Singleton<InventoryManager>
 
     private void Start()
     {
-        DropItem(new Item("sdf",1001,5,0));
+        DropItem(new Item("sdf",1000,5,0));
+        Equip equip = new Equip("나무 곤봉", 501, 1, 10, 30, "근접 전투용 나무 곤봉.\n팰과 싸우기엔 좀 불안하다.", new int[,] { { 1, 5 } }); equip.sprite = ItemDatabase.Instance.sprites_equip[0];
+        DropItem(equip);
     }
+
+    public int CheckWeapon()
+    {
+        for(int i = 21; i <= 25; i++)
+        {
+            if (!inventory.ContainsKey(i)) return i;
+        }
+        return -1;
+    }
+
+    public int CheckNull()
+    {
+        for (int i = 0; i < 21; i++)
+        {
+            if (!inventory.ContainsKey(i)) return i;
+        }
+        return -1;
+    }
+
 
     void UpdateSlot(int i,Item item)
     {
@@ -66,9 +89,8 @@ public class InventoryManager : Singleton<InventoryManager>
             Slot slot = UIEquipmentSlot.transform.GetChild(i - 21).GetChild(0).GetComponent<Slot>();
             slot.UpdateSlot(item);
             //무기 교체
-            Debug.Log(item);
-            if(item == null) WeaponManager.Instance.Equip(500, i);
-            else WeaponManager.Instance.Equip(item.id, i);
+            if(slot.item == null) WeaponManager.Instance.Equip(500, i);
+            else WeaponManager.Instance.Equip(slot.item.id, i);
         }
         else if (i >= 50)
         {
@@ -90,6 +112,9 @@ public class InventoryManager : Singleton<InventoryManager>
         {
             Slot slot = UIEquipmentSlot.transform.GetChild(i - 21).GetChild(0).GetComponent<Slot>();
             slot.UpdateSlot();
+            //무기 교체
+            if (slot.item == null) WeaponManager.Instance.Equip(500, i);
+            else WeaponManager.Instance.Equip(slot.item.id, i);
         }
         else if (i >= 50)
         {
@@ -109,10 +134,10 @@ public class InventoryManager : Singleton<InventoryManager>
             Debug.Log("case1");
             inventory[startSlotkey].Substarct(tempSlot.item);
             inventory.Add(endSlotkey,tempSlot.item);
-            UpdateSlot(startSlotkey, null);
+            UpdateSlot(startSlotkey);
             UpdateSlot(endSlotkey, inventory[endSlotkey]);
         }
-        else if (tempSlot.item.Equals(inventory[endSlotkey])) // 같은 종류의 아이템이면
+        else if (tempSlot.item.Equals(inventory[endSlotkey]) && !(tempSlot.item is Equip)) // 같은 종류의 아이템이고 장비가 아니면
         {
             Debug.Log("case2");
             inventory[startSlotkey].Substarct(tempSlot.item);
@@ -120,7 +145,7 @@ public class InventoryManager : Singleton<InventoryManager>
             UpdateSlot(startSlotkey);
             UpdateSlot(endSlotkey, inventory[endSlotkey]);
         }
-        else // 다른종류의 아이템이면
+        else // 다른종류의 아이템이거나 장비이면
         {
             if (inventory[startSlotkey].count != tempSlot.item.count) // 바꾸기가 아니라 갯수가 달라졌으면 취소
             {
@@ -187,6 +212,7 @@ public class InventoryManager : Singleton<InventoryManager>
         {
             if(inventory.ContainsKey(i) && inventory[i].Equals(item)) {  alreadyHas = true; index = i; break; }
         }
+        if (item is Equip) alreadyHas = false;
         if (alreadyHas) //인벤토리에 아이템이 이미 존재하는 경우
         {
             inventory[index].Add(item);

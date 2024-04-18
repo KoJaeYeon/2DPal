@@ -155,6 +155,10 @@ public class GetTarget : MonoBehaviour
                     case Building.BuildingType.Chest:
                         interactiveText.text = "¿­±â";
                         break;
+                    case Building.BuildingType.None:
+                        if(building.buildingStatement != BuildingStatement.isBuilding)
+                        ActionPanel.SetActive(false);
+                        break;
                 }
             }
 
@@ -172,6 +176,7 @@ public class GetTarget : MonoBehaviour
     private void OnTriggerExit2D(Collider2D collision)
     {
         playerControll.target = null;
+        if (building.buildingType == Building.BuildingType.None && building.buildingStatement != BuildingStatement.isBuilding) return;
         building = null;
         if (collision.gameObject.CompareTag("Furniture") || collision.gameObject.CompareTag("DropItem"))
         {
@@ -184,7 +189,7 @@ public class GetTarget : MonoBehaviour
                 }
             }
             else
-            {
+            {                
                 animators[0].Play("UnShowEffect");
             }
         }

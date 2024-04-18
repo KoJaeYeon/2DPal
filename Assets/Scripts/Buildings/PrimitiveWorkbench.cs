@@ -14,7 +14,7 @@ public class PrimitiveWorkbench : Building
         buildingName = "원시적인 작업대";
         base.Awake();
         RecipePanel = GameManager.Instance.RecipePanel;
-        todoList = todoList = PalManager.Instance.producing;
+        todoList = PalManager.Instance.producing;
         buildingType = BuildingType.Recipe;
 
     }
@@ -34,7 +34,6 @@ public class PrimitiveWorkbench : Building
                 GameManager.Instance.activePanel = RecipePanel;
                 break;
             case BuildingStatement.Done:
-                Debug.Log(production is Equip);
                 InventoryManager.Instance.DropItem(production);
                 GameManager.Instance.GetExp(production.count * 2);
                 buildingStatement = BuildingStatement.Built;

@@ -21,6 +21,7 @@ public class PalAI : MonoBehaviour
     public GameObject target;
     public Building targetBulding;
 
+    public bool thisPalCanSleep = true;
     public bool thisPalCanbuild = true;
     public bool thisPalCanProduce = false;
 
@@ -38,10 +39,9 @@ public class PalAI : MonoBehaviour
     #endregion
 
     private void Awake()
-    {
-        astar = GetComponent<Astar>();
-    }
+    {        
 
+    }
 
     void OnGo()
     {
@@ -60,15 +60,36 @@ public class PalAI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        gameObject.layer = 8;
+        astar = GetComponent<Astar>();
+        transform.GetChild(0).gameObject.SetActive(false);
+
         pal = PalDatabase.Instance.GetPal(id);
-        coroutine = StartCoroutine(Search());
+        StartCoroutine(Search());
     }
     IEnumerator Search()
     {
         while (true)
         {
+            Debug.Log("dg");
             if (palState == PalStates.Idle)
             {
+                if (thisPalCanSleep && PalManager.Instance.sleeping.Count > 0)
+                {
+                    int count = PalManager.Instance.sleeping.Count;
+                    for (int i = 0; i < count; i++)
+                    {
+                        targetBulding = PalManager.Instance.sleeping[i];
+                        if (targetBulding.workingPal == null)
+                        {
+                            targetBulding.workingPal = this;
+                            target = targetBulding.gameObject;
+                            OnGo();
+                            break;
+                        }
+                    }
+                }
+
                 if (thisPalCanProduce && PalManager.Instance.producing.Count > 0)
                 {
                     int count = PalManager.Instance.producing.Count;
