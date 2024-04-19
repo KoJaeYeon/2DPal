@@ -78,14 +78,15 @@ public class PalSphere : MonoBehaviour
         {
             Debug.Log("Caputre!!!");
             enemy_Pal.gameObject.SetActive(false);
-            gameObject.SetActive(false);
             PalBoxManager.Instance.CatchPal(enemy_Pal.pal.id);
+            enemy_Pal.transform.SetParent(PalDatabase.Instance.poolParent.transform);
+            gameObject.SetActive(false);
             return true;
         }
-        else if (Random.Range(0, 100) > (80 + (enemy_Pal.percent * 0.4f) - (tryCount + 1) * 20) - 20)
+        else if (Random.Range(0, 100) > (50 + (enemy_Pal.percent * 0.6f) - (tryCount + 1) * 20) - 20)
         {
             animator_p.Play("Capture" + tryCount);
-            float percent = 100 - (80 + (enemy_Pal.percent * 0.4f) - (tryCount + 1) * 20 - 20);
+            float percent = 100 - (50 + (enemy_Pal.percent * 0.6f) - (tryCount + 1) * 20 - 20);
             percent = percent > 100 ? 100 : percent;
             percent = percent < 0 ? 10 : percent;
             textMeshProUGUI.text = percent.ToString("0");

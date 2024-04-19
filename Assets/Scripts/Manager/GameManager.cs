@@ -21,6 +21,8 @@ public class GameManager : Singleton<GameManager>
 
     public TextMeshProUGUI technicPoint;
 
+    public Slider healthSlider;
+
 
 
     private void Awake()
@@ -90,6 +92,7 @@ public class GameManager : Singleton<GameManager>
     public void GetDamage(float damage)
     {
         playerControll.health -= damage;
+        healthSlider.value = playerControll.health / playerControll.maxHealth;
     }
 
     public void GetExp(int exp)

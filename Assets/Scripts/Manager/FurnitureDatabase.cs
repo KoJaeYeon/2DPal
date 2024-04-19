@@ -55,7 +55,7 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
             MakeSlot(1,1100 + i);
         }
 
-        for (int i = 0; i < 2; i++) //¸ð´ÚºÒ ÃÖÃÊ ½½·Ô ºÎ¿©
+        for (int i = 0; i < 3; i++) //¸ð´ÚºÒ ÃÖÃÊ ½½·Ô ºÎ¿©
         {
             MakeSlot(2,1200 + i);
         }

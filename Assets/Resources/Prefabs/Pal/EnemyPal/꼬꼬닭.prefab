@@ -292,13 +292,12 @@ GameObject:
   - component: {fileID: 2906565930652152871}
   - component: {fileID: 2906565930652152870}
   - component: {fileID: -1934943057225138578}
-  - component: {fileID: 2906565930652152874}
   - component: {fileID: 2906565930652152869}
   - component: {fileID: 2906565930652152872}
   - component: {fileID: 8928478272081766420}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: "\uAF2C\uAF2C\uB2ED"
-  m_TagString: Untagged
+  m_TagString: EnemyPal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -399,7 +398,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2906565930652152865}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 161348b7f5d588c4cbf69a54ad554943, type: 3}
   m_Name: 
@@ -415,31 +414,6 @@ MonoBehaviour:
   statement: 0
   attackPlayed: 0
   canAttack: 0
---- !u!114 &2906565930652152874
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2906565930652152865}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4800df746b141d4786071e7bf3adb04, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pal:
-    _attack: 0
-  id: 3
-  palState: 0
-  target: {fileID: 0}
-  targetBulding: {fileID: 0}
-  thisPalCanbuild: 1
-  thisPalCanProduce: 0
-  thisPalPlaying: 0
-  pathInitIndex: 0
-  pathFinalIndex: 0
-  targetx: 0
-  targety: 0
 --- !u!114 &2906565930652152869
 MonoBehaviour:
   m_ObjectHideFlags: 0

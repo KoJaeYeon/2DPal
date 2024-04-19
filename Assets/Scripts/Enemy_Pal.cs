@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 public class Enemy_Pal : MonoBehaviour
 {
@@ -38,11 +39,13 @@ public class Enemy_Pal : MonoBehaviour
     }
     private void Start()
     {
-        transform.GetComponent<PalAI>().StopAllCoroutines();
         transform.GetChild(0).gameObject.SetActive(true);
         tag = "EnemyPal";
 
         pal = PalDatabase.Instance.GetPal(id);
+        if(ItemDatabase.Instance.dropDics.ContainsKey(id))
+        dropItems = ItemDatabase.Instance.dropDics[id];
+        else dropItems = new List<Item>();
 
         levelName.text = "Lv." + pal.lv + " " + pal.palName;
         slider.value = pal.health / pal.maxHealth;
@@ -74,20 +77,7 @@ public class Enemy_Pal : MonoBehaviour
     {
         statement = EnemyState.Battle;
         pal.health -= damage;
-        slider.value = pal.health / pal.maxHealth;
-        percent = slider.value;
-        if(slider.value < 0.2)
-        {
-            fillImage.color = Color.red;
-        }
-        else if(slider.value  < 0.5)
-        {
-            fillImage.color = Color.yellow;
-        }
-        else
-        {
-            fillImage.color = Color.green;
-        }
+        Status();
         if (pal.health <= 0) Die();
         if(!attackPlayed)
         {
@@ -96,6 +86,23 @@ public class Enemy_Pal : MonoBehaviour
         }
     }
 
+    public void Status()
+    {
+        slider.value = pal.health / pal.maxHealth;
+        percent = slider.value;
+        if (slider.value < 0.2)
+        {
+            fillImage.color = Color.red;
+        }
+        else if (slider.value < 0.5)
+        {
+            fillImage.color = Color.yellow;
+        }
+        else
+        {
+            fillImage.color = Color.green;
+        }
+    }
     public void RushStart()
     {
         attackPlayed = true;
@@ -113,6 +120,23 @@ public class Enemy_Pal : MonoBehaviour
         StopAllCoroutines();
         statement = EnemyState.Idle;
         attackPlayed = false;
+        animator.Play("Pal_Die");
+    }
+
+    public void Disappear()
+    {
+        StopAllCoroutines();
+        statement = EnemyState.Idle;
+        attackPlayed = false;
+        transform.SetParent(PalDatabase.Instance.poolParent.transform);
+        int length = dropItems.Count;
+        for (int i = 0; i < length; i++)
+        {
+            Item item = ItemDatabase.Instance.GetItem(dropItems[i].id);
+            item.count = dropItems[i].count;
+            InventoryManager.Instance.DropItem(item);
+        }
+        gameObject.SetActive(false);
     }
 
     private void OnCollisionStay2D(Collision2D collision)

@@ -49,8 +49,9 @@ public class PlayerControll : MonoBehaviour
     public int exp;
     public float hungry;
     public float health;
-    public float moveWeight;
-    public int skillPoint;
+    public float maxHealth;
+    public float moveWeight = 300;
+    public int skillPoint = 0;
     public int TechPoint = 10;
 
     public float speed = 0.01f;
@@ -116,7 +117,7 @@ public class PlayerControll : MonoBehaviour
 
 
     public void Stamina()
-    {
+    {        
         if (running && moving)
         {
             slider.gameObject.SetActive(true);
@@ -124,8 +125,36 @@ public class PlayerControll : MonoBehaviour
         }
         else if (fire)
         {
-            slider.gameObject.SetActive(true);
-            nowStamina -= 0.03f;
+            if (GameManager.Instance.ManagerUsingUi())
+            {
+                if (nowStamina < maxStamina)
+                    nowStamina += 0.03f;
+                else
+                {
+                    istired = false;
+                    image.color = new Color(1, 1, 0, 0.8f);
+                    slider.gameObject.SetActive(false);
+                }
+                slider.value = nowStamina / maxStamina;
+                return;
+            }
+            else if(!istired)
+            {
+                slider.gameObject.SetActive(true);
+                nowStamina -= 0.03f;
+            }
+            else
+            {
+                nowStamina += 0.03f;
+                slider.value = nowStamina / maxStamina;
+                if (nowStamina > maxStamina)
+                {
+                    istired = false;
+                    image.color = new Color(1, 1, 0, 0.8f);
+                    slider.gameObject.SetActive(false);
+                }
+                return;
+            }
         }
         else
         {

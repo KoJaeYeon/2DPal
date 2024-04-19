@@ -8,6 +8,7 @@ TagManager:
   - Furniture
   - EnemyPal
   - DropItem
+  - PalBed
   layers:
   - Default
   - TransparentFX
@@ -47,6 +48,9 @@ TagManager:
     locked: 0
   - name: MiddleGround
     uniqueID: 1815730023
+    locked: 0
+  - name: Resource
+    uniqueID: 3393212867
     locked: 0
   - name: Default
     uniqueID: 0

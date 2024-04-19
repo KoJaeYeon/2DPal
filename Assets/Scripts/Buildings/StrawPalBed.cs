@@ -9,18 +9,18 @@ public class StrawPalBed : Building
     {
         buildingName = "원시적인 작업대";
         base.Awake();
-        todoList = PalManager.Instance.producing;
+        todoList = PalManager.Instance.sleeping;
         buildingType = BuildingType.None;
 
     }
 
     private new void OnEnable()
     {
-        base.OnEnable();
         PalManager.Instance.palBedBuilding.Add(this);
     }
-    private void OnDisable()
+    private new void OnDisable()
     {
+        base.OnDisable();
         PalManager.Instance.palBedBuilding.Remove(this);
     }
 

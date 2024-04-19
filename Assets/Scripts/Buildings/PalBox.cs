@@ -18,8 +18,9 @@ public class PalBox : Building
         base.OnEnable();
         PalBoxManager.Instance.palBoxBuilding.Add(this);
     }
-    private void OnDisable()
+    private new void OnDisable()
     {
+        base.OnDisable();
         PalBoxManager.Instance.palBoxBuilding.Remove(this);
         PalBoxManager.Instance.Dispawn();
     }

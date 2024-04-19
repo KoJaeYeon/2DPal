@@ -32,7 +32,9 @@ public class ItemDatabase : Singleton<ItemDatabase>
         id = 6; food = new Food("버섯", id, 1, 1f, 0, "그냥 먹어도 되는 버섯.\n섬을 돌아다니다 보면 쉽게 보인다."); food.sprite = sprites[index++]; items.Add(id, food);
         id = 7; item = new Item("열매 씨", id, 2, 0.05f, "빨간 열매을(를) 재배할 수 있는 씨.\n농원을 만들 때 필요하다.\n빨간 열매을(를) 채취할 때 얻을 수 있다."); item.sprite = sprites[index++]; items.Add(id, item);
         id = 8; item = new Item("섬유", id, 4, 0.5f, "나무에서 얻는 섬유.\n활 등을 제작하는 소재가 된다."); item.sprite = sprites[index++]; items.Add(id, item);
-        id = 9; item = new Item("양털", id, 4, 1f, "양 팰에게서 얻는 소재.\n침대나 천을(를) 만들 때 필요하다."); item.sprite = sprites[index++]; items.Add(id, item);
+        id = 9; item = new Item("양털", id, 2, 1f, "양 팰에게서 얻는 소재.\n침대나 천을(를) 만들 때 필요하다."); item.sprite = sprites[index++]; items.Add(id, item);
+        id = 10; food = new Food("도로롱", id, 1, 1f, 0, "도로롱의 고기.\n독특한 풍미가 매력적인 붉은 살코기. 잡내가 있지만 맛이 좋다."); food.sprite = sprites[index++]; items.Add(id, food);
+
 
         index = 0;
         id = 1000; Product product = new Product("팰 스피어", id, 1, 0, 5, "던져서 팰을 포획하는 도구", new int[,] { { 1, 3 }, { 2, 3 }, { 3, 1 } }); product.sprite = sprites_product[index++]; items.Add(id, product);
@@ -63,16 +65,18 @@ public class ItemDatabase : Singleton<ItemDatabase>
 
 
         //적 팰 드랍리스트
+        id = 1; dropList = new List<Item>(); food = GetFood(10); food.count = 1; dropList.Add(food); item = GetItem(9); item.count = 2; dropList.Add(item); dropDics.Add(id, dropList);
 
 
         index = 0;
         id = 1100; product = new Product("금속 주괴", id, 1, 0.15f, 10, "금속제 무기나 방어구를 만들 때 필요한 소재.\n금속 광석을 화로에 제련해서 만든다.", new int[,] { { 4, 2 } }); product.sprite = sprites_fire[index++]; items.Add(id, product);
 
         index = 0;
-        id = 1200; food = new Food("구운 열매", id, 1, 0.15f, 5, "구우면 영양가가 높아진다.\n신기할 정도로 포만감이 좋다.", new int[,] { { 5, 1 } }); food.sprite = sprites_cook[index++]; items.Add(id, product);
+        id = 1200; food = new Food("구운 열매", id, 1, 0.15f, 5, "구우면 영양가가 높아진다.\n신기할 정도로 포만감이 좋다.", new int[,] { { 5, 1 } }); food.sprite = sprites_cook[index++]; items.Add(id, food);
         id = 1201; food = new Food("구운 버섯", id, 1, 1, 5, "구우면 영양가가 높아지는 버섯.\n신기할 정도로 포만감이 좋다.", new int[,] { { 6, 1 } }); food.sprite = sprites_cook[index++]; items.Add(id, food);
+        id = 1202; food = new Food("도로롱", id, 1, 1, 5, "향신료에 재운 양고기를 구워 만든 요리.\n짙은 개성과 깊이 있는 맛을 체감할 수 있다.", new int[,] { { 10, 1 } }); food.sprite = sprites_cook[index++]; items.Add(id, food);
 
-        
+
 
         //더미 드랍 게임 오브젝트 생성
         for (int i = 0; i < 20; i++)
@@ -126,6 +130,11 @@ public class ItemDatabase : Singleton<ItemDatabase>
             Equip equip = new Equip((Equip)items[id]);
             return equip;
         }
+        else if (items[id] is Food)
+        {
+            Food food = new Food((Food)items[id]);
+            return food;
+        }
         Product product = new Product((Product)items[id]);
         return product;
     }
@@ -149,6 +158,21 @@ public class ItemDatabase : Singleton<ItemDatabase>
     }
     public Item GetItem(int id)
     {
+        if (items[id] is Equip)
+        {
+            Equip equip = new Equip((Equip)items[id]);
+            return equip;
+        }
+        else if (items[id] is Food)
+        {
+            Food food = new Food((Food)items[id]);
+            return food;
+        }
+        else if (items[id] is Product)
+        {
+            Product product = new Product((Product)items[id]);
+            return product;
+        }
         Item item = new Item(items[id]);
         return item;
     }

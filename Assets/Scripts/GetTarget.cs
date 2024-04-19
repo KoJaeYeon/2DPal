@@ -157,6 +157,7 @@ public class GetTarget : MonoBehaviour
                         break;
                     case Building.BuildingType.None:
                         if(building.buildingStatement != BuildingStatement.isBuilding)
+                            interactiveText.text = "";
                         ActionPanel.SetActive(false);
                         break;
                 }
@@ -176,7 +177,6 @@ public class GetTarget : MonoBehaviour
     private void OnTriggerExit2D(Collider2D collision)
     {
         playerControll.target = null;
-        if (building.buildingType == Building.BuildingType.None && building.buildingStatement != BuildingStatement.isBuilding) return;
         building = null;
         if (collision.gameObject.CompareTag("Furniture") || collision.gameObject.CompareTag("DropItem"))
         {

@@ -16,7 +16,7 @@ public class Building : MonoBehaviour
     public int index;
     static int worldIndexNum = 1;
     public BuildingStatement buildingStatement = BuildingStatement.FreeBuilding;
-    bool isContact = false;
+    bool isContact = false; // 설치 시 접촉되어 있는지 판단하는 변수
     public float MaxConstructTime;
     public float nowConstructTime;
     public float MaxWorkTime;
@@ -44,7 +44,10 @@ public class Building : MonoBehaviour
 
     protected void OnEnable()
     {
-        buildingStatement = BuildingStatement.FreeBuilding;
+    }
+
+    protected void OnDisable()
+    {
         isContact = false;
         boxCollider2d.isTrigger = true;
         rigidbody2d.bodyType = RigidbodyType2D.Dynamic;

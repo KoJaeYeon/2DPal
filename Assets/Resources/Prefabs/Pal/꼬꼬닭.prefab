@@ -291,7 +291,6 @@ GameObject:
   - component: {fileID: 2906565930652152868}
   - component: {fileID: 2906565930652152871}
   - component: {fileID: 2906565930652152870}
-  - component: {fileID: -1934943057225138578}
   - component: {fileID: 2906565930652152874}
   - component: {fileID: 2906565930652152869}
   - component: {fileID: 2906565930652152872}
@@ -392,29 +391,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &-1934943057225138578
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2906565930652152865}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 161348b7f5d588c4cbf69a54ad554943, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pal:
-    _attack: 0
-  id: 3
-  percent: 100
-  power: 300
-  dropItems: []
-  slider: {fileID: 0}
-  fillImage: {fileID: 0}
-  statement: 0
-  attackPlayed: 0
-  canAttack: 0
 --- !u!114 &2906565930652152874
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -422,7 +398,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2906565930652152865}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c4800df746b141d4786071e7bf3adb04, type: 3}
   m_Name: 
@@ -433,6 +409,7 @@ MonoBehaviour:
   palState: 0
   target: {fileID: 0}
   targetBulding: {fileID: 0}
+  thisPalCanSleep: 1
   thisPalCanbuild: 1
   thisPalCanProduce: 0
   thisPalPlaying: 0

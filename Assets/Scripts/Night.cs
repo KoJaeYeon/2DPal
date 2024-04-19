@@ -44,6 +44,7 @@ public class Night : MonoBehaviour
                 ToMidnight();
                 foreach (StrawPalBed strawPalBed in PalManager.Instance.palBedBuilding)
                 {
+                    Debug.Log(strawPalBed);
                     strawPalBed.Sleep();
                 }
             }

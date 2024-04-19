@@ -112,6 +112,7 @@ public class PalBoxManager : Singleton<PalBoxManager>
             if(spawnPal.ContainsKey(i))
             {
                 spawnPal[i].SetActive(false);
+                spawnPal[i].transform.SetParent(ItemDatabase.Instance.poolParent.transform);
                 spawnPal.Remove(i);
                 for (int j = 5; j < 95; j++)
                 {

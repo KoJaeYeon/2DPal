@@ -13,6 +13,7 @@ public class Bricks : MonoBehaviour
 
     [SerializeField] int id;
     [SerializeField] int bonusId;
+    [SerializeField] int bonusCount = 4;
 
     public float maxDuration = 250;
     public float duration = 250;
@@ -20,13 +21,13 @@ public class Bricks : MonoBehaviour
     public int count;
     public int givedItem = 0;
     public int leftItem;
-    
+
 
     private void Start()
     {
         tilemap = GetComponent<Tilemap>();
         item = ItemDatabase.Instance.items[id];
-        if(bonusId != 0 ) bonusItem = ItemDatabase.Instance.items[bonusId];
+        if (bonusId != 0) {bonusItem = ItemDatabase.Instance.items[bonusId]; bonusItem.count = bonusCount; }
         count = item.count;
         leftItem = count;
     }

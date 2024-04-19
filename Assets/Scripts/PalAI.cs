@@ -42,6 +42,15 @@ public class PalAI : MonoBehaviour
     {        
 
     }
+    void Start()
+    {
+        gameObject.layer = 8;
+        astar = GetComponent<Astar>();
+        transform.GetChild(0).gameObject.SetActive(false);
+
+        pal = PalDatabase.Instance.GetPal(id);
+        StartCoroutine(Search());
+    }
 
     void OnGo()
     {
@@ -54,24 +63,14 @@ public class PalAI : MonoBehaviour
         palState = PalStates.Move;
         pathInitIndex = 0; // 초기화
         pathFinalIndex = path.Count;
-        if(thisPalPlaying) StopCoroutine(playing);
+        if (thisPalPlaying) { thisPalPlaying = false; StopCoroutine(playing); }
     }
 
     // Start is called before the first frame update
-    void Start()
-    {
-        gameObject.layer = 8;
-        astar = GetComponent<Astar>();
-        transform.GetChild(0).gameObject.SetActive(false);
-
-        pal = PalDatabase.Instance.GetPal(id);
-        StartCoroutine(Search());
-    }
     IEnumerator Search()
     {
         while (true)
         {
-            Debug.Log("dg");
             if (palState == PalStates.Idle)
             {
                 if (thisPalCanSleep && PalManager.Instance.sleeping.Count > 0)
@@ -109,6 +108,11 @@ public class PalAI : MonoBehaviour
                 {
                     targetBulding = PalManager.Instance.buildings[0];
                     target = targetBulding.gameObject;
+                    if (thisPalPlaying)
+                    {
+                        StopCoroutine(playing);
+                        thisPalPlaying = false;
+                    }
                     OnGo();
                 }
 
@@ -134,7 +138,7 @@ public class PalAI : MonoBehaviour
             }
             else if (palState == PalStates.Move)
             {
-                if (targetBulding.buildingStatement != BuildingStatement.isBuilding) //가기 전에 건물 완공되면 업무취소
+                if (targetBulding.buildingStatement == BuildingStatement.Built) //가기 전에 건물 완공되면 업무취소
                 {
                     palState = PalStates.Idle;
                     target = null;
@@ -221,7 +225,7 @@ public class PalAI : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
 
-        if(collision.gameObject.CompareTag("Furniture"))
+        if(collision.gameObject.CompareTag("Furniture") || collision.gameObject.CompareTag("PalBed"))
         {
             int index = collision.gameObject.GetComponent<Building>().index;
             if(targetBulding.index == index)

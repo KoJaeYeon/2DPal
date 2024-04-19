@@ -11,7 +11,9 @@ public class PalDatabase : Singleton<PalDatabase>
     public GameObject parent_Wild;
     public GameObject poolParent;
     public List<GameObject>[] palPrefabs = new List<GameObject>[10];
+    public List<GameObject>[] palPrefabs_enemy = new List<GameObject>[10];
     public GameObject[] Prefabs = new GameObject[10];
+    public GameObject[] Prefabs_enemy = new GameObject[10];
     private void Awake()
     {
         int index = 0;
@@ -27,51 +29,46 @@ public class PalDatabase : Singleton<PalDatabase>
             GameObject prefab = Instantiate(Prefabs[i]);
             palPrefabs[i] = new List<GameObject>();
             palPrefabs[i].Add(prefab);
-            prefab.transform.parent = poolParent.transform;
+            prefab.transform.SetParent(poolParent.transform);
             prefab.SetActive(false);
+        }
+        for (int i = 0; i < pals.Count; i++)
+        {
+            GameObject prefab_enemy = Instantiate(Prefabs_enemy[i]);
+            palPrefabs_enemy[i] = new List<GameObject>();
+            palPrefabs_enemy[i].Add(prefab_enemy);
+            prefab_enemy.transform.SetParent(poolParent.transform);
+            prefab_enemy.SetActive(false);
         }
     }
 
     public GameObject GivePal(int id, bool basePal = true)
     {
         id %= 100;
-        foreach (GameObject pal in palPrefabs[id - 1])
+        List<GameObject> list;
+        if (basePal) list = palPrefabs[id-1];
+        else list = palPrefabs_enemy[id - 1]; ;
+        foreach (GameObject pal in list)
         {
             if (!pal.activeSelf)
             {
-                if (basePal)
-                {
-                    pal.GetComponent<PalAI>().enabled = true;
-                    pal.GetComponent<Enemy_Pal>().enabled = false;
-                    
-                }
-                else
-                {
-                    pal.GetComponent<PalAI>().enabled = false;
-                    pal.GetComponent<Enemy_Pal>().enabled = true;
-                }
                 pal.SetActive(true);
                 return pal;
             }
         }
-        GameObject prefab = Instantiate(Prefabs[id - 1]);
-        palPrefabs[id - 1].Add(prefab);
         if (basePal)
         {
-            prefab.GetComponent<PalAI>().enabled = true;
-            prefab.GetComponent<Enemy_Pal>().enabled = false;
-            prefab.transform.GetChild(0).gameObject.SetActive(false);
-            prefab.layer = 8;
+            GameObject prefab = Instantiate(Prefabs[id - 1]);
+            list.Add(prefab);
+            return prefab;
         }
         else
         {
-            prefab.GetComponent<PalAI>().enabled = true;
-            prefab.GetComponent<Enemy_Pal>().enabled = true;
-            prefab.transform.GetChild(0).gameObject.SetActive(true);
-            prefab.tag = "EnemyPal";
-            prefab.layer = 9;
+            GameObject prefab = Instantiate(Prefabs_enemy[id - 1]);
+            list.Add(prefab);
+            return prefab;
         }
-        return prefab;
+
     }
 
     private void Start()
