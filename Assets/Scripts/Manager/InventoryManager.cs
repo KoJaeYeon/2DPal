@@ -1,9 +1,6 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEditor.Progress;
+using static UnityEditor.ShaderData;
 
 public class InventoryManager : Singleton<InventoryManager>
 {
@@ -50,9 +47,41 @@ public class InventoryManager : Singleton<InventoryManager>
 
     private void Start()
     {
-        DropItem(new Item("sdf",1000,5,0));
-        Equip equip = new Equip("나무 곤봉", 501, 1, 10, 30, "근접 전투용 나무 곤봉.\n팰과 싸우기엔 좀 불안하다.", new int[,] { { 1, 5 } }); equip.sprite = ItemDatabase.Instance.sprites_equip[0];
-        DropItem(equip);
+        DropItem(new Item("sdf", 1, 8, 0));
+        DropItem(new Item("sdf", 2, 8, 0));
+        DropItem(new Item("sdf", 3, 1, 0));
+        //DropItem(new Item("sdf",1000,5,0));
+        //Equip equip = new Equip("나무 곤봉", 501, 1, 10, 30, "근접 전투용 나무 곤봉.\n팰과 싸우기엔 좀 불안하다.", new int[,] { { 1, 5 } }); equip.sprite = ItemDatabase.Instance.sprites_equip[0];
+        //DropItem(equip);
+    }
+
+    public void LoadAllSlot(List<ItemData> itemDatas)
+    {
+        inventory.Clear();
+        Debug.Log("SDfsfdsdffsd");
+        foreach(int key in inventory.Keys)
+        {
+            UpdateSlot(key, null);
+        }
+
+        for (int i = 0; i < itemDatas.Count; i++)
+        {
+            Item item = ItemDatabase.Instance.GetItem(itemDatas[i].id);
+            item.count = itemDatas[i].count;
+            inventory.Add(itemDatas[i].key, item);
+        }
+        for(int i = 0; i < maxInvetory + 4; i++)
+        {
+            Debug.Log("dfgdgf");
+            if(inventory.ContainsKey(i))
+            {
+                UpdateSlot(i, inventory[i]);
+            }
+            else
+            {
+                UpdateSlot(i, null);
+            }
+        }
     }
 
     public int CheckWeapon()
@@ -243,53 +272,59 @@ public class InventoryManager : Singleton<InventoryManager>
         if (item.id == 1000) sphereCount -= item.count;
         Debugint = sphereCount;
         textMeshProUGUI.text = GameManager.Instance.CountString(sphereCount);
-        while (item.count > 0)
+        for (int i = 0; i < maxInvetory; i++)
         {
-            if (inventory.ContainsValue(item))
+            if (!inventory.ContainsKey(i)) continue;
+            if (inventory[i].Equals(item))
             {
-                //int[] keysArray = new int[inventory.Count];
-                //int keyIndex = 0;
-                //foreach (int i in inventory.Keys)
-                //{
-                //    keysArray[keyIndex++] = i;
-                //}
-                for (int i = 0; i < maxInvetory; i++)
+                if (inventory[i].count >= item.count) // 인벤토리 총합이 많을때
                 {
-                    if (!inventory.ContainsKey(i)) continue;
-                    if (inventory[i].Equals(item))
-                    {
-                        if (inventory[i].count >= item.count) // 인벤토리 총합이 많을때
-                        {
-                            playerWeight -= item.count * item.weight;
-                            weihgtPanel.UpdateWeight(playerWeight, maxPlayerWeight);
-                            inventory[i].Substarct(item);
-                            inventorySum[item.id] -= item.count;
-                            item.count = 0;
-                            UpdateSlot(i, inventory[i]);
-                            return;
-                        }
-                        else // 인벤토리 총합이 적을때
-                        {
-                            playerWeight -= item.count * item.weight;
-                            weihgtPanel.UpdateWeight(playerWeight, maxPlayerWeight);
-                            item.Substarct(inventory[i]);
-                            inventorySum[item.id] -= inventory[i].count;
-                            inventory[i].count = 0;
-                            UpdateSlot(i, null);
-                        }
-                    }
+                    playerWeight -= item.count * item.weight;
+                    weihgtPanel.UpdateWeight(playerWeight, maxPlayerWeight);
+                    inventory[i].Substarct(item);
+                    inventorySum[item.id] -= item.count;
+                    item.count = 0;
+                    UpdateSlot(i, inventory[i]);
+                    return;
+                }
+                else // 인벤토리 총합이 적을때
+                {
+                    playerWeight -= item.count * item.weight;
+                    weihgtPanel.UpdateWeight(playerWeight, maxPlayerWeight);
+                    item.Substarct(inventory[i]);
+                    inventorySum[item.id] -= inventory[i].count;
+                    inventory[i].count = 0;
+                    UpdateSlot(i, null);
                 }
             }
-            else if( false) //창고 확인
+        }
+        List<int> keys = new List<int>(); // 창고검색
+        foreach (var key in inventory.Keys)
+        {
+            keys.Add(key);
+        }
+        int length = keys.Count;
+        for (int i = 0; i < length; i++)
+        {
+            if (inventory[keys[i]].Equals(item))
             {
-                //for(int i = 0; i < Chect.Count; i++)
-                //{
-
-                //}
+                if (inventory[keys[i]].count >= item.count) // 창고 총합이 많을때
+                {
+                    inventory[keys[i]].Substarct(item);
+                    inventorySum[item.id] -= item.count;
+                    item.count = 0;
+                    return;
+                }
+                else // 창고 총합이 적을때
+                {
+                    item.Substarct(inventory[keys[i]]);
+                    inventorySum[item.id] -= inventory[keys[i]].count;
+                    inventory[keys[i]].count = 0;
+                }
             }
         }
-
     }
+
     public void UseItem(int id)
     {
         Item item = new Item("", id, 1, 0);

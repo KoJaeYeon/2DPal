@@ -23,7 +23,7 @@ public class Building : MonoBehaviour
     public float nowWorkTime;
     protected string buildingName;
 
-    public enum BuildingType { Recipe, Pal, Chest, None}
+    public enum BuildingType { Recipe, Pal, Chest, None }
     public BuildingType buildingType;
 
     SpriteRenderer spriteRenderer;
@@ -63,7 +63,7 @@ public class Building : MonoBehaviour
     {
         if (buildingStatement == BuildingStatement.Built) return;
         nowConstructTime += work;
-        if ((nowConstructTime / MaxConstructTime) < 0.5f) spriteRenderer.color = new Color((nowConstructTime / MaxConstructTime) *2, (nowConstructTime / MaxConstructTime) * 2, 0);
+        if ((nowConstructTime / MaxConstructTime) < 0.5f) spriteRenderer.color = new Color((nowConstructTime / MaxConstructTime) * 2, (nowConstructTime / MaxConstructTime) * 2, 0);
         else spriteRenderer.color = new Color(1, 1, ((nowConstructTime / MaxConstructTime) - 0.5f) * 2);
         if (nowConstructTime > MaxConstructTime)
         {
@@ -108,7 +108,7 @@ public class Building : MonoBehaviour
 
     public void Cancel() // C를 계속눌러 취소됐을 때
     {
-        switch(buildingStatement)
+        switch (buildingStatement)
         {
             case BuildingStatement.isBuilding:
                 CraftManager.Instance.ReturnBuilding(id);
@@ -135,7 +135,7 @@ public class Building : MonoBehaviour
 
     public void DestroyBuilding()
     {
-        if(buildingStatement == BuildingStatement.isBuilding) { PalManager.Instance.buildings.Remove(this); }
+        if (buildingStatement == BuildingStatement.isBuilding) { PalManager.Instance.buildings.Remove(this); }
         CraftManager.Instance.ReturnBuilding(id);
         transform.parent = FurnitureDatabase.Instance.poolParent.transform;
         buildingStatement = BuildingStatement.FreeBuilding;
@@ -187,5 +187,15 @@ public class Building : MonoBehaviour
     public override int GetHashCode()
     {
         return base.GetHashCode();
+    }
+
+    public int getBuildStaticNum()
+    {
+        return worldIndexNum;
+    }
+
+    public void setBuildStaticNum(int num)
+    {
+        worldIndexNum = num;
     }
 }

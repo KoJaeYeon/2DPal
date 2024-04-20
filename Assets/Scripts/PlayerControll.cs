@@ -45,13 +45,13 @@ public class PlayerControll : MonoBehaviour
     public bool isthorwing = false;
 
     //Player Data
-    public int lv;
-    public int exp;
-    public float hungry;
-    public float health;
-    public float maxHealth;
+    public int lv = 1;
+    public int exp = 10;
+    public float hungry = 100;
+    public float health = 500;
+    public float maxHealth = 500;
     public float moveWeight = 300;
-    public int skillPoint = 0;
+    public int skillPoint = 3;
     public int TechPoint = 10;
 
     public float speed = 0.01f;
@@ -93,10 +93,10 @@ public class PlayerControll : MonoBehaviour
         switch (statement)
         {
             case Statement.Building:
-                building.Build(0.1f);
+                building.Build(10f * Time.deltaTime);
                 break;
             case Statement.Action:
-                building.Work(0.02f);
+                building.Work(2f * Time.deltaTime);
                 break;
         }
         if(isthorwing)
@@ -104,31 +104,31 @@ public class PlayerControll : MonoBehaviour
             Vector3 point = Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
             Vector3 normal = (point - transform.position).normalized;
             palSphere.transform.position = transform.position + normal * 2;
-            if (throwPower < 600f) throwPower += 0.2f;
+            if (throwPower < 600f) throwPower += 70f * Time.deltaTime;
             palsphere_PalSphere.SetRotateSpeed(throwPower);
-            if (camera.m_Lens.OrthographicSize < 12) camera.m_Lens.OrthographicSize += 0.001f;
+            if (camera.m_Lens.OrthographicSize < 12) camera.m_Lens.OrthographicSize += 2f * Time.deltaTime;
         }
         else
         {
-            if(camera.m_Lens.OrthographicSize > 8) camera.m_Lens.OrthographicSize -= 0.001f;
+            if(camera.m_Lens.OrthographicSize > 8) camera.m_Lens.OrthographicSize -= 2f * Time.deltaTime;
         }
 
     }
 
 
     public void Stamina()
-    {        
+    {
         if (running && moving)
         {
             slider.gameObject.SetActive(true);
-            nowStamina -= 0.015f;
+            nowStamina -= 10f * Time.deltaTime;
         }
         else if (fire)
         {
             if (GameManager.Instance.ManagerUsingUi())
             {
                 if (nowStamina < maxStamina)
-                    nowStamina += 0.03f;
+                    nowStamina += 15f * Time.deltaTime;
                 else
                 {
                     istired = false;
@@ -141,11 +141,11 @@ public class PlayerControll : MonoBehaviour
             else if(!istired)
             {
                 slider.gameObject.SetActive(true);
-                nowStamina -= 0.03f;
+                nowStamina -= 20f * Time.deltaTime;
             }
             else
             {
-                nowStamina += 0.03f;
+                nowStamina += 15f * Time.deltaTime;
                 slider.value = nowStamina / maxStamina;
                 if (nowStamina > maxStamina)
                 {
@@ -159,7 +159,7 @@ public class PlayerControll : MonoBehaviour
         else
         {
             if (nowStamina < maxStamina)
-                nowStamina += 0.03f;
+                nowStamina += 15f * Time.deltaTime;
             else
             {
                 istired = false;
@@ -330,13 +330,17 @@ public class PlayerControll : MonoBehaviour
         else if (target.CompareTag("DropItem"))
         {
             DropItem dropItem = target.GetComponent<DropItem>();
+            List<Item> items = dropItem.items;
 
             if (inputValue.isPressed)
             {
-                foreach(Item item in dropItem.items)
+                int length = items.Count;
+                for (int i = 0; i < length; i++)
                 {
+                    Item item = ItemDatabase.Instance.GetItem(items[i].id);
+                    item.count = items[i].count;
                     InventoryManager.Instance.DropItem(item);
-                }                
+                }
                 dropItem.gameObject.SetActive(false);
             }
         }

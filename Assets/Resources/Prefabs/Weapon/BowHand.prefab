@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 504
-  weapon_damage: 100
+  weapon_damage: 60
   list: 0
   canAttack: 0
   equip: 0

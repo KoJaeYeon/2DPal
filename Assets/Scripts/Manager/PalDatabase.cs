@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -73,8 +72,8 @@ public class PalDatabase : Singleton<PalDatabase>
 
     private void Start()
     {
-        GivePal(1, false);
-        GivePal(1, false);
+        //GivePal(1, false);
+        //GivePal(1, false);
     }
 
     public Pal GetPal(int id)

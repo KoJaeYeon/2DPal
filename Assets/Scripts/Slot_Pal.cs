@@ -103,11 +103,8 @@ public class Slot_Pal : MonoBehaviour
     {
         pal = null;
         gameObject.SetActive(false);
-        if( key < 5 )
-        {
-            if (PalBoxManager.Instance.palBox[0].ContainsKey(key)) PalBoxManager.Instance.palBox[0].Remove(key);
-        }
-        //조건추가
+        if (PalBoxManager.Instance.palBox.ContainsKey(key)) PalBoxManager.Instance.palBox.Remove(key);
+
     }
 
     public override bool Equals(object obj)

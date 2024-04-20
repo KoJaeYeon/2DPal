@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class ItemDatabase : Singleton<ItemDatabase>
 {
@@ -79,7 +77,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
 
 
         //더미 드랍 게임 오브젝트 생성
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 24; i++)
         {
             GameObject prefab = Instantiate(itemPrefab);
             DropItem dropItem = prefab.GetComponent<DropItem>();
@@ -91,13 +89,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
 
     private void Start()
     {
-        giveitem(201).transform.position = new Vector3(2, 0, 0);
-        giveitem(202).transform.position = new Vector3(3, 3, 0);
-        giveitem(203).transform.position = new Vector3(4, 5, 0);
-        giveitem(204).transform.position = new Vector3(5, 7, 0);
-        giveitem(205).transform.position = new Vector3(10, 0, 0);
-        giveitem(205).transform.position = new Vector3(11, 3, 0);
-        giveitem(206).transform.position = new Vector3(11, -2, 0);
+
     }
 
     public GameObject giveitem(int id)
@@ -116,7 +108,6 @@ public class ItemDatabase : Singleton<ItemDatabase>
         DropItem dropItem = prefab.GetComponent<DropItem>();
         dropItems.Add(dropItem);
         dropItem.transform.parent = poolParent.transform;
-
         dropItem.sprite = dropSprites[id - 201];
         dropItem.items = dropDics[id];
         dropItem.gameObject.SetActive(true);

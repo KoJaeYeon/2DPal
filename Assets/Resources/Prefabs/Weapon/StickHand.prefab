@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 501
-  weapon_damage: 100
+  weapon_damage: 30
   list: 0
   canAttack: 0
   equip: 0

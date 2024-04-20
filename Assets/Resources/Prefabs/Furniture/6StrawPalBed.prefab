@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4682611247453526021}
   - component: {fileID: 4682611247453526138}
   - component: {fileID: 6587373948662734806}
-  m_Layer: 8
+  m_Layer: 7
   m_Name: 6StrawPalBed
   m_TagString: Furniture
   m_Icon: {fileID: 0}
@@ -141,7 +141,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.1, y: 0.1}
+  m_Size: {x: 1.75, y: 1.75}
   m_EdgeRadius: 0
 --- !u!114 &6587373948662734806
 MonoBehaviour:

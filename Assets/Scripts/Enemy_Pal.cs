@@ -2,14 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 public class Enemy_Pal : MonoBehaviour
 {
     public Pal pal;
     public int id;
     public float percent = 100;
-
     public float power = 300;
 
     public List<Item> dropItems;
@@ -36,13 +34,12 @@ public class Enemy_Pal : MonoBehaviour
         fillImage = slider.transform.GetChild(1).GetChild(0).GetComponent<Image>();
         rigid = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        transform.GetChild(0).gameObject.SetActive(true);
+        tag = "EnemyPal";
+        pal = PalDatabase.Instance.GetPal(id);
     }
     private void Start()
     {
-        transform.GetChild(0).gameObject.SetActive(true);
-        tag = "EnemyPal";
-
-        pal = PalDatabase.Instance.GetPal(id);
         if(ItemDatabase.Instance.dropDics.ContainsKey(id))
         dropItems = ItemDatabase.Instance.dropDics[id];
         else dropItems = new List<Item>();
@@ -50,15 +47,6 @@ public class Enemy_Pal : MonoBehaviour
         levelName.text = "Lv." + pal.lv + " " + pal.palName;
         slider.value = pal.health / pal.maxHealth;
     }
-
-    private void Update()
-    {
-        //if ()
-        //{
-            
-        //}
-    }
-
     IEnumerator Rush()
     {
         while (true)
@@ -88,6 +76,7 @@ public class Enemy_Pal : MonoBehaviour
 
     public void Status()
     {
+        levelName.text = "Lv." + pal.lv + " " + pal.palName;
         slider.value = pal.health / pal.maxHealth;
         percent = slider.value;
         if (slider.value < 0.2)

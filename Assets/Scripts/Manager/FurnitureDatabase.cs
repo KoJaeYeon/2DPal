@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -20,7 +19,7 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
 
     public List<GameObject>[] RecipeSlots = new List<GameObject>[4];
 
-    public GameObject UnlockPanel;
+    public GameObject unlockPanel;
     private TechButton techButton;
     private void Awake()
     {
@@ -79,8 +78,9 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
     public void OpenUnlockPanel(TechButton techButton) // 기술 해금 창 열기
     {
         this.techButton = techButton;
-        UnlockPanel.SetActive(true);
-        UnlockPanel.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = techButton.text[0].text + "을(를) 해방할까요?";
+        unlockPanel.SetActive(true);
+        unlockPanel.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = techButton.text[0].text + "을(를) 해방할까요?";
+        GameManager.Instance.activePanel = unlockPanel;
     }
     public void UnlockTech() // 기술 해금
     {

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PrimitiveFurnature : Building
@@ -13,7 +11,7 @@ public class PrimitiveFurnature : Building
         buildingName = "원시적인 화로";
         base.Awake();
         RecipePanel = GameManager.Instance.RecipePanel;
-        todoList = PalManager.Instance.producing;
+        todoList = PalManager.Instance.cooking;
         buildingType = BuildingType.Recipe;
     }
     public override void Action()

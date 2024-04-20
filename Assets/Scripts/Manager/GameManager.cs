@@ -54,6 +54,7 @@ public class GameManager : Singleton<GameManager>
     {
         if (activePanel != null) { activePanel.SetActive(false); activePanel = null; return; }
         if(activePanel == InventoryManager.Instance.FoodPanel) { activePanel = OptionPanel; InventoryManager.Instance.FoodPanel.SetActive(false); return; }
+        else if(activePanel == FurnitureDatabase.Instance.unlockPanel) { activePanel = OptionPanel; FurnitureDatabase.Instance.unlockPanel.SetActive(false); return; }
         if (!range) { return; }
         activePanel = OptionPanel; OptionPanel.SetActive(true);
     }

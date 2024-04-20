@@ -23,6 +23,7 @@ public class PalAI : MonoBehaviour
 
     public bool thisPalCanSleep = true;
     public bool thisPalCanbuild = true;
+    public bool thiSPalCanFire = false;
     public bool thisPalCanProduce = false;
 
     Coroutine coroutine;
@@ -79,6 +80,22 @@ public class PalAI : MonoBehaviour
                     for (int i = 0; i < count; i++)
                     {
                         targetBulding = PalManager.Instance.sleeping[i];
+                        if (targetBulding.workingPal == null)
+                        {
+                            targetBulding.workingPal = this;
+                            target = targetBulding.gameObject;
+                            OnGo();
+                            break;
+                        }
+                    }
+                }
+
+                if (thiSPalCanFire && PalManager.Instance.cooking.Count > 0)
+                {
+                    int count = PalManager.Instance.cooking.Count;
+                    for (int i = 0; i < count; i++)
+                    {
+                        targetBulding = PalManager.Instance.cooking[i];
                         if (targetBulding.workingPal == null)
                         {
                             targetBulding.workingPal = this;

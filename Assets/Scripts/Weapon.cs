@@ -30,6 +30,11 @@ public class Weapon : MonoBehaviour
     {
         canAttack = true;
     }
+    [SerializeField]
+    void CanAttackFalse()
+    {
+        canAttack = false;
+    }
     public void Attack(Collider2D collision)
     {
         if (canAttack)

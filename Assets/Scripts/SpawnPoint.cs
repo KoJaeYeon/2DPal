@@ -13,6 +13,7 @@ public class SpawnPoint : MonoBehaviour
     private void Awake()
     {
         pals = new List<GameObject>();
+        Destroy(transform.GetChild(0).gameObject);
     }
     private void OnEnable()
     {
@@ -42,6 +43,7 @@ public class SpawnPoint : MonoBehaviour
                 GameObject pal = PalDatabase.Instance.GivePal(palId, false);
                 Enemy_Pal enemy_Pal = pal.GetComponent<Enemy_Pal>();
                 enemy_Pal.pal = PalDatabase.Instance.GetPal(palId);
+                enemy_Pal.pal.LevelUp(palLevel);
                 enemy_Pal.Status();
                 enemy_Pal.statement = Enemy_Pal.EnemyState.Idle;
                 pals.Add(pal);

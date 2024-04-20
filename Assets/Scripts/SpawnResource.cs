@@ -1,8 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using static UnityEditor.PlayerSettings;
 
 public class SpawnResource : MonoBehaviour
 {
@@ -26,6 +24,7 @@ public class SpawnResource : MonoBehaviour
 
     IEnumerator SetTile()
     {
+        yield return new WaitForSeconds(Random.Range(0, 0.3f));
         while (true)
         {
 
@@ -44,7 +43,7 @@ public class SpawnResource : MonoBehaviour
             }
 
 
-            yield return new WaitForSeconds(300);
+            yield return new WaitForSeconds(240);
         }
         
     }

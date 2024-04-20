@@ -26,10 +26,16 @@ public class SpawnManager : Singleton<SpawnManager>
         {
             SearchPoint();
             yield return new WaitForSeconds(15);
+            SearchPoint();
+            yield return new WaitForSeconds(15);
+            SearchPoint();
+            yield return new WaitForSeconds(15);
+            SearchPoint(true);
+            yield return new WaitForSeconds(15);
         }
     }
     
-    private void SearchPoint()
+    private void SearchPoint(bool set = false)
     {
         Debug.Log("SearchPoint");
         for (int i = 0; i < spawnPoint.Length; i++)
@@ -39,6 +45,7 @@ public class SpawnManager : Singleton<SpawnManager>
             if(distance < 5000)
             {
                 spawnPoint[i].SetActive(true);
+                if (true) spawnPoint[i].GetComponent<SpawnPoint>().SpawnPal();
             }
             else
             {

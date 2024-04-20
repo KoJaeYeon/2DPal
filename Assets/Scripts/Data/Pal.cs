@@ -10,7 +10,7 @@ public class Pal
     private string _palName;
     private int _lv;
     private int _exp;
-    public float _attack;
+    private float _attack;
     private float _hungry;
     private float _health;
     private float _maxHealth;
@@ -44,8 +44,22 @@ public class Pal
         _portrait = pal._portrait;
     }
 
-    public Pal()
+    public void LevelUp()
     {
+        _lv++;
+        _attack *= 1.2f;
+        _health *= 1.2f;
+        _maxHealth *= 1.2f;
+    }
+    public void LevelUp(int lv)
+    {
+        while (_lv < lv)
+        {
+            _lv++;
+            _attack *= 1.2f;
+            _health *= 1.2f;
+            _maxHealth *= 1.2f;
+        }
     }
 
     #region Property
