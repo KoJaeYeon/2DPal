@@ -21,6 +21,12 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
 
     public GameObject unlockPanel;
     private TechButton techButton;
+    public List<int> techList;
+    public GameObject techContent;
+    public TechButton[] techButtons;
+
+    public List<Building> ConstructedBuilding;
+
     private void Awake()
     {
         int index = 0;
@@ -58,6 +64,74 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
         {
             MakeSlot(2,1200 + i);
         }
+
+        techList.Clear();
+        techButtons = techContent.GetComponentsInChildren<TechButton>();
+    }
+
+    public void LoadAll(List<FurnitureData> furnitureDatas)
+    {
+        foreach(TechButton techButton in techButtons)
+        {
+            if(techList.Contains(techButton.id))
+            {
+                techButton.ActiveSlot();
+            }
+        }
+
+        int length = ConstructedBuilding.Count;
+        for(int i = 0;i < length;i++)
+        {
+            ConstructedBuilding[0].gameObject.SetActive(false);
+        }
+
+        length = furnitureDatas.Count;
+        for(int i = 0; i < length; i++)
+        {
+            GameObject furniture = GiveFurniture(furnitureDatas[i].id);
+            Building building = furniture.GetComponent<Building>();
+            furniture.transform.SetParent(FurnitureDatabase.Instance.parent.transform);
+            furniture.transform.position = new Vector2(furnitureDatas[i].positionX, furnitureDatas[i].positionY);
+            building.index = furnitureDatas[i].index;
+            building.buildingStatement = (BuildingStatement)furnitureDatas[i].buildingStatement;
+            building.nowConstructTime = furnitureDatas[i].nowContructTime;
+            building.MaxWorkTime = furnitureDatas[i].maxWorkTime;
+            building.nowWorkTime = furnitureDatas[i].nowWorkTime;
+            building.ChangeRigid();
+
+            if ((int)building.buildingStatement == 1)
+            {
+                building.BuildColor();
+                PalManager.Instance.buildings.Add(building);
+            }
+            else if (building.buildingType == 0 && (int)building.buildingStatement >= 3)
+            {
+                if (building is PrimitiveWorkbench)
+                {
+                    ((PrimitiveWorkbench)building).production = (Product)ItemDatabase.Instance.GetItem(furnitureDatas[i].productId);
+                    ((PrimitiveWorkbench)building).production.count = furnitureDatas[i].productCount;
+                    PalManager.Instance.producing.Add(building);
+                }
+                else if (building is PrimitiveFurnature)
+                {
+                    ((PrimitiveFurnature)building).production = (Product)ItemDatabase.Instance.GetItem(furnitureDatas[i].productId);
+                    ((PrimitiveFurnature)building).production.count = furnitureDatas[i].productCount;
+                    PalManager.Instance.cooking.Add(building);
+                }
+                else if (building is Campfire)
+                {
+                    ((PrimitiveFurnature)building).production = (Product)ItemDatabase.Instance.GetItem(furnitureDatas[i].productId);
+                    ((PrimitiveFurnature)building).production.count = furnitureDatas[i].productCount;
+                    PalManager.Instance.cooking.Add(building);
+                }
+            }
+            else if(building.buildingType == Building.BuildingType.None)
+            {
+                ((StrawPalBed)building).Sleep();
+            }
+
+        }
+
     }
 
     public GameObject GiveFurniture(int id) // 가구 프리펩 오브젝트 전달

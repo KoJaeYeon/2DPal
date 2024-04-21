@@ -201,9 +201,11 @@ public class PalBoxManager : Singleton<PalBoxManager>
             else // 새로 스폰할 때
             {
                 spawnPal.Add(endSlotkey, PalDatabase.Instance.GivePal(palBox[endSlotkey].id));
-                spawnPal[endSlotkey].transform.position = palBoxBuilding[0].transform.position + Vector3.down * 2;                
+                spawnPal[endSlotkey].transform.position = palBoxBuilding[0].transform.position + Vector3.down * 2;     
+                spawnPal[endSlotkey].transform.SetParent(PalDatabase.Instance.parent_Base.transform);
+
             }
-            
+
         }
         else //Swap
         {
@@ -219,6 +221,7 @@ public class PalBoxManager : Singleton<PalBoxManager>
 
                 spawnPal.Add(endSlotkey, PalDatabase.Instance.GivePal(palBox[endSlotkey].id)); // 새로 팰 추가
                 spawnPal[endSlotkey].transform.position = palBoxBuilding[0].transform.position + Vector3.down * 2;
+                spawnPal[endSlotkey].transform.SetParent(PalDatabase.Instance.parent_Base.transform);
             }
             else if(startSlotkey >= 95 && endSlotkey < 95)
             {

@@ -14,4 +14,12 @@ public class PalManager : Singleton<PalManager>
     {
         
     }
+
+    public void ClearList()
+    {
+        buildings.Clear();
+        producing.Clear();
+        cooking.Clear();
+        sleeping.Clear();
+    }
 }

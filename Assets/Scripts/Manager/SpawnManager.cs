@@ -7,6 +7,7 @@ public class SpawnManager : Singleton<SpawnManager>
     [SerializeField]
     GameObject[] spawnPoint;
     public GameObject pointer;
+    int index = 0;
 
     Coroutine coroutine;
     private void Start()
@@ -26,18 +27,19 @@ public class SpawnManager : Singleton<SpawnManager>
         {
             SearchPoint();
             yield return new WaitForSeconds(15);
-            SearchPoint();
-            yield return new WaitForSeconds(15);
-            SearchPoint();
-            yield return new WaitForSeconds(15);
-            SearchPoint(true);
-            yield return new WaitForSeconds(15);
+            index++;
+            if(index >= 8)
+            {
+                SearchPoint(true);
+                yield return new WaitForSeconds(15);
+                index = 0;
+            }
+
         }
     }
     
     private void SearchPoint(bool set = false)
     {
-        Debug.Log("SearchPoint");
         for (int i = 0; i < spawnPoint.Length; i++)
         {
             Vector3 offset = spawnPoint[i].transform.position - GameManager.Instance.playerController.transform.position;

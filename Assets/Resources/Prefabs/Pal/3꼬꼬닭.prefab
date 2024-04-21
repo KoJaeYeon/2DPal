@@ -310,7 +310,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2906565930652152865}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.18, y: 3.68, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -403,14 +403,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4800df746b141d4786071e7bf3adb04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pal:
-    _attack: 0
   id: 3
   palState: 0
   target: {fileID: 0}
   targetBulding: {fileID: 0}
   thisPalCanSleep: 1
   thisPalCanbuild: 1
+  thiSPalCanFire: 0
   thisPalCanProduce: 0
   thisPalPlaying: 0
   pathInitIndex: 0

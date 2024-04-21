@@ -30,6 +30,7 @@ public class PalAI : MonoBehaviour
     Coroutine playing;
 
     public bool thisPalPlaying = false;
+    bool start = false;
 
     #region Astar Pathfinding
     Astar astar;
@@ -39,14 +40,23 @@ public class PalAI : MonoBehaviour
     public float targety;
     #endregion
 
-    private void Awake()
-    {        
+    private void OnEnable()
+    {
+        if(start)
+        StartCoroutine(Search());
+    }
 
+    private void Awake()
+    {
+        astar = GetComponent<Astar>();
+    }
+    private void OnDisable()
+    {
+        StopAllCoroutines();
     }
     void Start()
     {
-        gameObject.layer = 8;
-        astar = GetComponent<Astar>();
+        start = true;        
         transform.GetChild(0).gameObject.SetActive(false);
 
         pal = PalDatabase.Instance.GetPal(id);

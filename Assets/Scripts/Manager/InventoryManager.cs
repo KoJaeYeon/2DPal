@@ -58,7 +58,6 @@ public class InventoryManager : Singleton<InventoryManager>
     public void LoadAllSlot(List<ItemData> itemDatas)
     {
         inventory.Clear();
-        Debug.Log("SDfsfdsdffsd");
         foreach(int key in inventory.Keys)
         {
             UpdateSlot(key, null);
@@ -72,7 +71,6 @@ public class InventoryManager : Singleton<InventoryManager>
         }
         for(int i = 0; i < maxInvetory + 4; i++)
         {
-            Debug.Log("dfgdgf");
             if(inventory.ContainsKey(i))
             {
                 UpdateSlot(i, inventory[i]);

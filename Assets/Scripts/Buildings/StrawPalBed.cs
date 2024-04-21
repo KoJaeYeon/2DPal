@@ -34,6 +34,19 @@ public class StrawPalBed : Building
                 break;
         }
     }
+
+    public override void Build(float work)
+    {
+        base.Build(work);
+        if (nowConstructTime > MaxConstructTime)
+        {
+            if (GameManager.Instance.night.IsMidnight())
+            {
+                Sleep();
+            }
+        }
+    }
+
     public override void Work(float work)
     {        
         base.Work(work);
@@ -50,15 +63,8 @@ public class StrawPalBed : Building
     public void Sleep()
     {
         buildingStatement = BuildingStatement.Working;
-        todoList.Add(this);
+        if(!PalManager.Instance.sleeping.Contains(this)) todoList.Add(this);
         MaxWorkTime = 100000;
         nowWorkTime = 0;
-    }
-    public override void ResetPanel()
-    {
-        foreach (GameObject recipe in FurnitureDatabase.Instance.RecipeSlots[0])
-        {
-            recipe.SetActive(false);
-        }
     }
 }

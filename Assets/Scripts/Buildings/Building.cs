@@ -44,6 +44,7 @@ public class Building : MonoBehaviour
 
     protected void OnEnable()
     {
+        FurnitureDatabase.Instance.ConstructedBuilding.Add(this);
     }
 
     protected void OnDisable()
@@ -53,18 +54,18 @@ public class Building : MonoBehaviour
         rigidbody2d.bodyType = RigidbodyType2D.Dynamic;
         nowConstructTime = 0;
         workingPal = null;
+        FurnitureDatabase.Instance.ConstructedBuilding.Remove(this);
     }
 
     public virtual void Action()
     {
     }
 
-    public void Build(float work)
+    public virtual void Build(float work)
     {
         if (buildingStatement == BuildingStatement.Built) return;
         nowConstructTime += work;
-        if ((nowConstructTime / MaxConstructTime) < 0.5f) spriteRenderer.color = new Color((nowConstructTime / MaxConstructTime) * 2, (nowConstructTime / MaxConstructTime) * 2, 0);
-        else spriteRenderer.color = new Color(1, 1, ((nowConstructTime / MaxConstructTime) - 0.5f) * 2);
+        BuildColor();
         if (nowConstructTime > MaxConstructTime)
         {
             buildingStatement = BuildingStatement.Built;
@@ -78,6 +79,12 @@ public class Building : MonoBehaviour
                 playerControll.EndConstruct(this);
             }
         }
+    }
+
+    public void BuildColor()
+    {
+        if ((nowConstructTime / MaxConstructTime) < 0.5f) spriteRenderer.color = new Color((nowConstructTime / MaxConstructTime) * 2, (nowConstructTime / MaxConstructTime) * 2, 0);
+        else spriteRenderer.color = new Color(1, 1, ((nowConstructTime / MaxConstructTime) - 0.5f) * 2);
     }
 
     public virtual void ConfirmProduct(Product product)
@@ -125,12 +132,17 @@ public class Building : MonoBehaviour
     {
         if (isContact) return isContact;
         buildingStatement = BuildingStatement.isBuilding;
-        boxCollider2d.isTrigger = false;
-        rigidbody2d.bodyType = RigidbodyType2D.Static;
+        ChangeRigid();
         spriteRenderer.color = Color.black;
         index = worldIndexNum++;
         PalManager.Instance.buildings.Add(this);
         return false;
+    }
+
+    public void ChangeRigid()
+    {
+        boxCollider2d.isTrigger = false;
+        rigidbody2d.bodyType = RigidbodyType2D.Static;        
     }
 
     public void DestroyBuilding()

@@ -50,6 +50,7 @@ public class ResourceManager : Singleton<ResourceManager>
             attackDamage += damage;
             Item giveItem = nowAttackBricks.Attack(damage);
             PlusExp(giveItem.count);
+            SoundManager.Instance.sfx.Play();
             if (nowAttackBricks.duration < 0)
             {
                 if (playerControll.viewdirection == ViewDirection.Left || playerControll.viewdirection == ViewDirection.Right)

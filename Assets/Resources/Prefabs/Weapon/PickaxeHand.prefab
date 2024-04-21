@@ -83,6 +83,7 @@ GameObject:
   - component: {fileID: 4297415394380963085}
   - component: {fileID: 4297415394380963080}
   - component: {fileID: 4297415394380963086}
+  - component: {fileID: 2843405733852024575}
   m_Layer: 0
   m_Name: Pickaxe
   m_TagString: Untagged
@@ -173,3 +174,15 @@ CircleCollider2D:
   m_Offset: {x: 0.1, y: 0.1}
   serializedVersion: 2
   m_Radius: 0.3
+--- !u!114 &2843405733852024575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4297415394380963084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16934bcba925dbd468f17f890164b709, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

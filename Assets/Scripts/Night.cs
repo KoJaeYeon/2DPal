@@ -83,4 +83,15 @@ public class Night : MonoBehaviour
     {
         animator.Play("ToDay");
     }
+
+    public bool IsMidnight()
+    {
+        if(dayTime == DayTime.Midnight) return true;
+        else return false;
+    }
+
+    public void SetTime(int day, float time)
+    {
+
+    }
 }

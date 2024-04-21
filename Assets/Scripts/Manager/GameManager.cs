@@ -16,14 +16,15 @@ public class GameManager : Singleton<GameManager>
     public GameObject recipeCraftPanel;
     public GameObject palBoxPanel;
     public GameObject chestPanel;
+    public GameObject savePanel;
+    public GameObject loadPanel;
 
     public GameObject activePanel;
+    public Night night;
 
     public TextMeshProUGUI technicPoint;
 
     public Slider healthSlider;
-
-
 
     private void Awake()
     {
@@ -48,13 +49,20 @@ public class GameManager : Singleton<GameManager>
         if(activePanel != null) return true;
         return false;
     }
-
+    public void EndGame()
+    {
+        Application.Quit();
+    }
 
     public void ExitMenu(bool range = false)
     {
         if (activePanel != null) { activePanel.SetActive(false); activePanel = null; return; }
-        if(activePanel == InventoryManager.Instance.FoodPanel) { activePanel = OptionPanel; InventoryManager.Instance.FoodPanel.SetActive(false); return; }
-        else if(activePanel == FurnitureDatabase.Instance.unlockPanel) { activePanel = OptionPanel; FurnitureDatabase.Instance.unlockPanel.SetActive(false); return; }
+        if(activePanel == FurnitureDatabase.Instance.unlockPanel || activePanel == InventoryManager.Instance.FoodPanel || activePanel == savePanel || activePanel == loadPanel)
+        { 
+            activePanel.SetActive(false);
+            activePanel = OptionPanel;
+            return;
+        }
         if (!range) { return; }
         activePanel = OptionPanel; OptionPanel.SetActive(true);
     }
@@ -88,6 +96,30 @@ public class GameManager : Singleton<GameManager>
             OptionPanel.SetActive(true);
         }
         else if (activePanel == OptionPanel) { ExitMenu(); }
+    }
+
+    public void OpenSavePanel()
+    {
+        activePanel = savePanel;
+        activePanel.SetActive(true);
+    }
+
+    public void OpenLoadPanel()
+    {
+        activePanel = loadPanel ;
+        activePanel.SetActive(true);
+    }
+
+    public void SaveGame(int num)
+    {
+        DataManager.Instance.Save(num);
+        savePanel.GetComponent<LoadPanel>().Renew();
+    }
+
+    public void LoadGame(int num)
+    {
+        SceneManager_Title.Instance.SceneLoad();
+        DataManager.Instance.SetLoadNum(num);
     }
 
     public void GetDamage(float damage)

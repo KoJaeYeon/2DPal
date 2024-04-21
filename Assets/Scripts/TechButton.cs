@@ -58,7 +58,11 @@ public class TechButton : MonoBehaviour
 
     public void ActiveSlot() // 기술 해금 활성화
     {
-        GameManager.Instance.TechnicPointUse(point);
+        if (!FurnitureDatabase.Instance.techList.Contains(id))
+        {
+            FurnitureDatabase.Instance.techList.Add(id);
+            GameManager.Instance.TechnicPointUse(point);
+        }
         if(!furniture)
         {
             for (int i = 0; i < FurnitureDatabase.Instance.RecipeSlots.Length; i++)
