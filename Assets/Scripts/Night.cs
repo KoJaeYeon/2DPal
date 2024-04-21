@@ -3,10 +3,12 @@ using UnityEngine;
 public class Night : MonoBehaviour
 {
     Animator animator;
+    SpriteRenderer spriteRenderer;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     public enum DayTime { Day, Evening, Midnight, Twilight }
@@ -92,6 +94,11 @@ public class Night : MonoBehaviour
 
     public void SetTime(int day, float time)
     {
-
+        this.day = day;
+        this.time = time;
+        if (time < 120) spriteRenderer.color = new Color(1, 1, 1, 1);
+        else if( time < 150) spriteRenderer.color = new Color(1, 1, 1, 0.3f);
+        else if (time < 210) spriteRenderer.color = new Color(1, 1, 1, 0.85f);
+        else spriteRenderer.color = new Color(1, 1, 1, 0.3f);
     }
 }

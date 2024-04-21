@@ -10,6 +10,7 @@ public class LoadPanel : MonoBehaviour
     TextMeshProUGUI[] textMeshProUGUI;
     [SerializeField]
     Button[] loadButtons;
+    [SerializeField] bool save;
 
     private void OnEnable()
     {
@@ -23,23 +24,26 @@ public class LoadPanel : MonoBehaviour
         else
         {
             textMeshProUGUI[0].text = "저장슬롯1\n" + "저장된 데이터 없음\n ";
-            loadButtons[0].interactable = false;
+            if(!save) loadButtons[0].interactable = false;
+            else loadButtons[2].interactable = true;
         }
 
         date = DataManager.Instance.ButtonText(2);
-        if (date != "null") textMeshProUGUI[1].text = "저장슬롯1\n" + date;
+        if (date != null) textMeshProUGUI[1].text = "저장슬롯2\n" + date;
         else
         {
             textMeshProUGUI[1].text = "저장슬롯2\n" + "저장된 데이터 없음\n ";
-            loadButtons[1].interactable = false;
+            if (!save) loadButtons[1].interactable = false;
+            else loadButtons[2].interactable = true;
         }
 
         date = DataManager.Instance.ButtonText(3);
-        if (date != "null") textMeshProUGUI[2].text = "저장슬롯1\n" + date;
+        if (date != null) textMeshProUGUI[2].text = "저장슬롯3\n" + date;
         else
         {
             textMeshProUGUI[2].text = "저장슬롯3\n" + "저장된 데이터 없음\n ";
-            loadButtons[2].interactable = false;
+            if (!save) loadButtons[2].interactable = false;
+            else loadButtons[2].interactable = true;
         }
     }
 

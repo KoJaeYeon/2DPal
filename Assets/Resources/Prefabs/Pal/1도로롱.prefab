@@ -199,15 +199,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4800df746b141d4786071e7bf3adb04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pal:
-    _attack: 0
   id: 1
   palState: 0
   target: {fileID: 0}
   targetBulding: {fileID: 0}
   thisPalCanSleep: 1
   thisPalCanbuild: 1
-  thiSPalCanFire: 0
+  thisPalCanFire: 0
+  thisPalCanSeed: 0
+  thisPalCanWater: 0
+  thisPalCanHarvest: 1
+  thisPalCanCutting: 1
+  thisPalCanMining: 0
   thisPalCanProduce: 0
   thisPalPlaying: 0
   pathInitIndex: 0

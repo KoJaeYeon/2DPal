@@ -23,7 +23,7 @@ public class Building : MonoBehaviour
     public float nowWorkTime;
     protected string buildingName;
 
-    public enum BuildingType { Recipe, Pal, Chest, None }
+    public enum BuildingType { Recipe, Pal, Chest, None, Plant }
     public BuildingType buildingType;
 
     SpriteRenderer spriteRenderer;
@@ -201,12 +201,12 @@ public class Building : MonoBehaviour
         return base.GetHashCode();
     }
 
-    public int getBuildStaticNum()
+    public static int getBuildStaticNum()
     {
         return worldIndexNum;
     }
 
-    public void setBuildStaticNum(int num)
+    public static void setBuildStaticNum(int num)
     {
         worldIndexNum = num;
     }

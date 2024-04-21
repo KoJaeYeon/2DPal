@@ -134,6 +134,7 @@ public class Enemy_Pal : MonoBehaviour
         {
             if(canAttack)
             {
+                SoundManager.Instance.sfx[2].Play();
                 GameManager.Instance.GetDamage(pal.attack);
                 rigid.velocity = Vector3.zero;
                 collision.rigidbody.velocity = Vector3.zero;

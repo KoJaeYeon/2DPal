@@ -46,15 +46,17 @@ public class PlayerControll : MonoBehaviour
 
     //Player Data
     public int lv = 1;
-    public int exp = 10;
+    public int exp = 0;
+    public int maxExp = 10;
     public float hungry = 100;
     public float health = 500;
     public float maxHealth = 500;
     public float moveWeight = 300;
-    public int skillPoint = 3;
-    public int TechPoint = 10;
+    public int skillPoint = 0;
+    public int TechPoint = 3;
+    public float attack = 100;
 
-    public float speed = 0.01f;
+    public float speed = 0.1f;
     public float run = 1;
     public float throwPower = 0;
 

@@ -18,11 +18,16 @@ public class GameManager : Singleton<GameManager>
     public GameObject chestPanel;
     public GameObject savePanel;
     public GameObject loadPanel;
+    public GameObject settingPanel;
 
     public GameObject activePanel;
     public Night night;
+    public Animator effectAnimator;
+
 
     public TextMeshProUGUI technicPoint;
+
+    public TextMeshProUGUI[] status;
 
     public Slider healthSlider;
 
@@ -38,6 +43,8 @@ public class GameManager : Singleton<GameManager>
         palBoxPanel.SetActive(false);
         chestPanel.SetActive(false);
         CraftManager.Instance.BuildingPanel.SetActive(false);
+        settingPanel.SetActive(false);
+        StatusRenew();
     }
 
     public void ActivePanel(GameObject panel)
@@ -57,7 +64,7 @@ public class GameManager : Singleton<GameManager>
     public void ExitMenu(bool range = false)
     {
         if (activePanel != null) { activePanel.SetActive(false); activePanel = null; return; }
-        if(activePanel == FurnitureDatabase.Instance.unlockPanel || activePanel == InventoryManager.Instance.FoodPanel || activePanel == savePanel || activePanel == loadPanel)
+        if(activePanel == FurnitureDatabase.Instance.unlockPanel || activePanel == InventoryManager.Instance.FoodPanel || activePanel == savePanel || activePanel == loadPanel || activePanel == settingPanel)
         { 
             activePanel.SetActive(false);
             activePanel = OptionPanel;
@@ -106,7 +113,13 @@ public class GameManager : Singleton<GameManager>
 
     public void OpenLoadPanel()
     {
-        activePanel = loadPanel ;
+        activePanel = loadPanel;
+        activePanel.SetActive(true);
+    }
+
+    public void OpenSettingPanel()
+    {
+        activePanel = settingPanel;
         activePanel.SetActive(true);
     }
 
@@ -131,6 +144,26 @@ public class GameManager : Singleton<GameManager>
     public void GetExp(int exp)
     {
         playerControll.exp += exp;
+        if(playerControll.exp >= playerControll.maxExp)
+        {
+            playerControll.exp -= playerControll.maxExp;
+            playerControll.maxExp = (int)(playerControll.maxExp * 1.5f);
+            playerControll.lv++;
+            playerControll.TechPoint += 2;
+            playerControll.skillPoint += 1;
+            status[0].text = playerControll.lv.ToString();
+            effectAnimator.Play("LevelUp");
+        }
+        
+    }
+
+    public void StatusRenew()
+    {
+        status[0].text = playerControll.lv.ToString();
+        status[1].text = playerControll.maxHealth.ToString();
+        status[2].text = playerControll.maxStamina.ToString();
+        status[3].text = playerControll.attack.ToString();
+        status[4].text = playerControll.moveWeight.ToString();
     }
 
     public void TechnicPointUse(int point)

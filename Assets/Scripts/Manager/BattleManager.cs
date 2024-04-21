@@ -46,12 +46,18 @@ public class BattleManager : Singleton<BattleManager>
 
     private void Start()
     {
-        PalBoxManager.Instance.CatchPal(2);
-        PalBoxManager.Instance.CatchPal(1);
-        //PalBoxManager.Instance.CatchPal(3);
-        //PalBoxManager.Instance.CatchPal(4);
-        //PalBoxManager.Instance.CatchPal(5);
-        //PalBoxManager.Instance.CatchPal(6);
+        //    PalBoxManager.Instance.CatchPal(2);
+        //    PalBoxManager.Instance.CatchPal(1);
+        //    PalBoxManager.Instance.CatchPal(3);
+        //    PalBoxManager.Instance.CatchPal(4);
+        //    PalBoxManager.Instance.CatchPal(5);
+        //    PalBoxManager.Instance.CatchPal(2);
+        //    PalBoxManager.Instance.CatchPal(1);
+        //    PalBoxManager.Instance.CatchPal(3);
+        //    PalBoxManager.Instance.CatchPal(4);
+        //    PalBoxManager.Instance.CatchPal(5);
+        //    PalBoxManager.Instance.CatchPal(6);
+        //    PalBoxManager.Instance.CatchPal(6);
     }
 
 }

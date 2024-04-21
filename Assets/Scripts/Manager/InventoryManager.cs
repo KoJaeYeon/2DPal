@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.ShaderData;
 
 public class InventoryManager : Singleton<InventoryManager>
 {
@@ -10,13 +9,13 @@ public class InventoryManager : Singleton<InventoryManager>
     public GameObject UIEquipmentSlot;
     public GameObject FoodPanel;
 
-
+    public TMPro.TextMeshProUGUI chestName;
     public TMPro.TextMeshProUGUI textMeshProUGUI; //팰스피어 갯수 표시 UI
     public Dictionary<int,Item> inventory = new Dictionary<int,Item>();
     private int maxInvetory = 21;
     public float playerWeight = 0;
     public float maxPlayerWeight = 300;
-    public WeihgtPanel weihgtPanel;
+    public WeihgtPanel[] weihgtPanel;
 
     public static Dictionary<int,int> inventorySum = new Dictionary<int,int>();
     public static int sphereCount = 0;
@@ -47,9 +46,10 @@ public class InventoryManager : Singleton<InventoryManager>
 
     private void Start()
     {
-        DropItem(new Item("sdf", 1, 8, 0));
-        DropItem(new Item("sdf", 2, 8, 0));
-        DropItem(new Item("sdf", 3, 1, 0));
+        //DropItem(new Item("sdf", 1, 300, 0));
+        //DropItem(new Item("sdf", 2, 300, 0));
+        //DropItem(new Item("sdf", 3, 100, 0));
+        //DropItem(new Item("sdf", 7, 10, 0));
         //DropItem(new Item("sdf",1000,5,0));
         //Equip equip = new Equip("나무 곤봉", 501, 1, 10, 30, "근접 전투용 나무 곤봉.\n팰과 싸우기엔 좀 불안하다.", new int[,] { { 1, 5 } }); equip.sprite = ItemDatabase.Instance.sprites_equip[0];
         //DropItem(equip);
@@ -100,7 +100,11 @@ public class InventoryManager : Singleton<InventoryManager>
         return -1;
     }
 
-
+    private void UpdateWeihgtPanel(float nowWeight, float maxWeight)
+    {
+        weihgtPanel[0].UpdateWeight(playerWeight, maxPlayerWeight);
+        weihgtPanel[1].UpdateWeight(playerWeight, maxPlayerWeight);
+    }
     void UpdateSlot(int i,Item item)
     {
         if(i < 21)
@@ -200,6 +204,15 @@ public class InventoryManager : Singleton<InventoryManager>
             inventory.Add(endSlotkey, tempSlot2.item);
             UpdateSlot(startSlotkey);
             UpdateSlot(endSlotkey, inventory[endSlotkey]);
+            if (startSlotkey < 25 && endSlotkey >= 25)
+            {
+                playerWeight -= tempSlot2.item.count * tempSlot2.item.weight;
+            }
+            else if (endSlotkey < 25 && startSlotkey >= 25)
+            {
+                playerWeight -= tempSlot2.item.count * tempSlot2.item.weight;
+            }
+            UpdateWeihgtPanel(playerWeight, maxPlayerWeight);
         }
         else if (tempSlot2.item.Equals(inventory[endSlotkey])) // 같은 종류의 아이템이면
         {
@@ -208,6 +221,15 @@ public class InventoryManager : Singleton<InventoryManager>
             inventory[endSlotkey].Add(tempSlot2.item);
             UpdateSlot(startSlotkey);
             UpdateSlot(endSlotkey, inventory[endSlotkey]);
+            if (startSlotkey < 25 && endSlotkey >= 25)
+            {
+                playerWeight -= tempSlot2.item.count * tempSlot2.item.weight;
+            }
+            else if (endSlotkey < 25 && startSlotkey >= 25)
+            {
+                playerWeight -= tempSlot2.item.count * tempSlot2.item.weight;
+            }
+            UpdateWeihgtPanel(playerWeight, maxPlayerWeight);
         }
         else // 다른종류의 아이템이면
         {
@@ -223,6 +245,15 @@ public class InventoryManager : Singleton<InventoryManager>
                 inventory[endSlotkey] = tempSlot2.item;
                 UpdateSlot(startSlotkey, inventory[startSlotkey]);
                 UpdateSlot(endSlotkey, inventory[endSlotkey]);
+                if (startSlotkey < 25 && endSlotkey >= 25)
+                {
+                    playerWeight -= tempSlot2.item.count * tempSlot2.item.weight;
+                }
+                else if (endSlotkey < 25 && startSlotkey >= 25)
+                {
+                    playerWeight -= tempSlot2.item.count * tempSlot2.item.weight;
+                }
+                UpdateWeihgtPanel(playerWeight, maxPlayerWeight);
             }
 
         }
@@ -245,7 +276,7 @@ public class InventoryManager : Singleton<InventoryManager>
             inventory[index].Add(item);
             inventorySum[item.id] += item.count;
             playerWeight += item.count * item.weight;
-            weihgtPanel.UpdateWeight(playerWeight, maxPlayerWeight);
+            UpdateWeihgtPanel(playerWeight, maxPlayerWeight);
             UpdateSlot(index, inventory[index]);
         }
         else // 인벤토리에 아이템이 없는 경우
@@ -257,7 +288,7 @@ public class InventoryManager : Singleton<InventoryManager>
                     inventory.Add(i, item);
                     if(!inventorySum.TryAdd(item.id,item.count)) inventorySum[item.id] += item.count;
                     playerWeight += item.count * item.weight;
-                    weihgtPanel.UpdateWeight(playerWeight, maxPlayerWeight);
+                    UpdateWeihgtPanel(playerWeight, maxPlayerWeight);
                     UpdateSlot(i, item);
                     break;
                 }
@@ -278,7 +309,7 @@ public class InventoryManager : Singleton<InventoryManager>
                 if (inventory[i].count >= item.count) // 인벤토리 총합이 많을때
                 {
                     playerWeight -= item.count * item.weight;
-                    weihgtPanel.UpdateWeight(playerWeight, maxPlayerWeight);
+                    UpdateWeihgtPanel(playerWeight, maxPlayerWeight);
                     inventory[i].Substarct(item);
                     inventorySum[item.id] -= item.count;
                     item.count = 0;
@@ -288,7 +319,7 @@ public class InventoryManager : Singleton<InventoryManager>
                 else // 인벤토리 총합이 적을때
                 {
                     playerWeight -= item.count * item.weight;
-                    weihgtPanel.UpdateWeight(playerWeight, maxPlayerWeight);
+                    UpdateWeihgtPanel(playerWeight, maxPlayerWeight);
                     item.Substarct(inventory[i]);
                     inventorySum[item.id] -= inventory[i].count;
                     inventory[i].count = 0;

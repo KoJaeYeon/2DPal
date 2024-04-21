@@ -11,13 +11,19 @@ public class Data
     public string saveDate;
     public string saveTime;
 
+    public float bgmVolume;
+    public float sfxVolume;
+
     public float time;
     public int day;
+
+    public int worldIndexNum;
+
     public List<bool> dropActive;
     public List<PalData> palDatas;
     public PlayerData playerData;
     public List<ItemData> itemDatas;
-    public Dictionary<int,int> itemSum;
+    public Dictionary<int, int> itemSum;
     public List<int> techList;
     public List<FurnitureData> furnitureDatas;
 }
@@ -39,6 +45,7 @@ public class PlayerData
 {
     public int lv;
     public int exp;
+    public int maxExp;
     public float hungry;
     public float health;
     public float maxHealth;
@@ -48,14 +55,16 @@ public class PlayerData
 
     public float maxStamina;
     public float nowStamina;
+    public float attack;
 
     public float playerPosX;
     public float playerPosY;
 
-    public PlayerData(int lv, int exp, float hungry, float health, float maxHealth, float moveWeight, int skillPoint, int techPoint, float maxStamina, float nowStamina, float playerPosX, float playerPosY)
+    public PlayerData(int lv, int exp,int maxExp, float hungry, float health, float maxHealth, float moveWeight, int skillPoint, int techPoint, float maxStamina, float nowStamina,float attack, float playerPosX, float playerPosY)
     {
         this.lv = lv;
         this.exp = exp;
+        this.maxExp = maxExp;
         this.hungry = hungry;
         this.health = health;
         this.maxHealth = maxHealth;
@@ -64,6 +73,7 @@ public class PlayerData
         TechPoint = techPoint;
         this.maxStamina = maxStamina;
         this.nowStamina = nowStamina;
+        this.attack = attack;
         this.playerPosX = playerPosX;
         this.playerPosY = playerPosY;
     }
@@ -77,6 +87,17 @@ public class ItemData
     public ItemData(int key, int id, int count)
     {
         this.key = key;
+        this.id = id;
+        this.count = count;
+    }
+}
+
+public class ItemSumData
+{
+    public int id;
+    public int count;
+    public ItemSumData(int id, int count)
+    {
         this.id = id;
         this.count = count;
     }
@@ -122,8 +143,15 @@ public class DataManager : Singleton<DataManager>
     }
     public void Save(int num)
     {
+        
         data.saveDate = DateTime.Now.ToString("yyyy-MM-dd");
         data.saveTime = DateTime.Now.ToString("hh:mm:ss");
+        data.bgmVolume = SoundManager.Instance.bgm.volume;
+        data.sfxVolume = SoundManager.Instance.sfx[0].volume;
+        data.day = GameManager.Instance.night.day;
+        data.time = GameManager.Instance.night.time;
+
+        data.worldIndexNum = Building.getBuildStaticNum();
 
         #region PalBox
         data.palDatas = new List<PalData>();
@@ -138,8 +166,8 @@ public class DataManager : Singleton<DataManager>
         #endregion
         #region Player
         PlayerControll player = GameManager.Instance.playerController.GetComponent<PlayerControll>();
-        data.playerData = new PlayerData(player.lv,player.exp,player.hungry,player.health,player.maxHealth,
-            player.moveWeight,player.skillPoint,player.TechPoint,player.maxStamina,player.nowStamina,player.transform.position.x,player.transform.position.y);
+        data.playerData = new PlayerData(player.lv,player.exp,player.maxExp,player.hungry,player.health,player.maxHealth,
+            player.moveWeight,player.skillPoint,player.TechPoint,player.maxStamina,player.nowStamina,player.attack,player.transform.position.x,player.transform.position.y);
         #endregion
         #region Inventory
         data.itemDatas = new List<ItemData>();
@@ -163,7 +191,7 @@ public class DataManager : Singleton<DataManager>
             Building building = FurnitureDatabase.Instance.ConstructedBuilding[i];
             data.furnitureDatas.Add(new FurnitureData(building.id, building.index,(int)building.buildingType, (int)building.buildingStatement,
                 building.nowConstructTime, building.MaxWorkTime, building.nowWorkTime,building.transform.position.x,building.transform.position.y, 0, 0));
-            if(building.buildingType == 0 && (int)building.buildingStatement >=3)
+            if(building.buildingType == 0 && (int)building.buildingStatement >=3) // Recipe건물이면서 생산중이었으면
             {
                 if(building is PrimitiveWorkbench)
                 {
@@ -193,23 +221,20 @@ public class DataManager : Singleton<DataManager>
 
         #endregion
 
-
         var json = JsonConvert.SerializeObject(data);
-        File.WriteAllText(Application.dataPath + "/Saves/savedata" +num+".json", json);
-        Debug.Log(Application.dataPath);
-        Debug.Log(json);
+        File.WriteAllText(Application.dataPath + "/savedata" +num+".json", json);
     }
 
     public void Load()
     {
         if (loadNum == 0) return;
-        var json = File.ReadAllText(Application.dataPath + "/Saves/savedata"+loadNum+".json");
-        Debug.Log(json);
+        var json = File.ReadAllText(Application.dataPath + "/savedata"+loadNum+".json");
         data = JsonConvert.DeserializeObject<Data>(json);
 
         LoadPlayerData();
         InventoryManager.Instance.LoadAllSlot(data.itemDatas); // 인벤토리
-        InventoryManager.inventorySum = data.itemSum; // 인벤토리 + 창고
+        InventoryManager.inventorySum.Clear();
+        InventoryManager.inventorySum = data.itemSum;
         FurnitureDatabase.Instance.techList = data.techList; // 테크 준비
         FurnitureDatabase.Instance.LoadAll(data.furnitureDatas); //가구와 테크     
         PalBoxManager.Instance.LoadAllSlot(data.palDatas); //팰박스
@@ -218,6 +243,11 @@ public class DataManager : Singleton<DataManager>
         {
             ItemDatabase.Instance.poolParent.transform.GetChild(i).gameObject.SetActive(data.dropActive[i]);
         }
+
+        SoundManager.Instance.bgmVolume(data.bgmVolume);
+        SoundManager.Instance.sfxVolume(data.sfxVolume);
+        GameManager.Instance.night.SetTime(data.day, data.time);
+        Building.setBuildStaticNum(data.worldIndexNum);
     }
 
     private void LoadPlayerData()
@@ -233,7 +263,9 @@ public class DataManager : Singleton<DataManager>
         player.TechPoint = data.playerData.TechPoint;
         player.maxStamina = data.playerData.maxStamina;
         player.nowStamina = data.playerData.nowStamina;
+        player.attack = data.playerData.attack;
         player.transform.position = new Vector2(data.playerData.playerPosX, data.playerData.playerPosY);
+        GameManager.Instance.StatusRenew();
     }
 
     public void SetLoadNum(int num)
@@ -245,12 +277,10 @@ public class DataManager : Singleton<DataManager>
     {
         try
         {
-            var json = File.ReadAllText(Application.dataPath + "/Saves/savedata" + num + ".json");
-            Debug.Log(json);
+            var json = File.ReadAllText(Application.dataPath + "/savedata" + num + ".json");
             data = JsonConvert.DeserializeObject<Data>(json);
 
-
-            return data.saveDate + "\n" + data.saveTime;
+            return data.day + "일차\n"  + data.saveDate + " " + data.saveTime;
         }
         catch
         {

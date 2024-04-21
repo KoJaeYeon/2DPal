@@ -23,7 +23,12 @@ public class PalAI : MonoBehaviour
 
     public bool thisPalCanSleep = true;
     public bool thisPalCanbuild = true;
-    public bool thiSPalCanFire = false;
+    public bool thisPalCanFire = false;
+    public bool thisPalCanSeed = false;
+    public bool thisPalCanWater = false;
+    public bool thisPalCanHarvest = false;
+    public bool thisPalCanCutting = false;
+    public bool thisPalCanMining = false;
     public bool thisPalCanProduce = false;
 
     Coroutine coroutine;
@@ -100,7 +105,7 @@ public class PalAI : MonoBehaviour
                     }
                 }
 
-                if (thiSPalCanFire && PalManager.Instance.cooking.Count > 0)
+                if (thisPalCanFire && PalManager.Instance.cooking.Count > 0)
                 {
                     int count = PalManager.Instance.cooking.Count;
                     for (int i = 0; i < count; i++)
@@ -116,6 +121,53 @@ public class PalAI : MonoBehaviour
                     }
                 }
 
+                if (thisPalCanSeed && PalManager.Instance.seeding.Count > 0)
+                {
+                    int count = PalManager.Instance.seeding.Count;
+                    for (int i = 0; i < count; i++)
+                    {
+                        targetBulding = PalManager.Instance.seeding[i];
+                        if (targetBulding.workingPal == null)
+                        {
+                            targetBulding.workingPal = this;
+                            target = targetBulding.gameObject;
+                            OnGo();
+                            break;
+                        }
+                    }
+                }
+
+                if (thisPalCanWater && PalManager.Instance.watering.Count > 0)
+                {
+                    int count = PalManager.Instance.watering.Count;
+                    for (int i = 0; i < count; i++)
+                    {
+                        targetBulding = PalManager.Instance.watering[i];
+                        if (targetBulding.workingPal == null)
+                        {
+                            targetBulding.workingPal = this;
+                            target = targetBulding.gameObject;
+                            OnGo();
+                            break;
+                        }
+                    }
+                }
+
+                if (thisPalCanHarvest && PalManager.Instance.harvesting.Count > 0)
+                {
+                    int count = PalManager.Instance.harvesting.Count;
+                    for (int i = 0; i < count; i++)
+                    {
+                        targetBulding = PalManager.Instance.harvesting[i];
+                        if (targetBulding.workingPal == null)
+                        {
+                            targetBulding.workingPal = this;
+                            target = targetBulding.gameObject;
+                            OnGo();
+                            break;
+                        }
+                    }
+                }
                 if (thisPalCanProduce && PalManager.Instance.producing.Count > 0)
                 {
                     int count = PalManager.Instance.producing.Count;
@@ -131,6 +183,39 @@ public class PalAI : MonoBehaviour
                         }
                     }
                 }
+
+                if (thisPalCanMining && PalManager.Instance.mining.Count > 0)
+                {
+                    int count = PalManager.Instance.mining.Count;
+                    for (int i = 0; i < count; i++)
+                    {
+                        targetBulding = PalManager.Instance.mining[i];
+                        if (targetBulding.workingPal == null)
+                        {
+                            targetBulding.workingPal = this;
+                            target = targetBulding.gameObject;
+                            OnGo();
+                            break;
+                        }
+                    }
+                }
+
+                if (thisPalCanCutting && PalManager.Instance.cutting.Count > 0)
+                {
+                    int count = PalManager.Instance.cutting.Count;
+                    for (int i = 0; i < count; i++)
+                    {
+                        targetBulding = PalManager.Instance.cutting[i];
+                        if (targetBulding.workingPal == null)
+                        {
+                            targetBulding.workingPal = this;
+                            target = targetBulding.gameObject;
+                            OnGo();
+                            break;
+                        }
+                    }
+                }
+
                 if (thisPalCanbuild == true && PalManager.Instance.buildings.Count > 0 && palState == PalStates.Idle)
                 {
                     targetBulding = PalManager.Instance.buildings[0];

@@ -32,6 +32,11 @@ public class ItemDatabase : Singleton<ItemDatabase>
         id = 8; item = new Item("섬유", id, 4, 0.5f, "나무에서 얻는 섬유.\n활 등을 제작하는 소재가 된다."); item.sprite = sprites[index++]; items.Add(id, item);
         id = 9; item = new Item("양털", id, 2, 1f, "양 팰에게서 얻는 소재.\n침대나 천을(를) 만들 때 필요하다."); item.sprite = sprites[index++]; items.Add(id, item);
         id = 10; food = new Food("도로롱", id, 1, 1f, 0, "도로롱의 고기.\n독특한 풍미가 매력적인 붉은 살코기. 잡내가 있지만 맛이 좋다."); food.sprite = sprites[index++]; items.Add(id, food);
+        id = 11; food = new Food("꼬꼬닭", id, 1, 1f, 0, "꼬꼬닭의 고기.\n담백하여 먹기 좋으며 팰파고스섬의 주민이 즐겨 먹는다."); food.sprite = sprites[index++]; items.Add(id, food);
+        id = 12; food = new Food("알", id, 1, 0.5f, 0, "구워 먹어도 맛있고 요리 재료로도 좋다.\n꼬꼬닭이(가) 낳는다."); food.sprite = sprites[index++]; items.Add(id, food);
+        id = 13; item = new Item("가죽", id, 4, 2f, "팰에게서 얻은 가죽으로, 방어구의 재료가 된다.\n일부 팰에게서 얻을 수 있다."); item.sprite = sprites[index++]; items.Add(id, item);
+        id = 14; item = new Item("발화기관", id, 4, 2f, "화염 속성 팰에게서 얻는 소재.\n불화살 등을 제작하는 소재가 된다."); item.sprite = sprites[index++]; items.Add(id, item);
+        id = 15; item = new Item("팰의 체액", id, 4, 2f, "팰에게서 채취하는 체액. 점성이 뛰어나 유용하다."); item.sprite = sprites[index++]; items.Add(id, item);
 
 
         index = 0;
@@ -45,6 +50,8 @@ public class ItemDatabase : Singleton<ItemDatabase>
         id = 503; equip = new Equip("돌 곡괭이", id, 1, 10, 30, "채굴용 곡괭이.\n돌로 만들어 효율이 떨어진다.", new int[,] { { 1, 5 }, { 2, 5 } }); equip.sprite = sprites_equip[index++]; items.Add(id, equip);
         id = 504; equip = new Equip("돌 도끼", id, 1, 10, 30, "나무를 베는 용도의 도끼.\n돌로 만들어서 절삭력이 조금 아쉽다.", new int[,] { { 1, 5 }, { 2, 5 } }); equip.sprite = sprites_equip[index++]; items.Add(id, equip);
         id = 505; equip = new Equip("오래된 활", id, 1, 6, 20, "원거리 공격이 가능한 활.\n이것저것 긁어모아 만든 탓에 위력은 떨어진다.", new int[,] { { 1, 30 }, { 2, 5 }, { 8, 15 } }); equip.sprite = sprites_equip[index++]; items.Add(id, equip);
+        id = 506; equip = new Equip("돌 창", id, 1, 10, 10, "근접 전투에서 유용한 창.\n사정거리가 길어 거리를 조금 벌린 채 싸울 수 있다.", new int[,] { { 1, 18 }, { 2, 6 }, { 8, 15 } }); equip.sprite = sprites_equip[index++]; items.Add(id, equip);
+        id = 507; equip = new Equip("야구 방망이", id, 1, 3, 20, "근접 전투도 가능한 야구 방망이.\n팰은 공보다 훨씬 크다는 사실을 기억하자.", new int[,] { { 1, 30 }, { 2, 10 }}); equip.sprite = sprites_equip[index++]; items.Add(id, equip);
 
         ////DropItemId
         //드랍 오브젝트 드랍리스트
@@ -64,6 +71,11 @@ public class ItemDatabase : Singleton<ItemDatabase>
 
         //적 팰 드랍리스트
         id = 1; dropList = new List<Item>(); food = GetFood(10); food.count = 1; dropList.Add(food); item = GetItem(9); item.count = 2; dropList.Add(item); dropDics.Add(id, dropList);
+        id = 2; dropList = new List<Item>(); food = GetFood(5); food.count = 2; dropList.Add(food); dropDics.Add(id, dropList);
+        id = 3; dropList = new List<Item>(); food = GetFood(11); food.count = 1; dropList.Add(food); food = GetFood(12); food.count = 1; dropList.Add(food); dropDics.Add(id, dropList);
+        id = 4; dropList = new List<Item>(); item = GetItem(7); item.count = 1; dropList.Add(item); dropDics.Add(id, dropList);
+        id = 5; dropList = new List<Item>(); item = GetItem(13); item.count = 2; dropList.Add(item); item = GetItem(14); item.count = 1; dropList.Add(item); dropDics.Add(id, dropList);
+        id = 6; dropList = new List<Item>(); item = GetItem(13); item.count = 2; dropList.Add(item); item = GetItem(15); item.count = 1; dropList.Add(item); dropDics.Add(id, dropList);
 
 
         index = 0;
@@ -73,6 +85,7 @@ public class ItemDatabase : Singleton<ItemDatabase>
         id = 1200; food = new Food("구운 열매", id, 1, 0.15f, 5, "구우면 영양가가 높아진다.\n신기할 정도로 포만감이 좋다.", new int[,] { { 5, 1 } }); food.sprite = sprites_cook[index++]; items.Add(id, food);
         id = 1201; food = new Food("구운 버섯", id, 1, 1, 5, "구우면 영양가가 높아지는 버섯.\n신기할 정도로 포만감이 좋다.", new int[,] { { 6, 1 } }); food.sprite = sprites_cook[index++]; items.Add(id, food);
         id = 1202; food = new Food("도로롱", id, 1, 1, 5, "향신료에 재운 양고기를 구워 만든 요리.\n짙은 개성과 깊이 있는 맛을 체감할 수 있다.", new int[,] { { 10, 1 } }); food.sprite = sprites_cook[index++]; items.Add(id, food);
+        id = 1203; food = new Food("계란 프라이", id, 1, 1, 5, "알을(를) 익혀서 더 맛있어졌다.\n신기할 정도로 포만감이 든다.", new int[,] { { 12, 1 } }); food.sprite = sprites_cook[index++]; items.Add(id, food);
 
 
 

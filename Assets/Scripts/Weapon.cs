@@ -39,6 +39,7 @@ public class Weapon : MonoBehaviour
     {
         if (canAttack)
         {
+            SoundManager.Instance.sfx[1].Play();
             canAttack = false;
             Enemy_Pal enemy_Pal = collision.GetComponent<Enemy_Pal>();
             enemy_Pal.Attacked(weapon_damage);

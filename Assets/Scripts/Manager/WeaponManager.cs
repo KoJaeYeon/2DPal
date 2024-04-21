@@ -11,8 +11,6 @@ public class WeaponManager : Singleton<WeaponManager>
     public PlayerControll playerControll;
 
     public GameObject[] WeaponIndex = new GameObject[4];
-    public bool[] debugAble0;
-    public bool[] debugAble1;
     public bool actived;
 
     private void Awake()
@@ -69,8 +67,6 @@ public class WeaponManager : Singleton<WeaponManager>
                 if(actived) weapon.gameObject.SetActive(true); // 사용중인 무기였으면 사용중으로 돌려주기
                 playerControll.equip[index] = weapon.gameObject; // 장비변경
                 playerControll.animator_Equip[index] = weapon.transform.GetComponent<Animator>(); // 애니메이션 변경
-                debugAble0 = weaponAble[0];
-                debugAble1 = weaponAble[1];
                 break;
             }
         }

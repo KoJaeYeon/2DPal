@@ -155,7 +155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f528d774b4479ac4c927209b9c824255, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 0
+  id: 106
   index: 0
   buildingStatement: 0
   MaxConstructTime: 20

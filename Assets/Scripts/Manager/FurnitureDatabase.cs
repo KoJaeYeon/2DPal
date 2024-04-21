@@ -36,11 +36,14 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
         id = 104; furniture = new Furniture("모닥불", id, new int[,] { { 1, 10 } }); furniture.sprite = sprites[index++]; furnitures.Add(id, furniture);
         id = 105; furniture = new Furniture("나무 상자", id, new int[,] { { 1, 15 }, { 2, 5 } }); furniture.sprite = sprites[index++]; furnitures.Add(id, furniture);
         id = 106; furniture = new Furniture("짚 팰 침대", id, new int[,] { { 1, 10 }, { 2, 5 } }); furniture.sprite = sprites[index++]; furnitures.Add(id, furniture);
+        id = 107; furniture = new Furniture("먹이 상자", id, new int[,] { { 1, 20 } }); furniture.sprite = sprites[index++]; furnitures.Add(id, furniture);
+        id = 108; furniture = new Furniture("열매 농장", id, new int[,] { { 1, 20 }, { 2, 20 }, { 7, 3 } }); furniture.sprite = sprites[index++]; furnitures.Add(id, furniture);
+        id = 109; furniture = new Furniture("벌목장", id, new int[,] { { 1, 50 }, { 2, 20 }, { 3, 10 } }); furniture.sprite = sprites[index++]; furnitures.Add(id, furniture);
+        id = 110; furniture = new Furniture("채석장", id, new int[,] { { 1, 20 }, { 2, 50 }, { 3, 10 } }); furniture.sprite = sprites[index++]; furnitures.Add(id, furniture);
         for (int i = 0; i < furnitures.Count; i++)
         {
             GameObject prefab = Instantiate(Prefabs[i]);
-            furniturePrefabs[i] = new List<GameObject>();
-            furniturePrefabs[i].Add(prefab);
+            furniturePrefabs[i] = new List<GameObject> {prefab};
             prefab.transform.parent = poolParent.transform;
             prefab.SetActive(false);
         }
@@ -60,7 +63,7 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
             MakeSlot(1,1100 + i);
         }
 
-        for (int i = 0; i < 3; i++) //모닥불 최초 슬롯 부여
+        for (int i = 0; i < 4; i++) //모닥불 최초 슬롯 부여
         {
             MakeSlot(2,1200 + i);
         }
@@ -99,7 +102,7 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
             building.nowWorkTime = furnitureDatas[i].nowWorkTime;
             building.ChangeRigid();
 
-            if ((int)building.buildingStatement == 1)
+            if ((int)building.buildingStatement == 1) //짓고있는 중이면
             {
                 building.BuildColor();
                 PalManager.Instance.buildings.Add(building);
@@ -127,9 +130,12 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
             }
             else if(building.buildingType == Building.BuildingType.None)
             {
-                ((StrawPalBed)building).Sleep();
+                if(GameManager.Instance.night.IsMidnight()) ((StrawPalBed)building).Sleep();
             }
-
+            else if(building.buildingType == Building.BuildingType.Plant)
+            {
+                building.Action();
+            }
         }
 
     }
@@ -137,6 +143,7 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
     public GameObject GiveFurniture(int id) // 가구 프리펩 오브젝트 전달
     {
         id %= 100;
+        Debug.Log(id - 1);
         foreach (GameObject furniture in furniturePrefabs[id - 1])
         {
             if (!furniture.activeSelf)
@@ -163,6 +170,7 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
 
     public void OpenFruniture(int id) // 가구 해금
     {
+        Debug.Log(id);
         furnitureButton[id - 102].SetActive(true);
     }
 

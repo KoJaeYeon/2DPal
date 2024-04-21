@@ -16,6 +16,7 @@ public class StrawPalBed : Building
 
     private new void OnEnable()
     {
+        base.OnEnable();
         PalManager.Instance.palBedBuilding.Add(this);
     }
     private new void OnDisable()
