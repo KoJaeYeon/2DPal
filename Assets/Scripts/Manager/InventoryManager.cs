@@ -210,7 +210,7 @@ public class InventoryManager : Singleton<InventoryManager>
             }
             else if (endSlotkey < 25 && startSlotkey >= 25)
             {
-                playerWeight -= tempSlot2.item.count * tempSlot2.item.weight;
+                playerWeight += tempSlot2.item.count * tempSlot2.item.weight;
             }
             UpdateWeihgtPanel(playerWeight, maxPlayerWeight);
         }
@@ -227,7 +227,7 @@ public class InventoryManager : Singleton<InventoryManager>
             }
             else if (endSlotkey < 25 && startSlotkey >= 25)
             {
-                playerWeight -= tempSlot2.item.count * tempSlot2.item.weight;
+                playerWeight += tempSlot2.item.count * tempSlot2.item.weight;
             }
             UpdateWeihgtPanel(playerWeight, maxPlayerWeight);
         }
@@ -251,7 +251,7 @@ public class InventoryManager : Singleton<InventoryManager>
                 }
                 else if (endSlotkey < 25 && startSlotkey >= 25)
                 {
-                    playerWeight -= tempSlot2.item.count * tempSlot2.item.weight;
+                    playerWeight += tempSlot2.item.count * tempSlot2.item.weight;
                 }
                 UpdateWeihgtPanel(playerWeight, maxPlayerWeight);
             }

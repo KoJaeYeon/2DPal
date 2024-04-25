@@ -47,7 +47,7 @@ public class GameManager : Singleton<GameManager>
         StatusRenew();
     }
 
-    public void ActivePanel(GameObject panel)
+    public void SetActivePanel(GameObject panel)
     {
         activePanel = panel;
     }
@@ -68,6 +68,7 @@ public class GameManager : Singleton<GameManager>
         { 
             activePanel.SetActive(false);
             activePanel = OptionPanel;
+            activePanel.GetComponent<ActivePanel>().QuitPanel();
             return;
         }
         if (!range) { return; }

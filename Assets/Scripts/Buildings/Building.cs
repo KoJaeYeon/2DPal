@@ -10,7 +10,7 @@ public enum BuildingStatement
     Working = 3,
     Done = 4
 }
-public class Building : MonoBehaviour
+public abstract  class Building : MonoBehaviour
 {
     public int id;
     public int index;

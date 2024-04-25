@@ -46,7 +46,6 @@ public class ProductManager : Singleton<ProductManager>
         count = 1;
         countText.text = GameManager.Instance.CountString(count);
         DataPanel.SetActive(false);
-        IngredientPanel.SetActive(false);
         ConfirmPanel.SetActive(false);
     }
 
