@@ -4,13 +4,20 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LoadPanel : MonoBehaviour
+public class LoadPanel : MonoBehaviour,QuitPanelUI
 {
     [SerializeField]
     TextMeshProUGUI[] textMeshProUGUI;
     [SerializeField]
     Button[] loadButtons;
     [SerializeField] bool save;
+
+    public GameObject lastPanel;
+
+    private void Start()
+    {
+        gameObject.SetActive(false);
+    }
 
     private void OnEnable()
     {
@@ -47,8 +54,30 @@ public class LoadPanel : MonoBehaviour
         }
     }
 
-    void Start()
+    public void PanelActive()
     {
+        this.gameObject.SetActive(true);
+        lastPanel = GameManager.Instance.activePanel;
+        GameManager.Instance.activePanel = this.gameObject;
+    }
+
+    public void PanelDeactive()
+    {
+        GameManager.Instance.activePanel = lastPanel;
         gameObject.SetActive(false);
+        Debug.Log(gameObject);
+    }
+
+
+    public void SaveGame(int num)
+    {
+        DataManager.Instance.Save(num);
+        Renew();
+    }
+
+    public void LoadGame(int num)
+    {
+        SceneManager_Title.Instance.SceneLoad();
+        DataManager.Instance.SetLoadNum(num);
     }
 }

@@ -1,11 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class ActivePanel : MonoBehaviour
+public interface QuitPanelUI
 {
-    public void QuitPanel()
-    {
+    public void PanelActive();
+    public void PanelDeactive();
 
-    }
 }

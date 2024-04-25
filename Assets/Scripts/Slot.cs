@@ -106,8 +106,7 @@ public class Slot : MonoBehaviour
                 }
                 else if (item is Food)
                 {
-                    InventoryManager.Instance.FoodPanel.gameObject.SetActive(true);
-                    GameManager.Instance.activePanel = InventoryManager.Instance.FoodPanel;
+                    InventoryManager.Instance.FoodPanel.GetComponent<QuitPanelUI>().PanelActive();
                 }
                 else return;
             }

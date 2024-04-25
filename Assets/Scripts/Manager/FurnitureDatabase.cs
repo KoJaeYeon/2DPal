@@ -170,7 +170,6 @@ public class FurnitureDatabase : Singleton<FurnitureDatabase>
 
     public void OpenFruniture(int id) // 가구 해금
     {
-        Debug.Log(id);
         furnitureButton[id - 102].SetActive(true);
     }
 

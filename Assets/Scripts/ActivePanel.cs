@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ActivePanel : MonoBehaviour
-{
+{ 
     public GameObject[] panel;
+    public GameObject lastPanel;
     public void PanelActive(int num)
     {
         for(int i = 0; i < panel.Length; i++)
