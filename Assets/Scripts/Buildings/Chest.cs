@@ -19,10 +19,9 @@ public class Chest : Building
         switch (buildingStatement)
         {
             case BuildingStatement.Built:
-                chestPanel.SetActive(true);
-                GameManager.Instance.activePanel = chestPanel;
-                InventoryManager.Instance.chestName.text = buildingName;
-                chestKey.SetSlotVolume(volume, index * 50);
+                chestPanel.GetComponent<QuitPanelUI>().PanelActive(); // 상자 패널 활성화
+                InventoryManager.Instance.chestName.text = buildingName; // 패널과 상호작용한 오브젝트의 이름 갱신
+                chestKey.SetSlotVolume(volume, index * 50); // Chest 패널에 상자의 최대 보유량과 키 전달
                 break;
         }
     }

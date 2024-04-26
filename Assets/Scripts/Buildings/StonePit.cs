@@ -18,23 +18,24 @@ public class StonePit : Building
         if (nowConstructTime > MaxConstructTime)
         {
             buildingStatement = BuildingStatement.Built;
-            coroutine = StartCoroutine(BuildTerm());
+            coroutine = StartCoroutine(WorkTerm());
         }
     }
 
-    public override void Action()
-    {
-        buildingStatement = BuildingStatement.Built;
-        coroutine = StartCoroutine(BuildTerm());
-    }
 
-    IEnumerator BuildTerm()
+
+    IEnumerator WorkTerm()
     {
         yield return new WaitForSeconds(1.1f);
         buildingStatement = BuildingStatement.Working;
         if(!todoList.Contains(this)) todoList.Add(this);
         nowWorkTime = 0;
         yield break;
+    }
+    public override void Action()
+    {
+        if (buildingStatement == BuildingStatement.Built)
+            coroutine = StartCoroutine(WorkTerm());
     }
     public override void Work(float work)
     {
@@ -46,7 +47,7 @@ public class StonePit : Building
             todoList.Remove(this);
             item = ItemDatabase.Instance.GetItem(2);
             buildingStatement = BuildingStatement.Built;
-            coroutine = StartCoroutine(BuildTerm());
+            coroutine = StartCoroutine(WorkTerm());
         }
     }
 }

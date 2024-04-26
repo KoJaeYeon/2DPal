@@ -7,8 +7,8 @@ TagManager:
   - Equipment
   - Furniture
   - EnemyPal
-  - DropItem
   - PalBed
+  - Pal
   layers:
   - Default
   - TransparentFX
