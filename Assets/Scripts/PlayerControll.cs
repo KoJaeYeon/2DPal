@@ -27,43 +27,63 @@ public enum Statement
 public class PlayerControll : MonoBehaviour
 {
     Vector2 direction;
-    public ViewDirection viewdirection;
-    public Statement statement;
+    private ViewDirection _viewdirection;
+    private Statement _statement;
     public GameObject target; // 콜라이더 오브젝트
-    public Transform GetTargetTrans;
-    public Slider slider;
-    public Image image;
+    [SerializeField]
+    private Transform GetTargetTrans;
+    [SerializeField]
+    private Slider slider;
+    [SerializeField]
+    private Image image;
 #pragma warning disable CS0108 // 멤버가 상속된 멤버를 숨깁니다. new 키워드가 없습니다.
-    public CinemachineVirtualCamera camera;
+    [SerializeField]
+    private CinemachineVirtualCamera camera;
 #pragma warning restore CS0108 // 멤버가 상속된 멤버를 숨깁니다. new 키워드가 없습니다.
 
-    public bool running = false;
-    public bool fire = false;
-    public bool moving = false;
-    public bool istired = false;
-    public bool isaction = false;
-    public bool isthorwing = false;
+    private bool running = false;
+    private bool fire = false;
+    private bool moving = false;
+    private bool istired = false;
+    private bool isaction = false;
+    private bool isthorwing = false;
 
     //Player Data
-    public int lv = 1;
-    public int exp = 0;
-    public int maxExp = 10;
-    public float hungry = 100;
-    public float health = 500;
-    public float maxHealth = 500;
-    public float moveWeight = 300;
-    public int skillPoint = 0;
-    public int TechPoint = 3;
-    public float attack = 100;
+    private int _lv = 1;
+    private int _exp = 0;
+    private int _maxExp = 10;
+    private float _hungry = 100;
+    private float _health = 500;
+    private float _maxHealth = 500;
+    private float _moveWeight = 300;
+    private int _skillPoint = 0;
+    private int _TechPoint = 3;
+    private float _attack = 100;
 
-    public float speed = 0.1f;
-    public float run = 1;
-    public float throwPower = 0;
+    private float speed = 0.1f;
+    private float run = 1;
+    private float throwPower = 0;
 
-    public float maxStamina = 100;
-    public float nowStamina = 100;
+    private float _maxStamina = 100;
+    private float _nowStamina = 100;
 
+    #region Player Data Property
+    public ViewDirection viewDirection { get => _viewdirection; set => _viewdirection = value; }
+    public Statement statement { get => _statement; set => _statement = value; }
+    public int lv { get => _lv; set => _lv = value; }
+    public int exp { get => _exp; set => _exp = value; }
+    public int maxExp { get => _maxExp; set => _maxExp = value; }
+    public float hungry { get => _hungry; set => _hungry = value; }
+    public float health { get => _health; set => _health = value; }
+    public float maxHealth { get => _maxHealth; set => _maxHealth = value; }
+    public float moveWeight { get => _moveWeight; set => _moveWeight = value; }
+    public int skillPoint { get => _skillPoint; set => _skillPoint = value; }
+    public int TechPoint { get => _TechPoint; set => _TechPoint = value; }
+    public float attack { get => _attack; set => _attack = value; }
+    public float maxStamina { get => _maxStamina; set => _maxStamina = value;}
+    public float nowStamina { get => _nowStamina; set => _nowStamina = value; }
 
+    #endregion
     Animator animator;
 
     public GameObject[] equip;
@@ -76,7 +96,7 @@ public class PlayerControll : MonoBehaviour
     public Building building;
     public GameObject palSphere;
     public PalSphere palsphere_PalSphere;
-    CircleCollider2D circleCollider2D;
+    CircleCollider2D circleCollider2D;   
 
     private void Awake()
     {
@@ -92,7 +112,7 @@ public class PlayerControll : MonoBehaviour
     private void Update()
     {
         Stamina();
-        switch (statement)
+        switch (_statement)
         {
             case Statement.Building:
                 building.Build(10f * Time.deltaTime);
@@ -123,33 +143,33 @@ public class PlayerControll : MonoBehaviour
         if (running && moving)
         {
             slider.gameObject.SetActive(true);
-            nowStamina -= 10f * Time.deltaTime;
+            _nowStamina -= 10f * Time.deltaTime;
         }
         else if (fire)
         {
             if (GameManager.Instance.ManagerUsingUi())
             {
-                if (nowStamina < maxStamina)
-                    nowStamina += 15f * Time.deltaTime;
+                if (_nowStamina < _maxStamina)
+                    _nowStamina += 15f * Time.deltaTime;
                 else
                 {
                     istired = false;
                     image.color = new Color(1, 1, 0, 0.8f);
                     slider.gameObject.SetActive(false);
                 }
-                slider.value = nowStamina / maxStamina;
+                slider.value = _nowStamina / _maxStamina;
                 return;
             }
             else if(!istired)
             {
                 slider.gameObject.SetActive(true);
-                nowStamina -= 20f * Time.deltaTime;
+                _nowStamina -= 20f * Time.deltaTime;
             }
             else
             {
-                nowStamina += 15f * Time.deltaTime;
-                slider.value = nowStamina / maxStamina;
-                if (nowStamina > maxStamina)
+                _nowStamina += 15f * Time.deltaTime;
+                slider.value = _nowStamina / _maxStamina;
+                if (_nowStamina > _maxStamina)
                 {
                     istired = false;
                     image.color = new Color(1, 1, 0, 0.8f);
@@ -160,8 +180,8 @@ public class PlayerControll : MonoBehaviour
         }
         else
         {
-            if (nowStamina < maxStamina)
-                nowStamina += 15f * Time.deltaTime;
+            if (_nowStamina < _maxStamina)
+                _nowStamina += 15f * Time.deltaTime;
             else
             {
                 istired = false;
@@ -169,7 +189,7 @@ public class PlayerControll : MonoBehaviour
                 slider.gameObject.SetActive(false);
             }
         }
-        if (nowStamina < 0)
+        if (_nowStamina < 0)
         {
             istired = true;
             running = false;
@@ -182,7 +202,7 @@ public class PlayerControll : MonoBehaviour
             }
             image.color = new Color(1, 0, 0, 0.8f);
         }
-        slider.value = nowStamina / maxStamina;
+        slider.value = _nowStamina / _maxStamina;
     }
 
     private void FixedUpdate()
@@ -194,7 +214,7 @@ public class PlayerControll : MonoBehaviour
     {
         equip[nowEquip].SetActive(true);
         GetTargetTrans.gameObject.SetActive(true);
-        statement = Statement.Idle;
+        _statement = Statement.Idle;
         freeBuilding = null;
         GameManager.Instance.ExitMenu();
     }
@@ -204,7 +224,7 @@ public class PlayerControll : MonoBehaviour
         equip[nowEquip].SetActive(false);
         GetTargetTrans.gameObject.SetActive(false);
         freeBuilding.transform.parent = transform;
-        switch (viewdirection)
+        switch (_viewdirection)
         {
             case ViewDirection.Up:
                 freeBuilding.transform.localPosition = new Vector2(0, 2.5f);
@@ -225,7 +245,7 @@ public class PlayerControll : MonoBehaviour
     {
         if (this.building.Equals(building))
         {
-            statement = Statement.Idle;
+            _statement = Statement.Idle;
         }
     }
 
@@ -282,7 +302,7 @@ public class PlayerControll : MonoBehaviour
 
     private void OnEscape(InputValue inputValue) // Esc
     {
-        if (statement == Statement.Crafting)
+        if (_statement == Statement.Crafting)
         {
             freeBuilding.transform.parent = FurnitureDatabase.Instance.poolParent.transform;
             freeBuilding.SetActive(false);
@@ -291,7 +311,7 @@ public class PlayerControll : MonoBehaviour
         }
         else
         {
-            statement = Statement.Idle;
+            _statement = Statement.Idle;
             GameManager.Instance.ExitMenu(true);
         }
     }
@@ -310,13 +330,13 @@ public class PlayerControll : MonoBehaviour
                 switch (building.buildingStatement)
                 {
                     case BuildingStatement.isBuilding:
-                        statement = Statement.Building;
+                        _statement = Statement.Building;
                         break;
                     case BuildingStatement.Built:
                         building.Action();
                         break;
                     case BuildingStatement.Working:
-                        statement = Statement.Action;
+                        _statement = Statement.Action;
                         break;
                     case BuildingStatement.Done:
                         building.Action();
@@ -326,7 +346,7 @@ public class PlayerControll : MonoBehaviour
             else
             {
                 building = null;
-                statement = Statement.Idle;
+                _statement = Statement.Idle;
             }
         }
         else if (target.CompareTag("DropItem"))
@@ -352,10 +372,10 @@ public class PlayerControll : MonoBehaviour
         fire = inputValue.isPressed;
         if (fire)
         {
-            if (GameManager.Instance.activePanel == CraftManager.Instance.BuildingPanel) { }
+            if (GameManager.Instance.activePanel == CraftManager.Instance.buildingPanel) { }
             else if (GameManager.Instance.ManagerUsingUi()) return;
-            if (statement == Statement.Action) return;
-            else if (statement == Statement.Crafting)
+            if (_statement == Statement.Action) return;
+            else if (_statement == Statement.Crafting)
             {
                 if (freeBuilding.GetComponent<Building>().ContactCheck()) return;
                 else
@@ -367,7 +387,7 @@ public class PlayerControll : MonoBehaviour
                     return;
                 }
             }
-            else if(statement == Statement.Disassembling)
+            else if(_statement == Statement.Disassembling)
             {
                 if (target == null) return;
                 if (target.CompareTag("Furniture"))
@@ -389,7 +409,7 @@ public class PlayerControll : MonoBehaviour
 
     private void OnFire2()
     {
-        if (statement == Statement.Crafting)
+        if (_statement == Statement.Crafting)
         {
             if (freeBuilding.GetComponent<Building>().ContactCheck()) return;
             else
@@ -413,7 +433,7 @@ public class PlayerControll : MonoBehaviour
         {
             building = target.GetComponent<Building>();
         }
-        if (statement == Statement.Idle)
+        if (_statement == Statement.Idle)
         {
             if (getTarget.ActionPanel.activeSelf)
             {
@@ -424,7 +444,7 @@ public class PlayerControll : MonoBehaviour
     private void OnChangeWeapon(InputValue inputValue)
     {
         if (GameManager.Instance.ManagerUsingUi()) return;
-        if (statement == Statement.Crafting)
+        if (_statement == Statement.Crafting)
         {
             float rotationZ = inputValue.Get<Vector2>().y;
             freeBuilding.transform.Rotate(Vector3.forward * rotationZ * 30f);
@@ -439,7 +459,7 @@ public class PlayerControll : MonoBehaviour
             if(nowEquip == 3) nowEquip = 0;
             else nowEquip += 1;
             equip[nowEquip].SetActive(true);
-            animator_Equip[nowEquip].SetInteger("Direction", (int)viewdirection);
+            animator_Equip[nowEquip].SetInteger("Direction", (int)_viewdirection);
             animator_Equip[nowEquip].SetTrigger("Move");
         }
         else if (change < 0 && nowEquip != 0)
@@ -448,13 +468,13 @@ public class PlayerControll : MonoBehaviour
             if (nowEquip == 0) nowEquip = 3;
             else nowEquip -= 1;
             equip[nowEquip].SetActive(true);
-            animator_Equip[nowEquip].SetInteger("Direction", (int)viewdirection);
+            animator_Equip[nowEquip].SetInteger("Direction", (int)_viewdirection);
             animator_Equip[nowEquip].SetTrigger("Move");
         }
     }
     private void OnMove(InputValue inputValue)
     {
-        if (statement == Statement.Action) return;
+        if (_statement == Statement.Action) return;
         direction = inputValue.Get<Vector2>();
         moving = true;
         if (direction.x == 0 && direction.y != 0)
@@ -462,34 +482,34 @@ public class PlayerControll : MonoBehaviour
             animator.SetBool("Idle", false);
             if (direction.y < 0)
             {
-                viewdirection = ViewDirection.Down;
-                if (statement == Statement.Crafting)
+                _viewdirection = ViewDirection.Down;
+                if (_statement == Statement.Crafting)
                 {
                     freeBuilding.transform.localPosition = new Vector2(0, -2.5f);
                 }
                 else GetTargetTrans.localPosition = new Vector2(0, -1.5f);
-                if (animator.GetInteger("Direction") != (int)viewdirection)
+                if (animator.GetInteger("Direction") != (int)_viewdirection)
                 {
-                    animator.SetInteger("Direction", (int)viewdirection);
+                    animator.SetInteger("Direction", (int)_viewdirection);
                     animator.SetTrigger("Move");
-                    animator_Equip[(int)nowEquip].SetInteger("Direction", (int)viewdirection);
+                    animator_Equip[(int)nowEquip].SetInteger("Direction", (int)_viewdirection);
                     animator_Equip[(int)nowEquip].SetTrigger("Move");
                 }
 
             }
             else if (direction.y > 0)
             {
-                viewdirection = ViewDirection.Up;
-                if (statement == Statement.Crafting)
+                _viewdirection = ViewDirection.Up;
+                if (_statement == Statement.Crafting)
                 {
                     freeBuilding.transform.localPosition = new Vector2(0, 2.5f);
                 }
                 else GetTargetTrans.localPosition = new Vector2(0, 1.5f);
-                if (animator.GetInteger("Direction") != (int)viewdirection)
+                if (animator.GetInteger("Direction") != (int)_viewdirection)
                 {
-                    animator.SetInteger("Direction", (int)viewdirection);
+                    animator.SetInteger("Direction", (int)_viewdirection);
                     animator.SetTrigger("Move");
-                    animator_Equip[(int)nowEquip].SetInteger("Direction", (int)viewdirection);
+                    animator_Equip[(int)nowEquip].SetInteger("Direction", (int)_viewdirection);
                     animator_Equip[(int)nowEquip].SetTrigger("Move");
                 }
 
@@ -500,33 +520,33 @@ public class PlayerControll : MonoBehaviour
             animator.SetBool("Idle", false);
             if (direction.x < 0)
             {
-                viewdirection = ViewDirection.Left;
-                if (statement == Statement.Crafting)
+                _viewdirection = ViewDirection.Left;
+                if (_statement == Statement.Crafting)
                 {
                     freeBuilding.transform.localPosition = new Vector2(-2, 0);
                 }
                 else GetTargetTrans.localPosition = new Vector2(-1, 0);
-                if (animator.GetInteger("Direction") != (int)viewdirection)
+                if (animator.GetInteger("Direction") != (int)_viewdirection)
                 {
-                    animator.SetInteger("Direction", (int)viewdirection);
+                    animator.SetInteger("Direction", (int)_viewdirection);
                     animator.SetTrigger("Move");
-                    animator_Equip[(int)nowEquip].SetInteger("Direction", (int)viewdirection);
+                    animator_Equip[(int)nowEquip].SetInteger("Direction", (int)_viewdirection);
                     animator_Equip[(int)nowEquip].SetTrigger("Move");
                 }
             }
             else if (direction.x > 0)
             {
-                viewdirection = ViewDirection.Right;
-                if (statement == Statement.Crafting)
+                _viewdirection = ViewDirection.Right;
+                if (_statement == Statement.Crafting)
                 {
                     freeBuilding.transform.localPosition = new Vector2(2, 0);
                 }
                 else GetTargetTrans.localPosition = new Vector2(1, 0);
-                if (animator.GetInteger("Direction") != (int)viewdirection)
+                if (animator.GetInteger("Direction") != (int)_viewdirection)
                 {
-                    animator.SetInteger("Direction", (int)viewdirection);
+                    animator.SetInteger("Direction", (int)_viewdirection);
                     animator.SetTrigger("Move");
-                    animator_Equip[(int)nowEquip].SetInteger("Direction", (int)viewdirection);
+                    animator_Equip[(int)nowEquip].SetInteger("Direction", (int)_viewdirection);
                     animator_Equip[(int)nowEquip].SetTrigger("Move");
                 }
             }

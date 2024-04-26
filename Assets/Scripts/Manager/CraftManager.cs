@@ -10,7 +10,7 @@ public class CraftManager : Singleton<CraftManager>
 
     public GameObject Hole; // 중앙에 뜨는 아이템 정보
     public GameObject DataPanel; // 왼쪽 정보창에 뜨는 아이템 정보 패널
-    public GameObject BuildingPanel; // 건축 시작할 때 뜨는 패널
+    public GameObject buildingPanel; // 건축 시작할 때 뜨는 패널
 
     public Image holeImage;
     public TextMeshProUGUI holeTMP;
@@ -31,7 +31,7 @@ public class CraftManager : Singleton<CraftManager>
         holeImage = Hole.GetComponent<Image>();
         holeTMP = Hole.GetComponentInChildren<TextMeshProUGUI>();
         needPanels = DataPanel.GetComponentsInChildren<NeedPanel>();
-        needPanels_Build = BuildingPanel.transform.GetChild(0).GetComponentsInChildren<NeedPanel_Build>();
+        needPanels_Build = buildingPanel.transform.GetChild(0).GetComponentsInChildren<NeedPanel_Build>();
         initialImage = holeImage.sprite;
         holeTMP.text = "";
         Hole.SetActive(false);
@@ -39,7 +39,7 @@ public class CraftManager : Singleton<CraftManager>
     private void Start()
     {
 
-        BuildingPanel.SetActive(false);
+        buildingPanel.SetActive(false);
     }
 
     public void FurnitureOver(int id)
@@ -84,13 +84,12 @@ public class CraftManager : Singleton<CraftManager>
         else // 제작가능
         {
             if (!player) GameManager.Instance.ExitMenu();
-            GameManager.Instance.activePanel = BuildingPanel;
             playerControll.statement = Statement.Crafting;
             playerControll.freeBuilding = FurnitureDatabase.Instance.GiveFurniture(id);
             playerControll.FreeBuilding();
-            BuildingPanel.SetActive(true);
-            BuildingPanel.transform.GetChild(0).gameObject.SetActive(true);
-            BuildingPanel.transform.GetChild(1).gameObject.SetActive(false);
+            buildingPanel.GetComponent<QuitPanelUI>().PanelActive();
+            buildingPanel.transform.GetChild(0).gameObject.SetActive(true);
+            buildingPanel.transform.GetChild(1).gameObject.SetActive(false);
             canBuild = true;
             int[,] needItem = FurnitureDatabase.Instance.furnitures[id].buildingItems;
             for (int i = 0; i < needItem.GetLength(0); i++)

@@ -12,7 +12,7 @@ public class GameManager : Singleton<GameManager>
 
     public GameObject OptionPanel;
     public GameObject CraftingPanel;
-    public GameObject RecipePanel;
+    public GameObject recipePanel;
     public GameObject recipeCraftPanel;
     public GameObject palBoxPanel;
     public GameObject chestPanel;
@@ -36,10 +36,10 @@ public class GameManager : Singleton<GameManager>
     {
         OptionPanel.SetActive(false);
         CraftingPanel.SetActive(false);
-        RecipePanel.SetActive(false);
+        recipePanel.SetActive(false);
         palBoxPanel.SetActive(false);
         chestPanel.SetActive(false);
-        CraftManager.Instance.BuildingPanel.SetActive(false);
+        CraftManager.Instance.buildingPanel.SetActive(false);
         StatusRenew();
     }
 
@@ -79,10 +79,10 @@ public class GameManager : Singleton<GameManager>
         {
             playerControll.statement = Statement.Disassembling;
             CraftingPanel.SetActive(false);
-            activePanel = CraftManager.Instance.BuildingPanel;
-            CraftManager.Instance.BuildingPanel.SetActive(true);
-            CraftManager.Instance.BuildingPanel.transform.GetChild(0).gameObject.SetActive(false);
-            CraftManager.Instance.BuildingPanel.transform.GetChild(1).gameObject.SetActive(true);
+            activePanel = CraftManager.Instance.buildingPanel;
+            CraftManager.Instance.buildingPanel.SetActive(true);
+            CraftManager.Instance.buildingPanel.transform.GetChild(0).gameObject.SetActive(false);
+            CraftManager.Instance.buildingPanel.transform.GetChild(1).gameObject.SetActive(true);
         }
         else
         {

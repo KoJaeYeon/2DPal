@@ -2,14 +2,14 @@ using UnityEngine;
 
 public class Campfire : Building
 {
-    public GameObject RecipePanel;
+    public GameObject recipePanel;
     public Product production;
 
     private new void Awake()
     {
         buildingName = "¸ð´ÚºÒ";
         base.Awake();
-        RecipePanel = GameManager.Instance.RecipePanel;
+        recipePanel = GameManager.Instance.recipePanel;
         todoList = todoList = PalManager.Instance.cooking;
         buildingType = BuildingType.Recipe;
     }
@@ -18,15 +18,14 @@ public class Campfire : Building
         switch (buildingStatement)
         {
             case BuildingStatement.Built:
-                RecipePanel.SetActive(true);
+                recipePanel.GetComponent<QuitPanelUI>().PanelActive();
                 ProductManager.Instance.ResetPanel();
                 ProductManager.Instance.buildingName.text = buildingName;
                 foreach (GameObject recipe in FurnitureDatabase.Instance.RecipeSlots[2])
                 {
                     recipe.SetActive(true);
                 }
-                ProductManager.Instance.nowBuilding = this;
-                GameManager.Instance.activePanel = RecipePanel;
+                ProductManager.Instance.nowBuilding = this;               
                 break;
             case BuildingStatement.Done:
                 InventoryManager.Instance.DropItem(production);

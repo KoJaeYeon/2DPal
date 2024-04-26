@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PrimitiveWorkbench : Building
 {
-    public GameObject RecipePanel;
+    public GameObject recipePanel;
     public Product production;
 
     
@@ -13,7 +13,7 @@ public class PrimitiveWorkbench : Building
     {
         buildingName = "원시적인 작업대";
         base.Awake();
-        RecipePanel = GameManager.Instance.RecipePanel;
+        recipePanel = GameManager.Instance.recipePanel;
         todoList = PalManager.Instance.producing;
         buildingType = BuildingType.Recipe;
 
@@ -23,7 +23,7 @@ public class PrimitiveWorkbench : Building
         switch(buildingStatement)
         {
             case BuildingStatement.Built:
-                RecipePanel.SetActive(true);
+                recipePanel.GetComponent<QuitPanelUI>().PanelActive();
                 ProductManager.Instance.ResetPanel();
                 ProductManager.Instance.buildingName.text = buildingName;
                 foreach (GameObject recipe in FurnitureDatabase.Instance.RecipeSlots[0])
@@ -31,7 +31,6 @@ public class PrimitiveWorkbench : Building
                     recipe.SetActive(true);
                 }
                 ProductManager.Instance.nowBuilding = this;
-                GameManager.Instance.activePanel = RecipePanel;
                 break;
             case BuildingStatement.Done:
                 InventoryManager.Instance.DropItem(production);

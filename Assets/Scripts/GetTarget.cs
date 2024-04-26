@@ -23,7 +23,7 @@ public class GetTarget : MonoBehaviour
         interactiveText = ActionPanel.transform.GetChild(1).GetComponentInChildren<TextMeshProUGUI>();
         animators = ActionPanel.GetComponentsInChildren<Animator>();
         ActionPanel.gameObject.SetActive(false);
-        needPanels_DisAsseble = CraftManager.Instance.BuildingPanel.transform.GetChild(1).GetComponentsInChildren<NeedPanel_Build>();
+        needPanels_DisAsseble = CraftManager.Instance.buildingPanel.transform.GetChild(1).GetComponentsInChildren<NeedPanel_Build>();
     }
     private void Update()
     {

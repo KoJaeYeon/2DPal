@@ -19,8 +19,7 @@ public class FeedBox : Building
         switch (buildingStatement)
         {
             case BuildingStatement.Built:
-                chestPanel.SetActive(true);
-                GameManager.Instance.activePanel = chestPanel;
+                chestPanel.GetComponent<QuitPanelUI>().PanelActive();
                 InventoryManager.Instance.chestName.text = buildingName;
                 chestKey.SetSlotVolume(volume, index * 50);
                 break;

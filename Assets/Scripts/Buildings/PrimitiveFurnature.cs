@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PrimitiveFurnature : Building
 {
-    public GameObject RecipePanel;
+    public GameObject recipePanel;
     public Product production;
 
 
@@ -10,7 +10,7 @@ public class PrimitiveFurnature : Building
     {
         buildingName = "원시적인 화로";
         base.Awake();
-        RecipePanel = GameManager.Instance.RecipePanel;
+        recipePanel = GameManager.Instance.recipePanel;
         todoList = PalManager.Instance.cooking;
         buildingType = BuildingType.Recipe;
     }
@@ -19,7 +19,7 @@ public class PrimitiveFurnature : Building
         switch (buildingStatement)
         {
             case BuildingStatement.Built:
-                RecipePanel.SetActive(true);
+                recipePanel.GetComponent<QuitPanelUI>().PanelActive();
                 ProductManager.Instance.ResetPanel();
                 ProductManager.Instance.buildingName.text = buildingName;
                 foreach (GameObject recipe in FurnitureDatabase.Instance.RecipeSlots[1])
@@ -27,7 +27,6 @@ public class PrimitiveFurnature : Building
                     recipe.SetActive(true);
                 }
                 ProductManager.Instance.nowBuilding = this;
-                GameManager.Instance.activePanel = RecipePanel;
                 break;
             case BuildingStatement.Done:
                 InventoryManager.Instance.DropItem(production);

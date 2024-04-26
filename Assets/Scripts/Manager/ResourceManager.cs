@@ -53,7 +53,7 @@ public class ResourceManager : Singleton<ResourceManager>
             SoundManager.Instance.sfx[0].Play();
             if (nowAttackBricks.duration < 0)
             {
-                if (playerControll.viewdirection == ViewDirection.Left || playerControll.viewdirection == ViewDirection.Right)
+                if (playerControll.viewDirection == ViewDirection.Left || playerControll.viewDirection == ViewDirection.Right)
                 {
                     
                     if (nowAttackBricks.DestroyTile(bricsPosition))
