@@ -59,7 +59,9 @@ public class GameManager : Singleton<GameManager>
 
     public void ExitMenu(bool range = false)
     {
-        if (activePanel != null) { activePanel.GetComponent<QuitPanelUI>().PanelDeactive(); return; }
+        if (activePanel != null) {
+            activePanel.GetComponent<QuitPanelUI>().PanelDeactive(); 
+            return; }
         if(activePanel == FurnitureDatabase.Instance.unlockPanel || activePanel == InventoryManager.Instance.FoodPanel)
         { 
             Debug.Log(activePanel);
@@ -138,7 +140,7 @@ public class GameManager : Singleton<GameManager>
 
     public bool CheckTechPoint(int point)
     {
-        if(point < playerControll.TechPoint) return false;
+        if(point <= playerControll.TechPoint) return false;
         else return true;
     }
 

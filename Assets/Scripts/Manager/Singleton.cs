@@ -18,8 +18,6 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
                 {
                     GameObject singtonObject = new GameObject();
                     instance = singtonObject.AddComponent<T>();
-
-                    DontDestroyOnLoad(instance);
                 }
             }
             return instance;

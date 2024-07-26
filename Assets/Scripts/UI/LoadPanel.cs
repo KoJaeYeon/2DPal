@@ -27,30 +27,39 @@ public class LoadPanel : MonoBehaviour,QuitPanelUI
     public void Renew()
     {
         string date = DataManager.Instance.ButtonText(1);
-        if (date != null) textMeshProUGUI[0].text = "ÀúÀå½½·Ô1\n" + date;
+        if (date != null)
+        {
+            textMeshProUGUI[0].text = "ÀúÀå½½·Ô1\n" + date;
+            loadButtons[0].interactable = true;
+        }
         else
         {
             textMeshProUGUI[0].text = "ÀúÀå½½·Ô1\n" + "ÀúÀåµÈ µ¥ÀÌÅÍ ¾øÀ½\n ";
-            if(!save) loadButtons[0].interactable = false;
-            else loadButtons[2].interactable = true;
+            if (!save) loadButtons[0].interactable = false;
         }
 
         date = DataManager.Instance.ButtonText(2);
-        if (date != null) textMeshProUGUI[1].text = "ÀúÀå½½·Ô2\n" + date;
+        if (date != null)
+        {
+            textMeshProUGUI[1].text = "ÀúÀå½½·Ô2\n" + date;
+            loadButtons[1].interactable = true;
+        }
         else
         {
             textMeshProUGUI[1].text = "ÀúÀå½½·Ô2\n" + "ÀúÀåµÈ µ¥ÀÌÅÍ ¾øÀ½\n ";
             if (!save) loadButtons[1].interactable = false;
-            else loadButtons[2].interactable = true;
         }
 
         date = DataManager.Instance.ButtonText(3);
-        if (date != null) textMeshProUGUI[2].text = "ÀúÀå½½·Ô3\n" + date;
+        if (date != null)
+        { 
+            textMeshProUGUI[2].text = "ÀúÀå½½·Ô3\n" + date;
+            loadButtons[2].interactable = true;
+        }
         else
         {
             textMeshProUGUI[2].text = "ÀúÀå½½·Ô3\n" + "ÀúÀåµÈ µ¥ÀÌÅÍ ¾øÀ½\n ";
             if (!save) loadButtons[2].interactable = false;
-            else loadButtons[2].interactable = true;
         }
     }
 
