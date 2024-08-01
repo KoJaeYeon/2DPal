@@ -74,12 +74,15 @@ public class InventoryManager : Singleton<InventoryManager>
             if(inventory.ContainsKey(i))
             {
                 UpdateSlot(i, inventory[i]);
+                playerWeight += inventory[i].count * inventory[i].weight;
             }
             else
             {
                 UpdateSlot(i, null);
             }
         }
+
+        UpdateWeihgtPanel(playerWeight, maxPlayerWeight);
     }
 
     public int CheckWeapon()
