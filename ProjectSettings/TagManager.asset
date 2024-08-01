@@ -9,6 +9,7 @@ TagManager:
   - EnemyPal
   - PalBed
   - Pal
+  - DropItem
   layers:
   - Default
   - TransparentFX
